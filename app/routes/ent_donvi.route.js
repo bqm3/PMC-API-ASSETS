@@ -4,7 +4,7 @@ module.exports = (app) => {
 
   var router = require("express").Router();
 
-  // Create a new Ent_calv
+  
   router.post("/create", ent_donvi.createEnt_donvi);
   router.get("/all", ent_donvi.getAllEnt_donvi);
   router.put("/update/:id", ent_donvi.updateEnt_donvi);
