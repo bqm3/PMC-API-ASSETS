@@ -51,7 +51,7 @@ const Ent_Connguoi = sequelize.define("ent_connguoi", {
  {
     freezeTableName: true,
     timestamps: false,
-    tableName: 'ent_connguoi'
+    tableName: 'Ent_Connguoi'
   }
 );
 

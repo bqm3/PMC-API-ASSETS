@@ -26,18 +26,18 @@ Ent_Phongbanda.belongsTo(Ent_Chinhanh, {
 });
 
 // Tai san
-Ent_Donvi.hasMany(Ent_Taisan);
+Ent_Donvi.hasMany(Ent_Taisan, { as: 'ent_taisan', foreignKey: 'ID_Donvi' });
 Ent_Taisan.belongsTo(Ent_Donvi, {
   foreignKey: "ID_Donvi",
 });
 
-Ent_Nhomts.hasMany(Ent_Taisan);
+Ent_Nhomts.hasMany(Ent_Taisan, { as: 'ent_taisan', foreignKey: 'ID_Nhomts' });
 Ent_Taisan.belongsTo(Ent_Nhomts, {
   foreignKey: "ID_Nhomts",
 });
 
 // Tai san Qr Code
-Ent_Taisan.hasMany(Tb_TaisanQrCode);
+Ent_Taisan.hasMany(Tb_TaisanQrCode, { as: 'tb_taisanqrcode', foreignKey: 'ID_Taisan' });
 Tb_TaisanQrCode.belongsTo(Ent_Taisan, {
   foreignKey: "ID_Taisan",
 });

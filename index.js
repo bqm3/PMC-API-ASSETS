@@ -4,17 +4,11 @@ const cookieParser = require("cookie-parser");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const app = express();
+const db = require('./app/config/db.config');
 
 var corsOptions = {
   origin: [
     "*",
-    "http://localhost:3000",
-    "http://localhost:3000",
-    "https://dawndev.io.vn",
-    "https://master-nu-pied.vercel.app/",
-    "https://checklist.pmcweb.vn",
-   "https://be-nodejs-project.vercel.app",
-	  "https://pmc-rho.vercel.app"
   ],
 
   credentials: true, //access-control-allow-credentials:true
@@ -34,9 +28,19 @@ app.get("/", (req, res) => {
   res.json("PMC ASSETS!");
 });
 
-require("./app/routes/ent_calv.route")(app);
+require("./app/routes/ent_donvi.route")(app);
+require("./app/routes/ent_nhompb.route")(app);
 
 const PORT = process.env.PORT || 4444;
+
+db.authenticate()
+  .then(() => {
+    console.log('Connected to the database.');
+  })
+  .catch(err => {
+    console.error('Unable to connect to the database:', err);
+  });
+
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}.`);
 });

@@ -22,7 +22,7 @@ const Ent_Donvi = sequelize.define("ent_donvi", {
  {
     freezeTableName: true,
     timestamps: false,
-    tableName: 'ent_donvi'
+    tableName: 'Ent_Donvi'
   }
 );
 

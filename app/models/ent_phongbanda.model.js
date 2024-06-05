@@ -42,7 +42,7 @@ const Ent_Phongbanda = sequelize.define("ent_phongbanda", {
  {
     freezeTableName: true,
     timestamps: false,
-    tableName: 'ent_phongbanda'
+    tableName: 'Ent_Phongbanda'
   }
 );
 
