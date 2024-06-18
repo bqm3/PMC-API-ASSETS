@@ -31,13 +31,12 @@ const getAlleEnt_taisan = async () => {
     include: [
       {
         model: Ent_Nhomts,
-        as: "ent_nhomts",
-        attributes: ["ID_Loaits", "Manhom", "Loaits", "isDelete"],
+        as : "ent_nhomts",
+        attributes: ["ID_Nhomts", "Manhom", "Loaits", "isDelete"],
         where: { isDelete: 0 },
       },
       {
         model: Ent_Donvi,
-        as: "ent_donvi",
         attributes: ["ID_Donvi", "Donvi", "isDelete"],
         where: { isDelete: 0 },
       },
@@ -63,7 +62,7 @@ const getDetailEnt_taisan = async (id) => {
       {
         model: Ent_Nhomts,
         as: "ent_nhomts",
-        attributes: ["ID_Loaits", "Manhom", "Loaits", "isDelete"],
+        attributes: ["ID_Nhomts", "Manhom", "Loaits", "isDelete"],
         where: { isDelete: 0 },
       },
       {

@@ -9,6 +9,7 @@ const db = require('./app/config/db.config');
 var corsOptions = {
   origin: [
     "*",
+    "http://localhost:3006"
   ],
 
   credentials: true, //access-control-allow-credentials:true
@@ -29,6 +30,9 @@ app.get("/", (req, res) => {
 });
 
 require("./app/routes/ent_donvi.route")(app);
+require("./app/routes/ent_grouppolicy.route")(app);
+require("./app/routes/ent_policy.route")(app);
+require("./app/routes/ent_connguoi.route")(app);
 require("./app/routes/ent_nhompb.route")(app);
 require("./app/routes/ent_chinhanh.route")(app);
 require("./app/routes/ent_nhomts.route")(app);
@@ -36,6 +40,7 @@ require("./app/routes/ent_nghiepvu.route")(app);
 require("./app/routes/ent_taisan.route")(app);
 require("./app/routes/ent_phongbanda.route")(app);
 require("./app/routes/tb_taisanqrcode.route")(app);
+require("./app/routes/ent_user.route")(app);
 
 const PORT = process.env.PORT || 4444;
 

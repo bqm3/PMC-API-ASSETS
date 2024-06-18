@@ -14,7 +14,7 @@ const createEnt_nhomts = async (req, res) => {
       data: data,
     });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    res.status(500).json({ message: error.message });
   }
 };
 
@@ -26,16 +26,16 @@ const getAlleEnt_nhomts = async (req, res) => {
       data: data,
     });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    res.status(500).json({ message: error.message });
   }
 };
 
 const updateleEnt_nhomts = async (req, res) => {
   try {
     const { Manhom, Loaits } = req.body;
-    const ID_Loaits = req.params.id;
+    const ID_Nhomts = req.params.id;
     await entNhomtsService.updateleEnt_nhomts({
-      ID_Loaits: ID_Loaits,
+      ID_Nhomts: ID_Nhomts,
       Manhom: Manhom,
       Loaits: Loaits,
     });
@@ -43,19 +43,19 @@ const updateleEnt_nhomts = async (req, res) => {
       message: "Cập nhật thành công"
     });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    res.status(500).json({ message: error.message });
   }
 };
 
 const deleteEnt_nhomts = async (req, res) => {
   try {
-    const ID_Loaits = req.params.id;
-    await entNhomtsService.deleteEnt_nhomts(ID_Loaits);
+    const ID_Nhomts = req.params.id;
+    await entNhomtsService.deleteEnt_nhomts(ID_Nhomts);
     res.status(200).json({
       message: "Xóa thành công!",
     });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    res.status(500).json({ message: error.message });
   }
 };
 

@@ -2,34 +2,29 @@
 const { Sequelize, DataTypes } = require("sequelize");
 const sequelize = require("../config/db.config");
 
-const Ent_Nhomts = sequelize.define("ent_nhomts", {
+const Ent_Nam = sequelize.define("ent_nam", {
     
-  ID_Nhomts: {
+   ID_Nam: {
     type: DataTypes.INTEGER,
     allowNull: false,
     autoIncrement: true,
     primaryKey: true
    },
-   Manhom: {
+   Nam: {
      type: DataTypes.CHAR,
      allowNull: false,
    },
-   Loaits: {
+   Giatri: {
     type: DataTypes.CHAR,
-    allowNull: false,
-  },
-   isDelete: {
-    type: DataTypes.INTEGER,
-    defaultValue: 0,
    },
 },
  {
     freezeTableName: true,
     timestamps: false,
-    tableName: 'Ent_Nhomts'
+    tableName: 'Ent_Nam'
   }
 );
 
-module.exports = Ent_Nhomts;
+module.exports = Ent_Nam;
 
 

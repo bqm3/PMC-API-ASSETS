@@ -9,11 +9,11 @@ const createEnt_nghiepvu = async (req, res) => {
     };
     const data = await entNghiepvuService.createEnt_nghiepvu(reqData);
     res.status(200).json({
-      message: "Tạo đơn vị thành công",
+      message: "Tạo nghiệp vụ thành công",
       data: data,
     });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    res.status(500).json({ message: error.message });
   }
 };
 
@@ -21,11 +21,11 @@ const getAllEnt_nghiepvu = async (req, res) => {
   try {
     const data = await entNghiepvuService.getAlleEnt_nghiepvu();
     res.status(200).json({
-      message: "Danh sách đơn vị",
+      message: "Danh sách nghiệp vụ",
       data: data,
     });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    res.status(500).json({ message: error.message });
   }
 };
 
@@ -41,7 +41,7 @@ const updateEnt_nghiepvu = async (req, res) => {
       message: "Cập nhật thành công"
     });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    res.status(500).json({ message: error.message });
   }
 };
 
@@ -53,7 +53,7 @@ const deleteEnt_nghiepvu = async (req, res) => {
       message: "Xóa thành công!",
     });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    res.status(500).json({ message: error.message });
   }
 };
 

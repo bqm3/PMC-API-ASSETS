@@ -1,0 +1,25 @@
+version: '3'
+services:
+  nodejs:
+    build: .
+    ports:
+      - 8888:3000
+    volumes:
+      - .:/usr/src/app
+    depends_on:
+      - mysql
+    environment:
+      - PORT=3000
+
+  mysql:
+    image: mysql:latest
+    environment:
+      MYSQL_ROOT_PASSWORD: Vnptpmc@123
+      MYSQL_DATABASE: dbTaisanqrcode
+      MYSQL_USER: pmc
+      DB_HOST: checklist.pmcweb.vn
+      DB_DATABASE_NAME: dbTaisanqrcode
+      DB_USERNAME: pmc
+      DB_PASSWORD: Vnptpmc@123
+      DB_PORT: 3306
+      

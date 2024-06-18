@@ -13,7 +13,7 @@ const createEnt_nhompb = async (req, res) => {
       data: data,
     });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    res.status(500).json({ message: error.message });
   }
 };
 
@@ -25,7 +25,7 @@ const getAlleEnt_nhompb = async (req, res) => {
       data: data,
     });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    res.status(500).json({ message: error.message });
   }
 };
 
@@ -41,7 +41,7 @@ const updateleEnt_nhompb = async (req, res) => {
       message: "Cập nhật thành công"
     });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    res.status(500).json({ message: error.message });
   }
 };
 
@@ -53,7 +53,7 @@ const deleteEnt_nhompb = async (req, res) => {
       message: "Xóa thành công!",
     });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    res.status(500).json({ message: error.message });
   }
 };
 

@@ -2,22 +2,18 @@
 const { Sequelize, DataTypes } = require("sequelize");
 const sequelize = require("../config/db.config");
 
-const Ent_Nhomts = sequelize.define("ent_nhomts", {
+const Ent_GroupPolicy = sequelize.define("ent_grouppolicy", {
     
-  ID_Nhomts: {
+   ID_GroupPolicy: {
     type: DataTypes.INTEGER,
     allowNull: false,
     autoIncrement: true,
     primaryKey: true
    },
-   Manhom: {
+   GroupPolicy: {
      type: DataTypes.CHAR,
      allowNull: false,
    },
-   Loaits: {
-    type: DataTypes.CHAR,
-    allowNull: false,
-  },
    isDelete: {
     type: DataTypes.INTEGER,
     defaultValue: 0,
@@ -26,10 +22,10 @@ const Ent_Nhomts = sequelize.define("ent_nhomts", {
  {
     freezeTableName: true,
     timestamps: false,
-    tableName: 'Ent_Nhomts'
+    tableName: 'Ent_GroupPolicy'
   }
 );
 
-module.exports = Ent_Nhomts;
+module.exports = Ent_GroupPolicy;
 
 

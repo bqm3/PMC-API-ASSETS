@@ -29,13 +29,11 @@ const getAlleEnt_phongbanda = async () => {
     include: [
       {
         model: Ent_Chinhanh,
-        as: "ent_chinhanh",
         attributes: ["ID_Chinhanh", "Tenchinhanh", "isDelete"],
         where: { isDelete: 0 },
       },
       {
         model: Ent_Nhompb,
-        as: "ent_phongban",
         attributes: ["ID_Nhompb", "Nhompb", "isDelete"],
         where: { isDelete: 0 },
       },
@@ -79,9 +77,10 @@ const getDetailEnt_phongbanda = async (id) => {
 };
 
 const updateleEnt_phongbanda = async (data) => {
+  console.log(data)
   let whereClause = {
     isDelete: 0,
-    ID_Phongbanda: data.ID_Phongbanda,
+    ID_Phongban: Number(data.ID_Phongban),
   };
 
   const res = await Ent_Phongbanda.update(

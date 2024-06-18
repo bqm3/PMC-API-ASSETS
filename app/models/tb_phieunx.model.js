@@ -1,30 +1,41 @@
 const { Sequelize, DataTypes } = require("sequelize");
 const sequelize = require("../config/db.config");
 
-const Tb_TaisanQrCode = sequelize.define(
-  "tb_taisanqrcode",
+const Tb_PhieuNX = sequelize.define(
+  "tb_phieunx",
   {
-    ID_TaisanQr: {
+    ID_PhieuNX: {
       type: DataTypes.INTEGER,
       allowNull: false,
       autoIncrement: true,
       primaryKey: true,
     },
-    ID_Taisan: {
+    ID_Nghiepvu: {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
-
-    MaQrCode: {
+    ID_NoiNhap: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+    ID_NoiXuat: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+    Sophieu: {
       type: DataTypes.CHAR,
       allowNull: false,
     },
-    Ngaykhoitao: {
+    ID_Connguoi: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+    NgayNX: {
       type: DataTypes.DATE,
       allowNull: false,
     },
-    Giatri: {
-      type: DataTypes.DOUBLE,
+    Ghichu: {
+      type: DataTypes.TEXT,
       allowNull: false,
     },
     ID_Nam: {
@@ -35,23 +46,10 @@ const Tb_TaisanQrCode = sequelize.define(
       type: DataTypes.INTEGER,
       allowNull: false,
     },
-    ID_Phongban: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-    },
-    ID_Connguoi: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-    },
-    Ghichu: {
-      type: DataTypes.DATE,
-      allowNull: false,
-    },
     iTinhtrang: {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
-
     isDelete: {
       type: DataTypes.INTEGER,
       defaultValue: 0,
@@ -60,8 +58,8 @@ const Tb_TaisanQrCode = sequelize.define(
   {
     freezeTableName: true,
     timestamps: false,
-    tableName: "Tb_TaisanQrCode",
+    tableName: "Tb_PhieuNX",
   }
 );
 
-module.exports = Tb_TaisanQrCode;
+module.exports = Tb_PhieuNX;

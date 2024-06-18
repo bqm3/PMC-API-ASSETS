@@ -38,11 +38,6 @@ const Ent_Connguoi = sequelize.define("ent_connguoi", {
     type: DataTypes.TEXT,
     allowNull: false,
   },
-  MaPMC: {
-    type: DataTypes.CHAR,
-    allowNull: false,
-  },
-
    isDelete: {
     type: DataTypes.INTEGER,
     defaultValue: 0,

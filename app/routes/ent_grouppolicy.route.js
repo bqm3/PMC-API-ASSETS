@@ -1,5 +1,5 @@
 module.exports = (app) => {
-  const ent_phongbanda = require("../controllers/ent_phongbanda.controller.js");
+  const ent_grouppolicy = require("../controllers/ent_grouppolicy.controller.js");
   const { isAuthenticated } = require("../middleware/auth.middleware.js");
   const { isRole } = require("../middleware/isRole.middleware.js");
 
@@ -8,20 +8,19 @@ module.exports = (app) => {
   router.post(
     "/create",
     [isAuthenticated, isRole],
-    ent_phongbanda.createEnt_phongbanda
+    ent_grouppolicy.creatEnt_GroupPolicy
   );
-  router.get("/all", ent_phongbanda.getAlleEnt_phongbanda);
-  router.get("/:id", ent_phongbanda.getDetaileEnt_phongbanda);
+  router.get("/all", ent_grouppolicy.getAllEnt_GroupPolicy);
   router.put(
     "/update/:id",
     [isAuthenticated, isRole],
-    ent_phongbanda.updateleEnt_phongbanda
+    ent_grouppolicy.updateEnt_GroupPolicy
   );
   router.put(
     "/delete/:id",
     [isAuthenticated, isRole],
-    ent_phongbanda.deleteEnt_phongbanda
+    ent_grouppolicy.deleteEnt_GroupPolicy
   );
 
-  app.use("/api/ent_phongbanda", router);
+  app.use("/api/ent_grouppolicy", router);
 };

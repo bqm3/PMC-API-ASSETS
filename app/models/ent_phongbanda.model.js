@@ -32,7 +32,6 @@ const Ent_Phongbanda = sequelize.define("ent_phongbanda", {
   },
   Ghichu: {
     type: DataTypes.TEXT,
-    allowNull: false,
   },
    isDelete: {
     type: DataTypes.INTEGER,
@@ -42,7 +41,7 @@ const Ent_Phongbanda = sequelize.define("ent_phongbanda", {
  {
     freezeTableName: true,
     timestamps: false,
-    tableName: 'Ent_Phongbanda'
+    tableName: 'Ent_PhongbanDa'
   }
 );
 

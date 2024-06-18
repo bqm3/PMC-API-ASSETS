@@ -43,7 +43,7 @@ const getAlleTb_taisanqrcode = async () => {
           {
             model: Ent_Nhomts,
             as: "ent_nhomts",
-            attributes: ["ID_Loaits", "Manhom", "Loaits", "isDelete"],
+            attributes: ["ID_Nhomts", "Manhom", "Loaits", "isDelete"],
             where: { isDelete: 0 },
           },
           {
@@ -89,7 +89,7 @@ const getDetailTb_taisanqrcode = async (id) => {
           {
             model: Ent_Nhomts,
             as: "ent_nhomts",
-            attributes: ["ID_Loaits", "Manhom", "Loaits", "isDelete"],
+            attributes: ["ID_Nhomts", "Manhom", "Loaits", "isDelete"],
             where: { isDelete: 0 },
           },
           {

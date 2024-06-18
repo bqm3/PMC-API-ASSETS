@@ -19,7 +19,7 @@ const createEnt_phongbanda = async (req, res) => {
       data: data,
     });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    res.status(500).json({ message: error.message });
   }
 };
 
@@ -32,7 +32,7 @@ const getDetaileEnt_phongbanda = async(req, res) => {
       data: data,
     });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    res.status(500).json({ message: error.message });
   }
 }
 
@@ -44,28 +44,30 @@ const getAlleEnt_phongbanda = async (req, res) => {
       data: data,
     });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    res.status(500).json({ message: error.message });
   }
 };
 
 const updateleEnt_phongbanda = async (req, res) => {
   try {
-    const { ID_Nhompb, Mapb, Tenphongban, Diachi, Ghichu } = req.body;
-    const ID_Chinhanh = req.params.id;
+    const { ID_Nhompb,ID_Chinhanh, Mapb, Tenphongban, Diachi, Ghichu } = req.body;
+    const ID_Phongban = req.params.id;
 
     await entPhongbandaService.updateleEnt_phongbanda({
+      ID_Phongban: ID_Phongban,
       ID_Chinhanh: ID_Chinhanh || null,
       ID_Nhompb: ID_Nhompb || null,
       Mapb: Mapb || "",
       Tenphongban: Tenphongban || "",
       Diachi: Diachi || "",
       Ghichu: Ghichu || "",
+      isDelete: 0
     });
     res.status(200).json({
       message: "Cập nhật thành công",
     });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    res.status(500).json({ message: error.message });
   }
 };
 
@@ -77,7 +79,7 @@ const deleteEnt_phongbanda = async (req, res) => {
       message: "Xóa thành công!",
     });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    res.status(500).json({ message: error.message });
   }
 };
 

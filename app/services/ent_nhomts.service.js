@@ -6,6 +6,21 @@ const createEnt_nhomts = async (data) => {
   return res;
 };
 
+const getDetailEnt_taisan = async (ID)=> {
+  const res = await Ent_Nhomts.findByPk(ID, {
+    attributes: [
+      "ID_Nhomts",
+      "Manhom",
+      "Loaits",
+      "isDelete",
+    ],
+    where: {
+      isDelete: 0,
+    },
+  });
+  return res;
+}
+
 const getAlleEnt_nhomts = async () => {
   let whereClause = {
     isDelete: 0,
@@ -20,7 +35,7 @@ const getAlleEnt_nhomts = async () => {
 const updateleEnt_nhomts = async (data) => {
   let whereClause = {
     isDelete: 0,
-    ID_Loaits: data.ID_Loaits,
+    ID_Nhomts: data.ID_Nhomts,
   };
 
   const res = await Ent_Nhomts.update(
@@ -40,7 +55,7 @@ const deleteEnt_nhomts = async (id) => {
     { isDelete: 1 },
     {
       where: {
-        ID_Loaits: id,
+        ID_Nhomts: id,
       },
     }
   );
@@ -52,4 +67,5 @@ module.exports = {
   getAlleEnt_nhomts,
   updateleEnt_nhomts,
   deleteEnt_nhomts,
+  getDetailEnt_taisan
 };
