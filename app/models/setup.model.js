@@ -84,6 +84,15 @@ Tb_PhieuNX.belongsTo(Ent_Nam, {
   foreignKey: "ID_Nam",
 });
 
+// Thiết lập quan hệ cho nơi nhập
+Ent_Phongbanda.hasMany(Tb_PhieuNX, { foreignKey: 'ID_NoiNhap', as: 'NhapPhieuNX' });
+Tb_PhieuNX.belongsTo(Ent_Phongbanda, { foreignKey: 'ID_NoiNhap', as: 'NoiNhap' });
+
+// Thiết lập quan hệ cho nơi xuất
+Ent_Phongbanda.hasMany(Tb_PhieuNX, { foreignKey: 'ID_NoiXuat', as: 'XuatPhieuNX' });
+Tb_PhieuNX.belongsTo(Ent_Phongbanda, { foreignKey: 'ID_NoiXuat', as: 'NoiXuat' });
+
+
 
 
 // Phieu NXCT

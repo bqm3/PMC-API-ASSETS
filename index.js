@@ -36,11 +36,15 @@ require("./app/routes/ent_connguoi.route")(app);
 require("./app/routes/ent_nhompb.route")(app);
 require("./app/routes/ent_chinhanh.route")(app);
 require("./app/routes/ent_nhomts.route")(app);
+require("./app/routes/ent_nam.route")(app);
+require("./app/routes/ent_thang.route")(app);
 require("./app/routes/ent_nghiepvu.route")(app);
 require("./app/routes/ent_taisan.route")(app);
 require("./app/routes/ent_phongbanda.route")(app);
 require("./app/routes/tb_taisanqrcode.route")(app);
 require("./app/routes/ent_user.route")(app);
+require("./app/routes/tb_phieunx.route")(app);
+require("./app/routes/tb_phieunxct.route")(app);
 
 const PORT = process.env.PORT || 4444;
 

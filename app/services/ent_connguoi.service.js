@@ -41,7 +41,7 @@ const getDetailEnt_connguoi = async(data)=> {
         {
           model: Ent_Nhompb,
           attributes: [
-            "ID_Nhompb", "Nhompb", "isDelete"
+            "ID_Nhompb","Nhompb", "isDelete"
           ],
           where: {
             isDelete: 0
@@ -101,7 +101,7 @@ const getAllEnt_connguoi = async (user) => {
         {
           model: Ent_Nhompb,
           attributes: [
-            "ID_Nhompb", "Nhompb", "isDelete"
+            "ID_Nhompb","Nhompb", "isDelete"
           ],
           where: {
             isDelete: 0

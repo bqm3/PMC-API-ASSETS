@@ -20,15 +20,15 @@ const Ent_Phongbanda = sequelize.define("ent_phongbanda", {
    },
    Mapb: {
      type: DataTypes.CHAR,
-     allowNull: false,
    },
+   Thuoc: {
+    type: DataTypes.CHAR,
+  },
    Tenphongban: {
     type: DataTypes.CHAR,
-    allowNull: false,
   },
   Diachi: {
     type: DataTypes.CHAR,
-    allowNull: false,
   },
   Ghichu: {
     type: DataTypes.TEXT,

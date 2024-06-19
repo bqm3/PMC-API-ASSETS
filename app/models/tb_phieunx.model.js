@@ -1,5 +1,6 @@
 const { Sequelize, DataTypes } = require("sequelize");
 const sequelize = require("../config/db.config");
+const Ent_Phongbanda = require("./ent_phongbanda.model");
 
 const Tb_PhieuNX = sequelize.define(
   "tb_phieunx",
@@ -17,10 +18,18 @@ const Tb_PhieuNX = sequelize.define(
     ID_NoiNhap: {
       type: DataTypes.INTEGER,
       allowNull: false,
+      references: {
+        model: Ent_Phongbanda, // Tên bảng tham chiếu
+        key: 'ID_Phongban' // Khóa chính của bảng Ent_Phongbanda
+      }
     },
     ID_NoiXuat: {
       type: DataTypes.INTEGER,
       allowNull: false,
+      references: {
+        model: Ent_Phongbanda, // Tên bảng tham chiếu
+        key: 'ID_Phongban' // Khóa chính của bảng Ent_Phongbanda
+      }
     },
     Sophieu: {
       type: DataTypes.CHAR,

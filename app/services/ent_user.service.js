@@ -73,7 +73,7 @@ const login = async (data) => {
       include: [
         {
           model: Ent_Nhompb,
-          attributes: ["ID_Nhompb", "Nhompb"],
+          attributes: ["ID_Nhompb","Nhompb"],
         },
         {
           model: Ent_Chinhanh,
@@ -155,7 +155,7 @@ const checkAuth = async (ID) => {
       include: [
         {
           model: Ent_Nhompb,
-          attributes: ["ID_Nhompb", "Nhompb"],
+          attributes: ["ID_Nhompb","Nhompb"],
         },
         {
           model: Ent_Chinhanh,
