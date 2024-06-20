@@ -12,20 +12,16 @@ const Tb_SuachuaTS = sequelize.define(
     },
     Ngaygiao: {
       type: DataTypes.DATE,
-      allowNull: false,
     },
     Sophieu: {
       type: DataTypes.CHAR,
-      allowNull: false,
     },
     Nguoitheodoi: {
       type: DataTypes.CHAR,
-      allowNull: false,
     },
 
     iIinhtrang: {
       type: DataTypes.INTEGER,
-      allowNull: false,
     },
 
     isDelete: {

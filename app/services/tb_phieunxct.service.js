@@ -23,8 +23,25 @@ const createTb_PhieuNXCT = async (phieunxct,data) => {
       isDelete: 0
     });
   }));
- 
 };
+
+const updateTb_PhieuNXCT = async(phieunxct,data) => {
+  await Promise.all(phieunxct.map(async (item) => {
+    // Thực hiện insert dữ liệu từ mỗi item trong mảng phieunxct
+    await Tb_PhieuNXCT.update({
+      ID_PhieuNX: data.ID_PhieuNX,
+      ID_Taisan: item.ID_Taisan,
+      Dongia: item.Dongia,
+      Soluong: item.Soluong,
+      isDelete: 0
+    },
+    {
+      where: {
+        ID_PhieuNXCT: item.ID_PhieuNXCT,
+      },
+    });
+  }));
+}
 
 const getAllTb_PhieuNXCT = async () => {
     // Điều kiện để lấy các bản ghi không bị XCTóa
@@ -83,4 +100,5 @@ const getAllTb_PhieuNXCT = async () => {
 module.exports = {
   createTb_PhieuNXCT,
   getAllTb_PhieuNXCT,
+  updateTb_PhieuNXCT
 };

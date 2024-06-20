@@ -11,10 +11,19 @@ module.exports = (app) => {
       tb_phieunx.createTb_PhieuNX
     );
     router.get("/all", tb_phieunx.getAllTb_PhieuNX);
+    router.get(
+      "/:id",
+      tb_phieunx.getDetailTb_PhieuNX
+    );
     router.put(
       "/update/:id",
       [isAuthenticated, isRole],
       tb_phieunx.updateTb_PhieuNX
+    );
+    router.post(
+      "/close/:id",
+      [isAuthenticated, isRole],
+      tb_phieunx.closeTb_PhieuNX
     );
     router.put(
       "/delete/:id",

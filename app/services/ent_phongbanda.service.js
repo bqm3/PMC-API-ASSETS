@@ -88,6 +88,7 @@ const updateleEnt_phongbanda = async (data) => {
       ID_Chinhanh: data.ID_Chinhanh,
       ID_Nhompb: data.ID_Nhompb,
       Mapb: data.Mapb,
+      Thuoc: data.Thuoc,
       Tenphongban: data.Tenphongban,
       Diachi: data.Diachi,
       Ghichu: data.Ghichu,

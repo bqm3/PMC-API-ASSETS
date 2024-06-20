@@ -110,13 +110,11 @@ Tb_PhieuNXCT.belongsTo(Ent_Taisan, {
 // Sua chua CT
 Tb_SuachuaTS.hasMany(Tb_SuachuaCT, { as: 'tb_suachuact', foreignKey: 'ID_SuachuaTS' });
 Tb_SuachuaCT.belongsTo(Tb_SuachuaTS, {
-  foreignKey: "ID_SuachuaTS",
+  foreignKey: "ID_SuachuaTS", as: 'tb_suachuact'
 });
 
 Tb_TaisanQrCode.hasMany(Tb_SuachuaCT, { as: 'tb_suachuact', foreignKey: 'ID_TaisanQr' });
-Tb_SuachuaCT.belongsTo(Tb_TaisanQrCode, {
-  foreignKey: "ID_TaisanQr",
-});
+Tb_SuachuaCT.belongsTo(Tb_TaisanQrCode, { foreignKey: 'ID_TaisanQr', as: 'tb_taisanqrcode' });
 
 
 // Tai san

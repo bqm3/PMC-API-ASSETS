@@ -5,6 +5,9 @@ const {
   Ent_Donvi,
   Ent_Nghiepvu,
   Ent_Phongbanda,
+  Ent_Chinhanh,
+  Ent_Nhompb,
+  Ent_Connguoi,
 } = require("../models/setup.model");
 const { Op } = require("sequelize");
 
@@ -13,19 +16,19 @@ const createTb_taisanqrcode = async (data) => {
   return res;
 };
 
-const getAlleTb_taisanqrcode = async () => {
+const getAllTb_taisanqrcode = async () => {
   let whereClause = {
     isDelete: 0,
   };
 
   const res = await Tb_TaisanQrCode.findAll({
     attributes: [
-      "ID_TaisanQrCode",
-      "ID_Taisan",
+      "ID_TaisanQr",
+      "ID_Taisan","Giatri",
       "MaQrCode",
       "Ngaykhoitao",
       "iTinhtrang",
-      "isDelete",
+      "isDelete","Ghichu","ID_Nam", "ID_Thang", "ID_Phongban", "ID_Connguoi",
     ],
     include: [
       {
@@ -57,6 +60,54 @@ const getAlleTb_taisanqrcode = async () => {
         ],
         where: { isDelete: 0 },
       },
+      {
+        model: Ent_Phongbanda,
+        as: "ent_phongbanda", // Alias được sử dụng để phân biệt nơi nhập
+        attributes: [
+          "ID_Phongban",
+          "ID_Chinhanh",
+          "ID_Nhompb",
+          "Mapb",
+          "Tenphongban",
+          "Diachi",
+          "Ghichu",
+          "isDelete",
+        ],
+        include: [
+          {
+            model: Ent_Chinhanh,
+            attributes: ["ID_Chinhanh", "Tenchinhanh", "isDelete"],
+            where: {
+              isDelete: 0,
+            },
+          },
+          {
+            model: Ent_Nhompb,
+            attributes: ["ID_Nhompb","Nhompb", "isDelete"],
+            where: {
+              isDelete: 0,
+            },
+          },
+        ],
+        where: {
+          isDelete: 0,
+        },
+      },
+      {
+        model: Ent_Connguoi,
+        as: "ent_connguoi",
+        attributes: [
+          "ID_Connguoi",
+          "MaPMC",
+          "ID_Nhompb",
+          "Hoten",
+          "Gioitinh",
+          "Diachi",
+          "Sodienthoai",
+          "Ghichu",
+        ],
+        
+      }
     ],
     where: whereClause,
   });
@@ -66,12 +117,12 @@ const getAlleTb_taisanqrcode = async () => {
 const getDetailTb_taisanqrcode = async (id) => {
   const res = await Tb_TaisanQrCode.findByPk(id, {
     attributes: [
-      "ID_TaisanQrCode",
-      "ID_Taisan",
+      "ID_TaisanQr",
+      "ID_Taisan","Giatri",
       "MaQrCode",
       "Ngaykhoitao",
       "iTinhtrang",
-      "isDelete",
+      "isDelete","Ghichu","ID_Nam", "ID_Thang", "ID_Phongban", "ID_Connguoi",
     ],
     include: [
       {
@@ -114,7 +165,7 @@ const getDetailTb_taisanqrcode = async (id) => {
 const updateleTb_taisanqrcode = async (data) => {
   let whereClause = {
     isDelete: 0,
-    ID_TaisanQrCode: data.ID_TaisanQrCode,
+    ID_TaisanQr: data.ID_TaisanQr,
   };
 
   const res = await Tb_TaisanQrCode.update(
@@ -136,7 +187,7 @@ const deleteTb_taisanqrcode = async (id) => {
     { isDelete: 1 },
     {
       where: {
-        ID_TaisanQrCode: id,
+        ID_TaisanQr: id,
       },
     }
   );
@@ -193,6 +244,10 @@ const insertDataToEntQRCode = async (phieunxct, data) => {
           },
         });
 
+        console.log(
+          data.NgayNX
+        )
+
         const Thuoc = duan.Thuoc;
         const ManhomTs = taisan.ent_nhomts.Manhom;
         const MaID = taisan.ID_Taisan;
@@ -225,7 +280,7 @@ const insertDataToEntQRCode = async (phieunxct, data) => {
 
 module.exports = {
   createTb_taisanqrcode,
-  getAlleTb_taisanqrcode,
+  getAllTb_taisanqrcode,
   updateleTb_taisanqrcode,
   deleteTb_taisanqrcode,
   getDetailTb_taisanqrcode,
@@ -234,11 +289,19 @@ module.exports = {
 
 
 function formatDateTime(data) {
-  if (typeof data === 'string' && data.match(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d{3}Z$/)) {
-    const date = new Date(data); // Chuyển đổi chuỗi ngày tháng thành đối tượng Date
-    const year = date.getFullYear().toString().slice(2); // Lấy 2 chữ số cuối của năm
-    const month = (date.getMonth() + 1).toString().padStart(2, '0'); // Tháng với 2 chữ số, thêm số 0 nếu cần
-    const day = date.getDate().toString().padStart(2, '0'); // Ngày với 2 chữ số, thêm số 0 nếu cần
+  // Regular expressions for different date formats
+  const iso8601Regex = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d{3}Z$/;
+  const simpleDateRegex = /^\d{4}-\d{2}-\d{2}$/;
+
+  if (typeof data === 'string' && (data.match(iso8601Regex) || data.match(simpleDateRegex))) {
+    const date = new Date(data); // Convert the string to a Date object
+    if (isNaN(date)) {
+      throw new Error('Invalid date value');
+    }
+
+    const year = date.getFullYear().toString().slice(2); // Get last 2 digits of the year
+    const month = (date.getMonth() + 1).toString().padStart(2, '0'); // Ensure month is two digits
+    const day = date.getDate().toString().padStart(2, '0'); // Ensure day is two digits
 
     return `${year}${month}${day}`;
   } else {

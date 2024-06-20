@@ -10,7 +10,8 @@ var corsOptions = {
   origin: [
     "*",
     "http://localhost:3006",
-    "https://qlts.pmcweb.vn"
+    "https://qlts.pmcweb.vn",
+    "https://checklist.pmcweb.vn",
   ],
 
   credentials: true, //access-control-allow-credentials:true
@@ -46,6 +47,7 @@ require("./app/routes/tb_taisanqrcode.route")(app);
 require("./app/routes/ent_user.route")(app);
 require("./app/routes/tb_phieunx.route")(app);
 require("./app/routes/tb_phieunxct.route")(app);
+require("./app/routes/tb_suachuats.route")(app);
 
 const PORT = process.env.PORT || 4444;
 

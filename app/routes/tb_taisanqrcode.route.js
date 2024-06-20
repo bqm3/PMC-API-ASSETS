@@ -6,8 +6,8 @@ module.exports = (app) => {
 
   
   router.post("/create", tb_taisanqrcode.createTb_Taisanqrcode);
-  router.get("/all", tb_taisanqrcode.getAlleTb_Taisanqrcode);
-  router.get("/:id", tb_taisanqrcode.getDetaileTb_Taisanqrcode);
+  router.get("/all", tb_taisanqrcode.getAllTb_Taisanqrcode);
+  router.get("/:id", tb_taisanqrcode.getDetailTb_Taisanqrcode);
   router.put("/update/:id", tb_taisanqrcode.updateleTb_Taisanqrcode);
   router.put("/delete/:id", tb_taisanqrcode.deleteTb_Taisanqrcode);
 

@@ -21,7 +21,7 @@ const createTb_Taisanqrcode = async (req, res) => {
   }
 };
 
-const getDetaileTb_Taisanqrcode = async(req, res) => {
+const getDetailTb_Taisanqrcode = async(req, res) => {
   try {
     const ID_Taisan = req.params.id;
     const data = await tbTaisanQrCodeService.getDetailTb_taisanqrcode(ID_Taisan);
@@ -34,9 +34,9 @@ const getDetaileTb_Taisanqrcode = async(req, res) => {
   }
 }
 
-const getAlleTb_Taisanqrcode = async (req, res) => {
+const getAllTb_Taisanqrcode = async (req, res) => {
   try {
-    const data = await tbTaisanQrCodeService.getAlleTb_taisanqrcode();
+    const data = await tbTaisanQrCodeService.getAllTb_taisanqrcode();
     res.status(200).json({
       message: "Danh sách",
       data: data,
@@ -49,7 +49,7 @@ const getAlleTb_Taisanqrcode = async (req, res) => {
 const updateleTb_Taisanqrcode = async (req, res) => {
   try {
     const { ID_Taisan, MaQrCode, Ngaykhoitao, iTinhtrang } = req.body;
-    const ID_TaisanQrCode  = req.params.id;
+    const ID_TaisanQr  = req.params.id;
 
     await tbTaisanQrCodeService.updateleTb_taisanqrcode({
       ID_Taisan: ID_Taisan || null,
@@ -57,7 +57,7 @@ const updateleTb_Taisanqrcode = async (req, res) => {
       Ngaykhoitao: Ngaykhoitao || "",
       iTinhtrang: iTinhtrang || "",
       isDelete: 0,
-      ID_TaisanQrCode: ID_TaisanQrCode
+      ID_TaisanQr: ID_TaisanQr
     });
     res.status(200).json({
       message: "Cập nhật thành công",
@@ -69,8 +69,8 @@ const updateleTb_Taisanqrcode = async (req, res) => {
 
 const deleteTb_Taisanqrcode = async (req, res) => {
   try {
-    const ID_TaisanQrCode = req.params.id;
-    await tbTaisanQrCodeService.deleteTb_taisanqrcode(ID_TaisanQrCode);
+    const ID_TaisanQr = req.params.id;
+    await tbTaisanQrCodeService.deleteTb_taisanqrcode(ID_TaisanQr);
     res.status(200).json({
       message: "Xóa thành công!",
     });
@@ -81,8 +81,8 @@ const deleteTb_Taisanqrcode = async (req, res) => {
 
 module.exports = {
   createTb_Taisanqrcode,
-  getDetaileTb_Taisanqrcode,
-  getAlleTb_Taisanqrcode,
+  getDetailTb_Taisanqrcode,
+  getAllTb_Taisanqrcode,
   updateleTb_Taisanqrcode,
   deleteTb_Taisanqrcode,
 };
