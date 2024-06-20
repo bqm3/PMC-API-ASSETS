@@ -9,7 +9,8 @@ const db = require('./app/config/db.config');
 var corsOptions = {
   origin: [
     "*",
-    "http://localhost:3006"
+    "http://localhost:3006",
+    "https://qlts.pmcweb.vn"
   ],
 
   credentials: true, //access-control-allow-credentials:true
