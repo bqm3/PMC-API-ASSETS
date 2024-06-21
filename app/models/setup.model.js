@@ -114,7 +114,7 @@ Tb_SuachuaCT.belongsTo(Tb_SuachuaTS, {
 });
 
 Tb_TaisanQrCode.hasMany(Tb_SuachuaCT, { as: 'tb_suachuact', foreignKey: 'ID_TaisanQr' });
-Tb_SuachuaCT.belongsTo(Tb_TaisanQrCode, { foreignKey: 'ID_TaisanQr', as: 'tb_taisanqrcode' });
+Tb_SuachuaCT.belongsTo(Tb_TaisanQrCode, { foreignKey: 'ID_TaisanQr', as: 'tb_taisanqr' });
 
 
 // Tai san
@@ -147,27 +147,27 @@ Tb_Table.belongsTo(Ent_GroupPolicy, {
 
 
 // Tai san Qr Code
-Ent_Taisan.hasMany(Tb_TaisanQrCode, { as: 'tb_taisanqrcode', foreignKey: 'ID_Taisan' });
+Ent_Taisan.hasMany(Tb_TaisanQrCode, { as: 'tb_taisanqr', foreignKey: 'ID_Taisan' });
 Tb_TaisanQrCode.belongsTo(Ent_Taisan, {
   foreignKey: "ID_Taisan",
 });
 
-Ent_Nam.hasMany(Tb_TaisanQrCode, { as: 'tb_taisanqrcode', foreignKey: 'ID_Nam' });
+Ent_Nam.hasMany(Tb_TaisanQrCode, { as: 'tb_taisanqr', foreignKey: 'ID_Nam' });
 Tb_TaisanQrCode.belongsTo(Ent_Nam, {
   foreignKey: "ID_Nam",
 });
 
-Ent_Thang.hasMany(Tb_TaisanQrCode, { as: 'tb_taisanqrcode', foreignKey: 'ID_Thang' });
+Ent_Thang.hasMany(Tb_TaisanQrCode, { as: 'tb_taisanqr', foreignKey: 'ID_Thang' });
 Tb_TaisanQrCode.belongsTo(Ent_Thang, {
   foreignKey: "ID_Thang",
 });
 
-Ent_Phongbanda.hasMany(Tb_TaisanQrCode, { as: 'tb_taisanqrcode', foreignKey: 'ID_Phongban' });
+Ent_Phongbanda.hasMany(Tb_TaisanQrCode, { as: 'tb_taisanqr', foreignKey: 'ID_Phongban' });
 Tb_TaisanQrCode.belongsTo(Ent_Phongbanda, {
   foreignKey: "ID_Phongban",
 });
 
-Ent_Connguoi.hasMany(Tb_TaisanQrCode, { as: 'tb_taisanqrcode', foreignKey: 'ID_Connguoi' });
+Ent_Connguoi.hasMany(Tb_TaisanQrCode, { as: 'tb_taisanqr', foreignKey: 'ID_Connguoi' });
 Tb_TaisanQrCode.belongsTo(Ent_Connguoi, {
   foreignKey: "ID_Connguoi",
 });

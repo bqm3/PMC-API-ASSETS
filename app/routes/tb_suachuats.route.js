@@ -15,16 +15,16 @@ module.exports = (app) => {
       "/:id",
       tb_suachuats.getDetailTb_Suachuats
     );
-    // router.put(
-    //   "/update/:id",
-    //   [isAuthenticated, isRole],
-    //   tb_phieunx.updateTb_PhieuNX
-    // );
-    // router.post(
-    //   "/close/:id",
-    //   [isAuthenticated, isRole],
-    //   tb_phieunx.closeTb_PhieuNX
-    // );
+    router.put(
+      "/update/:id",
+      [isAuthenticated, isRole],
+      tb_suachuats.updateTb_Suachuats
+    );
+    router.put(
+      "/close/:id",
+      [isAuthenticated, isRole],
+      tb_suachuats.closeTb_Suachuats
+    );
     router.put(
       "/delete/:id",
       [isAuthenticated, isRole],

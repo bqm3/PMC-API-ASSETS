@@ -16,19 +16,18 @@ const Tb_SuachuaCT = sequelize.define(
     },
     ID_TaisanQr: {
       type: DataTypes.INTEGER,
-      allowNull: false,
+    },
+    ID_Taisan: {
+      type: DataTypes.INTEGER,
     },
     Ngaynhan: {
       type: DataTypes.DATE,
-      allowNull: false,
     },
     Sotien: {
       type: DataTypes.DOUBLE,
-      allowNull: false,
     },
     Ghichu: {
       type: DataTypes.TEXT,
-      allowNull: false,
     },
     
     isDelete: {

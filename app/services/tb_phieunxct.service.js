@@ -33,7 +33,7 @@ const updateTb_PhieuNXCT = async(phieunxct,data) => {
       ID_Taisan: item.ID_Taisan,
       Dongia: item.Dongia,
       Soluong: item.Soluong,
-      isDelete: 0
+      isDelete: item.isDelete
     },
     {
       where: {

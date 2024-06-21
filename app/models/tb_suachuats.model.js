@@ -19,9 +19,9 @@ const Tb_SuachuaTS = sequelize.define(
     Nguoitheodoi: {
       type: DataTypes.CHAR,
     },
-
-    iIinhtrang: {
+    iTinhtrang: {
       type: DataTypes.INTEGER,
+      defaultValue: 0,
     },
 
     isDelete: {

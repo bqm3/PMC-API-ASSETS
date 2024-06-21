@@ -2,7 +2,7 @@ const { Sequelize, DataTypes } = require("sequelize");
 const sequelize = require("../config/db.config");
 
 const Tb_TaisanQrCode = sequelize.define(
-  "tb_taisanqrcode",
+  "tb_taisanqr",
   {
     ID_TaisanQr: {
       type: DataTypes.INTEGER,
