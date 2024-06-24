@@ -36,7 +36,7 @@ const createTb_PhieuNX = async (req, res) => {
       ID_Nam: Nam.ID_Nam,
       ID_Thang: Thang.ID_Thang,
       NgayNX: NgayNX,
-      ID_Connguoi: user.ID_User,
+      ID_User: user.ID_User,
       Ghichu: Ghichu,
       iTinhtrang: 0,
       isDelete: 0,
@@ -51,9 +51,9 @@ const createTb_PhieuNX = async (req, res) => {
     await tbPhieuNXCTService.createTb_PhieuNXCT(phieunxct, data);
 
     // Insert data to Ent_QRCode if ID_Nghiepvu is 1 or 2
-    if (ID_Nghiepvu == 1 || ID_Nghiepvu == 2) {
-      await tbTaiSanQrService.insertDataToEntQRCode(phieunxct, reqData);
-    }
+    // if (ID_Nghiepvu == 1 || ID_Nghiepvu == 2) {
+    //   await tbTaiSanQrService.insertDataToEntQRCode(phieunxct, reqData);
+    // }
 
     // Send success response
     res.status(200).json({
@@ -128,7 +128,7 @@ const updateTb_PhieuNX = async (req, res) => {
       ID_Nam: Nam.ID_Nam,
       ID_Thang: Thang.ID_Thang,
       NgayNX: NgayNX,
-      ID_Connguoi: user.ID_User,
+      ID_User: user.ID_User,
       Ghichu: Ghichu,
       isDelete: 0,
     };
@@ -186,7 +186,7 @@ const closeTb_PhieuNX = async (req, res) => {
       ID_Nam: Nam.ID_Nam,
       ID_Thang: Thang.ID_Thang,
       NgayNX: NgayNX,
-      ID_Connguoi: user.ID_User,
+      ID_User: user.ID_User,
       Ghichu: Ghichu,
       isDelete: 0,
     };

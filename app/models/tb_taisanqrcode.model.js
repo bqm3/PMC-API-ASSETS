@@ -32,7 +32,7 @@ const Tb_TaisanQrCode = sequelize.define(
     ID_Phongban: {
       type: DataTypes.INTEGER,
     },
-    ID_Connguoi: {
+    ID_User: {
       type: DataTypes.INTEGER,
     },
     Ghichu: {

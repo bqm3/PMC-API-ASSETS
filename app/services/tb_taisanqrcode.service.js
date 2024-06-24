@@ -8,6 +8,7 @@ const {
   Ent_Chinhanh,
   Ent_Nhompb,
   Ent_Connguoi,
+  Ent_User,
 } = require("../models/setup.model");
 const { Op } = require("sequelize");
 
@@ -28,7 +29,7 @@ const getAllTb_taisanqrcode = async () => {
       "MaQrCode",
       "Ngaykhoitao",
       "iTinhtrang",
-      "isDelete","Ghichu","ID_Nam", "ID_Thang", "ID_Phongban", "ID_Connguoi",
+      "isDelete","Ghichu","ID_Nam", "ID_Thang", "ID_Phongban", "ID_User",
     ],
     include: [
       {
@@ -94,20 +95,20 @@ const getAllTb_taisanqrcode = async () => {
         },
       },
       {
-        model: Ent_Connguoi,
-        as: "ent_connguoi",
+        model: Ent_User,
+        as: "ent_user",
         attributes: [
-          "ID_Connguoi",
-          "MaPMC",
           "ID_Nhompb",
+          "MaPMC",
+          "ID_Chinhanh",
+          "ID_Chucvu",
           "Hoten",
           "Gioitinh",
           "Diachi",
           "Sodienthoai",
           "Ghichu",
         ],
-        
-      }
+      },
     ],
     where: whereClause,
   });
@@ -122,7 +123,7 @@ const getDetailTb_taisanqrcode = async (id) => {
       "MaQrCode",
       "Ngaykhoitao",
       "iTinhtrang",
-      "isDelete","Ghichu","ID_Nam", "ID_Thang", "ID_Phongban", "ID_Connguoi",
+      "isDelete","Ghichu","ID_Nam", "ID_Thang", "ID_Phongban", "ID_User",
     ],
     include: [
       {
@@ -201,6 +202,7 @@ const insertDataToEntQRCode = async (phieunxct, data) => {
       phieunxct.map(async (item) => {
         // Thực hiện insert dữ liệu từ mỗi item trong mảng phieunxct
 
+        console.log('data.ID_NoiNhap',data.ID_NoiNhap)
         const duan = await Ent_Phongbanda.findOne({
           attributes: [
             "ID_Phongban",
@@ -214,9 +216,10 @@ const insertDataToEntQRCode = async (phieunxct, data) => {
             "isDelete",
           ],
           where: {
-            ID_Chinhanh: data.ID_NoiNhap,
             isDelete: 0,
+            ID_Phongban: data.ID_NoiNhap
           },
+          
         });
 
         const taisan = await Ent_Taisan.findOne({
@@ -244,11 +247,11 @@ const insertDataToEntQRCode = async (phieunxct, data) => {
           },
         });
 
-        console.log(
-          data.NgayNX
-        )
 
-        const Thuoc = duan.Thuoc;
+        console.log('Thuoc', duan)
+      
+        const Thuoc = duan?.Thuoc;
+        
         const ManhomTs = taisan.ent_nhomts.Manhom;
         const MaID = taisan.ID_Taisan;
         const MaTaisan = taisan.Mats;
@@ -266,7 +269,7 @@ const insertDataToEntQRCode = async (phieunxct, data) => {
           iTinhtrang: 0,
           ID_Thang: data.ID_Thang,
           ID_Phongban: data.ID_NoiNhap,
-          ID_Connguoi: data.ID_Connguoi,
+          ID_User: data.ID_User,
         });
       })
     );

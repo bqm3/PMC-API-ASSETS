@@ -56,6 +56,9 @@ const Ent_User = sequelize.define(
     Anh: {
       type: DataTypes.CHAR,
     },
+    Ghichu: {
+      type: DataTypes.CHAR,
+    },
     isDelete: {
       type: DataTypes.INTEGER,
       defaultValue: 0,

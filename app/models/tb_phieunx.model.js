@@ -35,9 +35,8 @@ const Tb_PhieuNX = sequelize.define(
       type: DataTypes.CHAR,
       allowNull: false,
     },
-    ID_Connguoi: {
+    ID_User: {
       type: DataTypes.INTEGER,
-      allowNull: false,
     },
     NgayNX: {
       type: DataTypes.DATE,
@@ -49,11 +48,9 @@ const Tb_PhieuNX = sequelize.define(
     },
     ID_Nam: {
       type: DataTypes.INTEGER,
-      allowNull: false,
     },
     ID_Thang: {
       type: DataTypes.INTEGER,
-      allowNull: false,
     },
     iTinhtrang: {
       type: DataTypes.INTEGER,

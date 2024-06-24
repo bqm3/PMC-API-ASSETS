@@ -9,6 +9,7 @@ const {
   Tb_TaisanQrCode,
   Ent_Phongbanda,
   Ent_Connguoi,
+  Ent_User,
 } = require("../models/setup.model");
 const { Op } = require("sequelize");
 
@@ -26,7 +27,7 @@ const createTb_Suachuact = async (suachuact, data) => {
           "MaQrCode",
           "Ngaykhoitao",
           "iTinhtrang",
-          "isDelete", "Ghichu", "ID_Nam", "ID_Thang", "ID_Phongban", "ID_Connguoi",
+          "isDelete", "Ghichu", "ID_Nam", "ID_Thang", "ID_Phongban", "ID_User",
         ],
         where: {
           isDelete: 0
@@ -86,7 +87,7 @@ const getDetailTb_Suachuats = async (ID_Suachua) => {
               "ID_Nam",
               "ID_Thang",
               "ID_Phongban",
-              "ID_Connguoi",
+              "ID_User",
             ],
             include: [
               {
@@ -146,12 +147,13 @@ const getDetailTb_Suachuats = async (ID_Suachua) => {
                 where: { isDelete: 0 },
               },
               {
-                model: Ent_Connguoi,
-                as: "ent_connguoi",
+                model: Ent_User,
+                as: "ent_user",
                 attributes: [
-                  "ID_Connguoi",
-                  "MaPMC",
                   "ID_Nhompb",
+                  "MaPMC",
+                  "ID_Chinhanh",
+                  "ID_Chucvu",
                   "Hoten",
                   "Gioitinh",
                   "Diachi",
@@ -220,7 +222,7 @@ const getAllTb_Suachuats = async () => {
               "ID_Nam",
               "ID_Thang",
               "ID_Phongban",
-              "ID_Connguoi",
+              "ID_User",
             ],
             include: [
               {
@@ -280,12 +282,13 @@ const getAllTb_Suachuats = async () => {
                 where: { isDelete: 0 },
               },
               {
-                model: Ent_Connguoi,
-                as: "ent_connguoi",
+                model: Ent_User,
+                as: "ent_user",
                 attributes: [
-                  "ID_Connguoi",
-                  "MaPMC",
                   "ID_Nhompb",
+                  "MaPMC",
+                  "ID_Chinhanh",
+                  "ID_Chucvu",
                   "Hoten",
                   "Gioitinh",
                   "Diachi",
@@ -337,7 +340,7 @@ const updateTb_Suachuact = async (suachuact, data) => {
         attributes: [
           "ID_TaisanQr", "ID_Taisan", "Giatri", "MaQrCode",
           "Ngaykhoitao", "iTinhtrang", "isDelete", "Ghichu",
-          "ID_Nam", "ID_Thang", "ID_Phongban", "ID_Connguoi"
+          "ID_Nam", "ID_Thang", "ID_Phongban", "ID_User"
         ]
       });
 

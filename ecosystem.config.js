@@ -3,7 +3,7 @@
 module.exports = {
     apps: [
         {
-            name: "PMC ASSETS",
+            name: "api-assets",
             script: "./index.js",
             env: {
                 NODE_ENV: 'production',

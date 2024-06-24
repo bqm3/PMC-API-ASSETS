@@ -69,9 +69,9 @@ Tb_PhieuNX.belongsTo(Ent_Nghiepvu, {
   foreignKey: "ID_Nghiepvu",
 });
 
-Ent_Connguoi.hasMany(Tb_PhieuNX, { as: 'tb_phieunx', foreignKey: 'ID_Connguoi' });
-Tb_PhieuNX.belongsTo(Ent_Connguoi, {
-  foreignKey: "ID_Connguoi",
+Ent_User.hasMany(Tb_PhieuNX, { as: 'tb_phieunx', foreignKey: 'ID_User' });
+Tb_PhieuNX.belongsTo(Ent_User, {
+  foreignKey: "ID_User",
 });
 
 Ent_Thang.hasMany(Tb_PhieuNX, { as: 'tb_phieunx', foreignKey: 'ID_Thang' });
@@ -167,9 +167,9 @@ Tb_TaisanQrCode.belongsTo(Ent_Phongbanda, {
   foreignKey: "ID_Phongban",
 });
 
-Ent_Connguoi.hasMany(Tb_TaisanQrCode, { as: 'tb_taisanqr', foreignKey: 'ID_Connguoi' });
-Tb_TaisanQrCode.belongsTo(Ent_Connguoi, {
-  foreignKey: "ID_Connguoi",
+Ent_User.hasMany(Tb_TaisanQrCode, { as: 'tb_taisanqr', foreignKey: 'ID_User' });
+Tb_TaisanQrCode.belongsTo(Ent_User, {
+  foreignKey: "ID_User",
 });
 
 

@@ -11,6 +11,7 @@ const {
   Tb_PhieuNXCT,
   Tb_TaisanQrCode,
   Ent_Taisan,
+  Ent_User,
 } = require("../models/setup.model");
 const { Op } = require("sequelize");
 
@@ -32,7 +33,7 @@ const getDetailTb_PhieuNX = async(ID_PhieuNX) => {
       "Sophieu",
       "ID_NoiNhap",
       "ID_NoiXuat",
-      "ID_Connguoi",
+      "ID_User",
       "NgayNX",
       "Ghichu",
       "ID_Nam",
@@ -126,16 +127,20 @@ const getDetailTb_PhieuNX = async(ID_PhieuNX) => {
         attributes: ["ID_Thang", "Thang", "iThang"],
       },
       {
-        model: Ent_Connguoi,
+        model: Ent_User,
         attributes: [
-          "ID_Connguoi",
-          "MaPMC",
+          "ID_User",
           "ID_Nhompb",
+          "ID_Chinhanh",
+          "MaPMC",
           "Hoten",
           "Gioitinh",
           "Diachi",
           "Sodienthoai",
-          "Ghichu",
+          "Email",
+          "Anh",
+          "isDelete",
+          "ID_Chucvu",
         ],
         
       },
@@ -193,7 +198,7 @@ const getAllTb_PhieuNX = async () => {
         "Sophieu",
         "ID_NoiNhap",
         "ID_NoiXuat",
-        "ID_Connguoi",
+        "ID_User",
         "NgayNX",
         "Ghichu",
         "ID_Nam",
@@ -287,16 +292,20 @@ const getAllTb_PhieuNX = async () => {
           attributes: ["ID_Thang", "Thang", "iThang"],
         },
         {
-          model: Ent_Connguoi,
+          model: Ent_User,
           attributes: [
-            "ID_Connguoi",
-            "MaPMC",
+            "ID_User",
             "ID_Nhompb",
+            "ID_Chinhanh",
+            "MaPMC",
             "Hoten",
             "Gioitinh",
             "Diachi",
             "Sodienthoai",
-            "Ghichu",
+            "Email",
+            "Anh",
+            "isDelete",
+            "ID_Chucvu",
           ],
           include: [
             {
@@ -331,7 +340,7 @@ const updateTb_PhieuNX = async (data) => {
       ID_Nam: data.ID_Nam,
       ID_Thang: data.ID_Thang,
       NgayNX: data.NgayNX,
-      ID_Connguoi: data.ID_Connguoi,
+      ID_User: data.ID_User,
       Ghichu: data.Ghichu,
     },
     {
