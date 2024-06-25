@@ -138,7 +138,7 @@ const updateTb_PhieuNX = async (req, res) => {
     // Update Tb_PhieuNX
     data = await tbPhieuNXService.updateTb_PhieuNX(reqData);
     // Update Tb_PhieuNXCT
-    await tbPhieuNXCTService.updateTb_PhieuNXCT(phieunxct, data);
+    await tbPhieuNXCTService.updateTb_PhieuNXCT(phieunxct, ID_PhieuNX);
 
     // Send success response
     res.status(200).json({

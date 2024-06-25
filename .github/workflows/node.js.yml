@@ -24,6 +24,7 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
+        cache-dependency-path: subdir/package-lock.json
 
     - name: Clear npm cache
       run: npm cache clean --force
