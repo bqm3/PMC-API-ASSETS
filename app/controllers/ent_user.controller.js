@@ -40,6 +40,8 @@ const register = async (req, res) => {
       Anh,
       ID_Nhompb,
       ID_Chinhanh,
+      ID_Chucvu,
+      Ghichu
     } = req.body;
 
     const data = {
@@ -53,6 +55,8 @@ const register = async (req, res) => {
       Anh,
       ID_Nhompb,
       ID_Chinhanh,
+      ID_Chucvu,
+      Ghichu
     };
 
     const info = await entUserService.register(data);
@@ -112,6 +116,8 @@ const updateProfile = async (req, res) => {
       Anh,
       ID_Nhompb,
       ID_Chinhanh,
+      ID_Chucvu,
+      Ghichu
     } = req.body;
 
     const images = req.file;
@@ -129,6 +135,8 @@ const updateProfile = async (req, res) => {
       Anh,
       ID_Nhompb,
       ID_Chinhanh,
+      ID_Chucvu,
+      Ghichu
     };
 
     await entUserService.updateProfile(reqData);

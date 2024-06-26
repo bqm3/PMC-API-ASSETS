@@ -324,7 +324,6 @@ const getAllTb_PhieuNX = async () => {
     return res;
   };
   
-
 const updateTb_PhieuNX = async (data) => {
   let whereClause = {
     isDelete: 0,

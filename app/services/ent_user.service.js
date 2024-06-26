@@ -27,6 +27,7 @@ const register = async (data) => {
     var reqData = {
       ID_Nhompb: data.ID_Nhompb,
       ID_Chinhanh: data.ID_Chinhanh,
+      ID_Chucvu: data.ID_Chucvu,
       MaPMC: data.MaPMC,
       Hoten: data.Hoten,
       Password: await hashSync(data.Password, salt),
@@ -35,6 +36,7 @@ const register = async (data) => {
       Sodienthoai: data.Sodienthoai || "",
       Email: data.Email || "",
       Anh: data.Anh || "",
+      Ghichu: data.Ghichu || "",
       isDelete: 0,
     };
     const res = await Ent_User.create(reqData);
@@ -73,7 +75,7 @@ const login = async (data) => {
       include: [
         {
           model: Ent_Nhompb,
-          attributes: ["ID_Nhompb","Nhompb"],
+          attributes: ["ID_Nhompb", "Nhompb"],
         },
         {
           model: Ent_Chinhanh,
@@ -83,7 +85,6 @@ const login = async (data) => {
           model: Ent_Chucvu,
           attributes: ["Chucvu"],
         },
-       
       ],
       where: {
         MaPMC: MaPMC,
@@ -126,7 +127,7 @@ const login = async (data) => {
     if (error instanceof CustomError) {
       throw error;
     } else {
-      console.log('error', error)
+      console.log("error", error);
       throw new CustomError(
         "INTERNAL_SERVER_ERROR",
         "Có lỗi trong quá trình đăng nhập."
@@ -155,7 +156,7 @@ const checkAuth = async (ID) => {
       include: [
         {
           model: Ent_Nhompb,
-          attributes: ["ID_Nhompb","Nhompb"],
+          attributes: ["ID_Nhompb", "Nhompb"],
         },
         {
           model: Ent_Chinhanh,
@@ -210,12 +211,14 @@ const updateProfile = async (data) => {
     let updateData = {
       ID_Nhompb: data.ID_Nhompb,
       ID_Chinhanh: data.ID_Chinhanh,
+      ID_Chucvu: data.ID_Chucvu,
       MaPMC: data.MaPMC,
       Hoten: data.Hoten,
       Gioitinh: data.Gioitinh,
       Diachi: data.Diachi,
       Sodienthoai: data.Sodienthoai,
       Email: data.Email,
+      Ghichu: data.Ghichu,
       Anh: file ? file.id : "",
     };
     const res = await Ent_User.update(updateData, {

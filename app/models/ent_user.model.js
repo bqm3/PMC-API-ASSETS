@@ -12,15 +12,12 @@ const Ent_User = sequelize.define(
     },
     ID_Nhompb: {
       type: DataTypes.INTEGER,
-      allowNull: false,
     },
     ID_Chinhanh: {
       type: DataTypes.INTEGER,
-      allowNull: false,
     },
     ID_Chucvu: {
       type: DataTypes.INTEGER,
-      allowNull: false,
     },
     ID_Policy: {
       type: DataTypes.JSON,
