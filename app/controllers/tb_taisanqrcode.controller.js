@@ -79,10 +79,32 @@ const deleteTb_Taisanqrcode = async (req, res) => {
   }
 };
 
+const scanQrCodeTb_Taisanqrcode = async(req, res) => {
+  try {
+    const { Ghichu, iTinhtrang } = req.body;
+    const ID_TaisanQr  = req.params.id;
+    const images = req.file;
+    const user = req.user.data;
+
+    const reqData = {
+      Ghichu, iTinhtrang, ID_TaisanQr, images, user
+    }
+    
+
+    await tbTaisanQrCodeService.scanQrCodeTb_Taisanqrcode(reqData);
+    res.status(200).json({
+      message: "Kiểm kê tài sản thành công",
+    });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+}
+
 module.exports = {
   createTb_Taisanqrcode,
   getDetailTb_Taisanqrcode,
   getAllTb_Taisanqrcode,
   updateleTb_Taisanqrcode,
   deleteTb_Taisanqrcode,
+  scanQrCodeTb_Taisanqrcode
 };

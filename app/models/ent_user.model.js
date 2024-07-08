@@ -42,7 +42,7 @@ const Ent_User = sequelize.define(
       type: DataTypes.CHAR,
       
     },
-    Email: {
+    Emails: {
       type: DataTypes.CHAR,
       
     },

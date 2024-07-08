@@ -11,6 +11,7 @@ const {
   Ent_User,
 } = require("../models/setup.model");
 const { Op } = require("sequelize");
+const { uploadFile } = require("../middleware/image.middleware");
 
 const createTb_taisanqrcode = async (data) => {
   const res = await Tb_TaisanQrCode.create(data);
@@ -201,8 +202,6 @@ const insertDataToEntQRCode = async (phieunxct, data) => {
     await Promise.all(
       phieunxct.map(async (item) => {
         // Thực hiện insert dữ liệu từ mỗi item trong mảng phieunxct
-
-        console.log('data.ID_NoiNhap',data.ID_NoiNhap)
         const duan = await Ent_Phongbanda.findOne({
           attributes: [
             "ID_Phongban",
@@ -247,9 +246,6 @@ const insertDataToEntQRCode = async (phieunxct, data) => {
           },
         });
 
-
-        console.log('Thuoc', duan)
-      
         const Thuoc = duan?.Thuoc;
         
         const ManhomTs = taisan.ent_nhomts.Manhom;
@@ -269,17 +265,37 @@ const insertDataToEntQRCode = async (phieunxct, data) => {
           iTinhtrang: 0,
           ID_Thang: data.ID_Thang,
           ID_Phongban: data.ID_NoiNhap,
-          ID_User: data.ID_User,
+          ID_User: null,
         });
       })
     );
-
-    console.log("Insert thành công vào Ent_QRCode");
   } catch (error) {
     console.error("Lỗi khi insert vào Ent_QRCode:", error);
     throw error;
   }
 };
+
+const scanQrCodeTb_Taisanqrcode = async(data) => {
+  let whereClause = {
+    isDelete: 0,
+    ID_TaisanQr: data.ID_TaisanQr,
+  };
+  const file = await uploadFile(data.images);
+
+  const res = await Tb_TaisanQrCode.update(
+    {
+      Ghichu: data.Ghichu,
+      Image: file ? file.id : "",
+      iTinhtrang: data.iTinhtrang,
+      ID_User: data.user.ID_User,
+    },
+    {
+      where: whereClause,
+    }
+  );
+  return res;
+}
+
 
 module.exports = {
   createTb_taisanqrcode,
@@ -288,6 +304,7 @@ module.exports = {
   deleteTb_taisanqrcode,
   getDetailTb_taisanqrcode,
   insertDataToEntQRCode,
+  scanQrCodeTb_Taisanqrcode
 };
 
 

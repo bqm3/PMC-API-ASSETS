@@ -10,6 +10,7 @@ var corsOptions = {
   origin: [
     "*",
     "http://localhost:3006",
+    "http://localhost:3000",
     "https://qlts.pmcweb.vn",
     "https://checklist.pmcweb.vn",
   ],
@@ -32,7 +33,7 @@ app.get("/", (req, res) => {
 });
 
 require("./app/routes/ent_donvi.route")(app);
-require("./app/routes/ent_grouppolicy.route")(app);
+require("./app/routes/ent_chucvu.route")(app);
 require("./app/routes/ent_policy.route")(app);
 require("./app/routes/ent_connguoi.route")(app);
 require("./app/routes/ent_nhompb.route")(app);

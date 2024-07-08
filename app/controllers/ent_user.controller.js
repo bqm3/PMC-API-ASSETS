@@ -30,7 +30,7 @@ const login = async (req, res) => {
 const register = async (req, res) => {
   try {
     const {
-      Email,
+      Emails,
       Password,
       Hoten,
       MaPMC,
@@ -41,14 +41,15 @@ const register = async (req, res) => {
       ID_Nhompb,
       ID_Chinhanh,
       ID_Chucvu,
-      Ghichu
+      Ghichu,
+      UserName
     } = req.body;
 
     const data = {
-      Email,
+      Emails,
       Password,
       Hoten,
-      MaPMC,
+      MaPMC : MaPMC ? MaPMC : UserName,
       Gioitinh,
       Diachi,
       Sodienthoai,
@@ -106,7 +107,7 @@ const updateProfile = async (req, res) => {
     const user = req.user.data;
    
     const {
-      Email,
+      Emails,
       Password,
       Hoten,
       MaPMC,
@@ -125,7 +126,7 @@ const updateProfile = async (req, res) => {
     const reqData = {
       user,
       images,
-      Email,
+      Emails,
       Password,
       Hoten,
       MaPMC,

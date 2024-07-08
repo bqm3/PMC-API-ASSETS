@@ -16,7 +16,7 @@ const register = async (data) => {
   const user = await Ent_User.findOne({
     where: {
       isDelete: 0,
-      [Op.or]: [{ MaPMC: data.MaPMC }, { Sodienthoai: data.Sodienthoai }],
+      [Op.or]: [{ MaPMC: data.MaPMC }],
     },
   });
 
@@ -29,12 +29,12 @@ const register = async (data) => {
       ID_Chinhanh: data.ID_Chinhanh,
       ID_Chucvu: data.ID_Chucvu,
       MaPMC: data.MaPMC,
-      Hoten: data.Hoten,
+      Hoten: data.Hoten || "",
       Password: await hashSync(data.Password, salt),
-      Gioitinh: data.Gioitinh,
+      Gioitinh: data.Gioitinh || "",
       Diachi: data.Diachi || "",
       Sodienthoai: data.Sodienthoai || "",
-      Email: data.Email || "",
+      Emails: data.Emails || "",
       Anh: data.Anh || "",
       Ghichu: data.Ghichu || "",
       isDelete: 0,
@@ -68,7 +68,7 @@ const login = async (data) => {
         "Password",
         "Diachi",
         "Sodienthoai",
-        "Email",
+        "Emails",
         "Anh",
         "isDelete",
       ],
@@ -148,7 +148,7 @@ const checkAuth = async (ID) => {
         "Gioitinh",
         "Diachi",
         "Sodienthoai",
-        "Email",
+        "Emails",
         "Anh",
         "isDelete",
         "ID_Chucvu",
@@ -217,7 +217,7 @@ const updateProfile = async (data) => {
       Gioitinh: data.Gioitinh,
       Diachi: data.Diachi,
       Sodienthoai: data.Sodienthoai,
-      Email: data.Email,
+      Emails: data.Emails,
       Ghichu: data.Ghichu,
       Anh: file ? file.id : "",
     };
