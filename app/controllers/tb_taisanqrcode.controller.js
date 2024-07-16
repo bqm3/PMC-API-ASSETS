@@ -86,9 +86,12 @@ const scanQrCodeTb_Taisanqrcode = async(req, res) => {
     const images = req.file;
     const user = req.user.data;
 
+
     const reqData = {
       Ghichu, iTinhtrang, ID_TaisanQr, images, user
     }
+
+    // console.log(reqData)
     
 
     await tbTaisanQrCodeService.scanQrCodeTb_Taisanqrcode(reqData);

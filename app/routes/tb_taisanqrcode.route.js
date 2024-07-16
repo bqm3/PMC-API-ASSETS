@@ -13,7 +13,7 @@ module.exports = (app) => {
   router.get("/:id", tb_taisanqrcode.getDetailTb_Taisanqrcode);
   router.put("/update/:id", tb_taisanqrcode.updateleTb_Taisanqrcode);
   router.put("/delete/:id", tb_taisanqrcode.deleteTb_Taisanqrcode);
-  router.post(
+  router.put(
     "/scan/:id",
     [isAuthenticated, upload.single("Image")],
     tb_taisanqrcode.scanQrCodeTb_Taisanqrcode
