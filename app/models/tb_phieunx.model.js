@@ -52,6 +52,9 @@ const Tb_PhieuNX = sequelize.define(
     iTinhtrang: {
       type: DataTypes.INTEGER,
     },
+    ThuocQuy: {
+      type: DataTypes.INTEGER,
+    },
     isDelete: {
       type: DataTypes.INTEGER,
       defaultValue: 0,

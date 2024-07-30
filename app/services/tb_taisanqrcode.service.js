@@ -259,13 +259,14 @@ const insertDataToEntQRCode = async (phieunxct, data) => {
           ID_Taisan: item.ID_Taisan,
           Ngaykhoitao: data.NgayNX,
           Giatri: item.Dongia,
+          Namsx: item.Namsx,
           MaQrCode: MaQrCode,
           Ghichu: "",
           ID_Nam: data.ID_Nam,
           iTinhtrang: 0,
           ID_Thang: data.ID_Thang,
           ID_Phongban: data.ID_NoiNhap,
-          ID_User: null,
+          ID_User: data.ID_User,
         });
       })
     );

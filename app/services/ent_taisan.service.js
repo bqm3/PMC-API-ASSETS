@@ -25,6 +25,7 @@ const getAlleEnt_taisan = async () => {
       "Mats",
       "Tents",
       "Thongso",
+      "Nuocsx",
       "Ghichu",
       "isDelete",
     ],
@@ -55,6 +56,7 @@ const getDetailEnt_taisan = async (id) => {
       "Mats",
       "Tents",
       "Thongso",
+      "Nuocsx",
       "Ghichu",
       "isDelete",
     ],
@@ -92,6 +94,7 @@ const updateleEnt_taisan = async (data) => {
       Mats: data.Mats,
       Tents: data.Tents,
       Thongso: data.Thongso,
+      Nuocsx: data.Nuocsx,
       Ghichu: data.Ghichu,
     },
     {

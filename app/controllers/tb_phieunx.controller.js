@@ -15,6 +15,7 @@ const createTb_PhieuNX = async (req, res) => {
       NgayNX,
       Ghichu,
       phieunxct,
+      ThuocQuy,
     } = req.body;
 
     if (!Array.isArray(phieunxct) || phieunxct.length === 0) {
@@ -38,6 +39,7 @@ const createTb_PhieuNX = async (req, res) => {
       NgayNX: NgayNX,
       ID_User: user.ID_User,
       Ghichu: Ghichu,
+      ThuocQuy: ThuocQuy,
       iTinhtrang: 0,
       isDelete: 0,
     };
@@ -106,6 +108,7 @@ const updateTb_PhieuNX = async (req, res) => {
       NgayNX,
       Ghichu,
       phieunxct,
+      ThuocQuy
     } = req.body;
 
     if (!Array.isArray(phieunxct) || phieunxct.length === 0) {
@@ -130,6 +133,7 @@ const updateTb_PhieuNX = async (req, res) => {
       NgayNX: NgayNX,
       ID_User: user.ID_User,
       Ghichu: Ghichu,
+      ThuocQuy: ThuocQuy,
       isDelete: 0,
     };
 

@@ -3,7 +3,7 @@ const entNhomtsService = require("../services/ent_nhomts.service");
 
 const createEnt_taisan = async (req, res) => {
   try {
-    const { ID_Nhomts, ID_Donvi, Tents, Thongso, Ghichu } = req.body;
+    const { ID_Nhomts, ID_Donvi, Tents, Thongso, Ghichu, Nuocsx } = req.body;
 
     // Bước 1: Thêm bản ghi mới vào bảng ent_taisan mà không có Mats
     const reqData = {
@@ -12,6 +12,7 @@ const createEnt_taisan = async (req, res) => {
       Mats: "",  // Mats sẽ được tạo sau
       Tents: Tents || "",
       Thongso: Thongso || "",
+      Nuocsx: Nuocsx || "",
       Ghichu: Ghichu || "",
       isDelete: 0,
     };
@@ -73,7 +74,7 @@ const getAlleEnt_taisan = async (req, res) => {
 
 const updateleEnt_taisan = async (req, res) => {
   try {
-    const { ID_Nhomts, ID_Donvi, Mats, Tents, Thongso, Ghichu } = req.body;
+    const { ID_Nhomts, ID_Donvi, Mats, Tents, Thongso, Ghichu, Nuocsx } = req.body;
     const ID_Taisan = req.params.id;
 
     // Bước 1: Kiểm tra chi tiết tài sản hiện tại
@@ -103,6 +104,7 @@ const updateleEnt_taisan = async (req, res) => {
       Tents: Tents || currentAsset.Tents, // Giữ nguyên nếu không có thay đổi
       Thongso: Thongso || currentAsset.Thongso, // Giữ nguyên nếu không có thay đổi
       Ghichu: Ghichu || currentAsset.Ghichu, // Giữ nguyên nếu không có thay đổi
+      Nuocsx: Nuocsx || currentAsset.Nuocsx,
       ID_Taisan: ID_Taisan,
     });
 

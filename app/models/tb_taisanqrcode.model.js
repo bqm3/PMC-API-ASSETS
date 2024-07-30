@@ -38,6 +38,12 @@ const Tb_TaisanQrCode = sequelize.define(
     ID_User: {
       type: DataTypes.INTEGER,
     },
+    Namsx: {
+      type: DataTypes.INTEGER,
+    },
+    Nambdsd: {
+      type: DataTypes.INTEGER,
+    },
     Ghichu: {
       type: DataTypes.TEXT,
     },

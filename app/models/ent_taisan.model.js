@@ -30,6 +30,9 @@ const Ent_Taisan = sequelize.define("ent_taisan", {
     type: DataTypes.CHAR,
     allowNull: false,
   },
+  Nuocsx: {
+    type: DataTypes.CHAR,
+  },
   Ghichu: {
     type: DataTypes.TEXT,
     allowNull: false,

@@ -14,6 +14,9 @@ const Tb_PhieuNXCT = sequelize.define(
       type: DataTypes.INTEGER,
       allowNull: false,
     },
+    ID_TaisanQrcode: {
+      type: DataTypes.INTEGER,
+    },
     ID_Taisan: {
       type: DataTypes.INTEGER,
       allowNull: false,
@@ -27,7 +30,12 @@ const Tb_PhieuNXCT = sequelize.define(
       type: DataTypes.INTEGER,
       allowNull: false,
     },
-    
+    Namsx: {
+      type: DataTypes.INTEGER,
+    },
+    Anhts: {
+      type: DataTypes.TEXT,
+    },
     isDelete: {
       type: DataTypes.INTEGER,
       defaultValue: 0,

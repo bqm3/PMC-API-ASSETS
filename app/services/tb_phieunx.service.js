@@ -38,6 +38,7 @@ const getDetailTb_PhieuNX = async(ID_PhieuNX) => {
       "Ghichu",
       "ID_Nam",
       "ID_Thang",
+      "ThuocQuy",
       "iTinhtrang",
       "isDelete",
     ],
@@ -152,6 +153,7 @@ const getDetailTb_PhieuNX = async(ID_PhieuNX) => {
           "ID_PhieuNX",
           "ID_Taisan",
           "Dongia",
+          "Namsx",
           "Soluong",
           "isDelete",
         ],
@@ -203,44 +205,13 @@ const getAllTb_PhieuNX = async () => {
         "Ghichu",
         "ID_Nam",
         "ID_Thang",
+        "ThuocQuy",
         "iTinhtrang",
         "isDelete",
       ],
       include: [
         // Bao gồm quan hệ NhapPhieuNX với alias 'NoiNhap'
-        {
-          model: Ent_Phongbanda,
-          as: "NoiNhap", // Alias được sử dụng để phân biệt nơi nhập
-          attributes: [
-            "ID_Phongban",
-            "ID_Chinhanh",
-            "ID_Nhompb",
-            "Mapb",
-            "Tenphongban",
-            "Diachi",
-            "Ghichu",
-            "isDelete",
-          ],
-          include: [
-            {
-              model: Ent_Chinhanh,
-              attributes: ["ID_Chinhanh", "Tenchinhanh", "isDelete"],
-              where: {
-                isDelete: 0,
-              },
-            },
-            {
-              model: Ent_Nhompb,
-              attributes: ["ID_Nhompb","Nhompb", "isDelete"],
-              where: {
-                isDelete: 0,
-              },
-            },
-          ],
-          where: {
-            isDelete: 0,
-          },
-        },
+      
         // Bao gồm quan hệ XuatPhieuNX với alias 'NoiXuat'
         {
           model: Ent_Phongbanda,
@@ -317,6 +288,39 @@ const getAllTb_PhieuNX = async () => {
             },
           ],
         },
+        {
+          model: Tb_PhieuNXCT,
+          as: "tb_phieunxct",
+          attributes: [
+            "ID_PhieuNXCT",
+            "ID_PhieuNX",
+            "ID_Taisan",
+            "Dongia",
+            "Namsx",
+            "Soluong",
+            "isDelete",
+          ],
+          include: [
+            {
+              model: Ent_Taisan,
+              attributes: [ "ID_Taisan",
+                "ID_Nhomts",
+                "ID_Donvi",
+                "Mats",
+                "Tents",
+                "Thongso",
+                "Ghichu",
+                "isDelete",],
+              where: {
+                isDelete: 0,
+              },
+            },
+          ],
+          where: {
+            isDelete: 0
+          }
+          
+        },
       ],
       where: whereClause,
     });
@@ -341,6 +345,7 @@ const updateTb_PhieuNX = async (data) => {
       NgayNX: data.NgayNX,
       ID_User: data.ID_User,
       Ghichu: data.Ghichu,
+      ThuocQuy: data.ThuocQuy
     },
     {
       where: whereClause,

@@ -17,10 +17,11 @@ const createTb_PhieuNXCT = async (phieunxct,data) => {
 
   // Nhóm và tính tổng theo ID_Taisan
   phieunxct.forEach(item => {
-    const { ID_Taisan, Dongia, Soluong } = item;
+    const { ID_Taisan, Dongia, Soluong, Namsx } = item;
     if (!groupedItems[ID_Taisan]) {
       groupedItems[ID_Taisan] = {
         ID_Taisan,
+        Namsx,
         Dongia: 0,
         Soluong: 0
       };
@@ -34,6 +35,7 @@ const createTb_PhieuNXCT = async (phieunxct,data) => {
       ID_PhieuNX: data.ID_PhieuNX,
       ID_Taisan: groupedItem.ID_Taisan,
       Dongia: groupedItem.Dongia,
+      Namsx: groupedItem.Namsx,
       Soluong: groupedItem.Soluong,
       isDelete: 0
     });
@@ -45,14 +47,14 @@ const updateTb_PhieuNXCT = async (phieunxct, ID_PhieuNX) => {
 
   // Group items by ID_Taisan
   phieunxct.forEach(item => {
-    const { ID_Taisan, Dongia, Soluong, ID_PhieuNXCT, isDelete } = item;
+    const { ID_Taisan, Dongia, Soluong, ID_PhieuNXCT,Namsx, isDelete } = item;
     if (!groupedItems[ID_Taisan]) {
       groupedItems[ID_Taisan] = {
         ID_Taisan,
         items: []
       };
     }
-    groupedItems[ID_Taisan].items.push({ ID_PhieuNXCT, Dongia, Soluong, isDelete });
+    groupedItems[ID_Taisan].items.push({ ID_PhieuNXCT, Dongia, Soluong,Namsx, isDelete });
   });
 
   // Process grouped items
@@ -62,7 +64,7 @@ const updateTb_PhieuNXCT = async (phieunxct, ID_PhieuNX) => {
 
     // Iterate through items for the same ID_Taisan
     for (const item of items) {
-      const { ID_PhieuNXCT, Dongia, Soluong, isDelete } = item;
+      const { ID_PhieuNXCT, Dongia, Soluong,Namsx, isDelete } = item;
 
       if (ID_PhieuNXCT) {
         // Update existing record
@@ -71,6 +73,7 @@ const updateTb_PhieuNXCT = async (phieunxct, ID_PhieuNX) => {
           ID_Taisan,
           Dongia,
           Soluong,
+          Namsx,
           isDelete: isDelete
         }, {
           where: { ID_PhieuNXCT }
@@ -82,6 +85,7 @@ const updateTb_PhieuNXCT = async (phieunxct, ID_PhieuNX) => {
           ID_Taisan,
           Dongia,
           Soluong,
+          Namsx,
           isDelete: 0
         });
       }
@@ -104,6 +108,7 @@ const getAllTb_PhieuNXCT = async () => {
         "ID_Taisan",
         "Dongia",
         "Soluong",
+        "Namsx",
         "isDelete"
       ],
       where: whereClause,
