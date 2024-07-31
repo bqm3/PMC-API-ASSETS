@@ -50,12 +50,9 @@ const createTb_PhieuNX = async (req, res) => {
     data = await tbPhieuNXService.createTb_PhieuNX(reqData);
 
     // Create Tb_PhieuNXCT
-    await tbPhieuNXCTService.createTb_PhieuNXCT(phieunxct, data);
-
-    // Insert data to Ent_QRCode if ID_Nghiepvu is 1 or 2
-    // if (ID_Nghiepvu == 1 || ID_Nghiepvu == 2) {
-    //   await tbTaiSanQrService.insertDataToEntQRCode(phieunxct, reqData);
-    // }
+    if(phieunxct[0].ID_Taisan !==  null){
+      await tbPhieuNXCTService.createTb_PhieuNXCT(phieunxct, data);
+    }
 
     // Send success response
     res.status(200).json({
@@ -142,7 +139,9 @@ const updateTb_PhieuNX = async (req, res) => {
     // Update Tb_PhieuNX
     data = await tbPhieuNXService.updateTb_PhieuNX(reqData);
     // Update Tb_PhieuNXCT
-    await tbPhieuNXCTService.updateTb_PhieuNXCT(phieunxct, ID_PhieuNX);
+    if(phieunxct[0].ID_Taisan !==  null){
+      await tbPhieuNXCTService.updateTb_PhieuNXCT(phieunxct, data);
+    }
 
     // Send success response
     res.status(200).json({
@@ -197,7 +196,8 @@ const closeTb_PhieuNX = async (req, res) => {
 
     await tbPhieuNXService.closeTb_PhieuNX(ID_PhieuNX);
      // Insert data to Ent_QRCode if ID_Nghiepvu is 1 or 2
-     if (ID_Nghiepvu == 1 || ID_Nghiepvu == 2) {
+   
+     if ((ID_Nghiepvu == 1 || ID_Nghiepvu == 2) && phieunxct[0].ID_Taisan !==  null) {
       await tbTaiSanQrService.insertDataToEntQRCode(phieunxct, reqData);
     }
 
