@@ -176,8 +176,8 @@ const getDetailTb_PhieuNX = async(ID_PhieuNX) => {
         where: {
           ID_PhieuNX: ID_PhieuNX,
           isDelete: 0
-        }
-        
+        },
+        required: false, // Allow null values
       },
     ],
     where: whereClause,
@@ -210,9 +210,40 @@ const getAllTb_PhieuNX = async () => {
         "isDelete",
       ],
       include: [
-        // Bao gồm quan hệ NhapPhieuNX với alias 'NoiNhap'
-      
-        // Bao gồm quan hệ XuatPhieuNX với alias 'NoiXuat'
+        // Phong ban dự án
+        {
+          model: Ent_Phongbanda,
+          as: "NoiNhap", // Alias được sử dụng để phân biệt nơi nhập
+          attributes: [
+            "ID_Phongban",
+            "ID_Chinhanh",
+            "ID_Nhompb",
+            "Mapb",
+            "Tenphongban",
+            "Diachi",
+            "Ghichu",
+            "isDelete",
+          ],
+          include: [
+            {
+              model: Ent_Chinhanh,
+              attributes: ["ID_Chinhanh", "Tenchinhanh", "isDelete"],
+              where: {
+                isDelete: 0,
+              },
+            },
+            {
+              model: Ent_Nhompb,
+              attributes: ["ID_Nhompb","Nhompb", "isDelete"],
+              where: {
+                isDelete: 0,
+              },
+            },
+          ],
+          where: {
+            isDelete: 0,
+          },
+        },
         {
           model: Ent_Phongbanda,
           as: "NoiXuat", // Alias được sử dụng để phân biệt nơi xuất
@@ -247,6 +278,7 @@ const getAllTb_PhieuNX = async () => {
           },
         },
         // Bao gồm các bảng liên kết khác
+        // Nghiep vu
         {
           model: Ent_Nghiepvu,
           attributes: ["ID_Nghiepvu", "Nghiepvu", "isDelete"],
@@ -254,14 +286,17 @@ const getAllTb_PhieuNX = async () => {
             isDelete: 0,
           },
         },
+        // Nam
         {
           model: Ent_Nam,
           attributes: ["ID_Nam", "Nam", "Giatri"],
         },
+        // Thang
         {
           model: Ent_Thang,
           attributes: ["ID_Thang", "Thang", "iThang"],
         },
+        // User
         {
           model: Ent_User,
           attributes: [
@@ -288,6 +323,7 @@ const getAllTb_PhieuNX = async () => {
             },
           ],
         },
+        // Phieu NXCT
         {
           model: Tb_PhieuNXCT,
           as: "tb_phieunxct",
@@ -318,13 +354,14 @@ const getAllTb_PhieuNX = async () => {
           ],
           where: {
             isDelete: 0
-          }
-          
+          },
+          required: false, // Allow null values
         },
+        
       ],
       where: whereClause,
     });
-  
+
     return res;
   };
   

@@ -26,11 +26,17 @@ const getAllTb_taisanqrcode = async () => {
   const res = await Tb_TaisanQrCode.findAll({
     attributes: [
       "ID_TaisanQr",
-      "ID_Taisan","Giatri",
+      "ID_Taisan",
+      "Giatri",
       "MaQrCode",
       "Ngaykhoitao",
       "iTinhtrang",
-      "isDelete","Ghichu","ID_Nam", "ID_Thang", "ID_Phongban", "ID_User",
+      "isDelete",
+      "Ghichu",
+      "ID_Nam",
+      "ID_Thang",
+      "ID_Phongban",
+      "ID_User",
     ],
     include: [
       {
@@ -85,7 +91,7 @@ const getAllTb_taisanqrcode = async () => {
           },
           {
             model: Ent_Nhompb,
-            attributes: ["ID_Nhompb","Nhompb", "isDelete"],
+            attributes: ["ID_Nhompb", "Nhompb", "isDelete"],
             where: {
               isDelete: 0,
             },
@@ -120,11 +126,20 @@ const getDetailTb_taisanqrcode = async (id) => {
   const res = await Tb_TaisanQrCode.findByPk(id, {
     attributes: [
       "ID_TaisanQr",
-      "ID_Taisan","Giatri",
+      "ID_Taisan",
+      "Giatri",
       "MaQrCode",
       "Ngaykhoitao",
       "iTinhtrang",
-      "isDelete","Ghichu","ID_Nam", "ID_Thang", "ID_Phongban", "ID_User",
+      "isDelete",
+      "Ghichu",
+      "ID_Nam",
+      "ID_Thang",
+      "Namsx",
+      "Nambdsd",
+      "Image",
+      "ID_Phongban",
+      "ID_User",
     ],
     include: [
       {
@@ -216,9 +231,8 @@ const insertDataToEntQRCode = async (phieunxct, data) => {
           ],
           where: {
             isDelete: 0,
-            ID_Phongban: data.ID_NoiNhap
+            ID_Phongban: data.ID_NoiNhap,
           },
-          
         });
 
         const taisan = await Ent_Taisan.findOne({
@@ -247,7 +261,7 @@ const insertDataToEntQRCode = async (phieunxct, data) => {
         });
 
         const Thuoc = duan?.Thuoc;
-        
+
         const ManhomTs = taisan.ent_nhomts.Manhom;
         const MaID = taisan.ID_Taisan;
         const MaTaisan = taisan.Mats;
@@ -276,7 +290,7 @@ const insertDataToEntQRCode = async (phieunxct, data) => {
   }
 };
 
-const scanQrCodeTb_Taisanqrcode = async(data) => {
+const scanQrCodeTb_Taisanqrcode = async (data) => {
   let whereClause = {
     isDelete: 0,
     ID_TaisanQr: data.ID_TaisanQr,
@@ -295,8 +309,7 @@ const scanQrCodeTb_Taisanqrcode = async(data) => {
     }
   );
   return res;
-}
-
+};
 
 module.exports = {
   createTb_taisanqrcode,
@@ -305,27 +318,29 @@ module.exports = {
   deleteTb_taisanqrcode,
   getDetailTb_taisanqrcode,
   insertDataToEntQRCode,
-  scanQrCodeTb_Taisanqrcode
+  scanQrCodeTb_Taisanqrcode,
 };
-
 
 function formatDateTime(data) {
   // Regular expressions for different date formats
   const iso8601Regex = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d{3}Z$/;
   const simpleDateRegex = /^\d{4}-\d{2}-\d{2}$/;
 
-  if (typeof data === 'string' && (data.match(iso8601Regex) || data.match(simpleDateRegex))) {
+  if (
+    typeof data === "string" &&
+    (data.match(iso8601Regex) || data.match(simpleDateRegex))
+  ) {
     const date = new Date(data); // Convert the string to a Date object
     if (isNaN(date)) {
-      throw new Error('Invalid date value');
+      throw new Error("Invalid date value");
     }
 
     const year = date.getFullYear().toString().slice(2); // Get last 2 digits of the year
-    const month = (date.getMonth() + 1).toString().padStart(2, '0'); // Ensure month is two digits
-    const day = date.getDate().toString().padStart(2, '0'); // Ensure day is two digits
+    const month = (date.getMonth() + 1).toString().padStart(2, "0"); // Ensure month is two digits
+    const day = date.getDate().toString().padStart(2, "0"); // Ensure day is two digits
 
     return `${year}${month}${day}`;
   } else {
-    throw new Error('Invalid date format');
+    throw new Error("Invalid date format");
   }
 }
