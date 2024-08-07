@@ -261,27 +261,38 @@ const insertDataToEntQRCode = async (phieunxct, data) => {
         });
 
         const Thuoc = duan?.Thuoc;
-
         const ManhomTs = taisan.ent_nhomts.Manhom;
         const MaID = taisan.ID_Taisan;
         const MaTaisan = taisan.Mats;
         const Ngay = formatDateTime(data.NgayNX);
 
-        const MaQrCode = `${Thuoc}|${ManhomTs}|${MaID}|${MaTaisan}|${Ngay}`;
+        const createQrCodeEntry = async (index) => {
+          const MaQrCode = index >= 1 
+            ? `${Thuoc}|${ManhomTs}|${MaID}|${MaTaisan}|${Ngay}|${index}` 
+            : `${Thuoc}|${ManhomTs}|${MaID}|${MaTaisan}|${Ngay}`;
 
-        await Tb_TaisanQrCode.create({
-          ID_Taisan: item.ID_Taisan,
-          Ngaykhoitao: data.NgayNX,
-          Giatri: item.Dongia,
-          Namsx: item.Namsx,
-          MaQrCode: MaQrCode,
-          Ghichu: "",
-          ID_Nam: data.ID_Nam,
-          iTinhtrang: 0,
-          ID_Thang: data.ID_Thang,
-          ID_Phongban: data.ID_NoiNhap,
-          ID_User: data.ID_User,
-        });
+          await Tb_TaisanQrCode.create({
+            ID_Taisan: item.ID_Taisan,
+            Ngaykhoitao: data.NgayNX,
+            Giatri: item.Dongia,
+            Namsx: item.Namsx,
+            MaQrCode: MaQrCode,
+            Ghichu: "",
+            ID_Nam: data.ID_Nam,
+            iTinhtrang: 0,
+            ID_Thang: data.ID_Thang,
+            ID_Phongban: data.ID_NoiNhap,
+            ID_User: data.ID_User,
+          });
+        };
+
+        if (`${item.Soluong}` > "1") {
+          for (let i = 1; i <= item.Soluong; i++) {
+            await createQrCodeEntry(i);
+          }
+        } else {
+          await createQrCodeEntry(1);
+        }
       })
     );
   } catch (error) {
@@ -289,6 +300,7 @@ const insertDataToEntQRCode = async (phieunxct, data) => {
     throw error;
   }
 };
+
 
 const scanQrCodeTb_Taisanqrcode = async (data) => {
   let whereClause = {
