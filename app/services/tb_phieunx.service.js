@@ -12,6 +12,7 @@ const {
   Tb_TaisanQrCode,
   Ent_Taisan,
   Ent_User,
+  Ent_Quy,
 } = require("../models/setup.model");
 const { Op } = require("sequelize");
 
@@ -38,7 +39,7 @@ const getDetailTb_PhieuNX = async(ID_PhieuNX) => {
       "Ghichu",
       "ID_Nam",
       "ID_Thang",
-      "ThuocQuy",
+      "ID_Quy",
       "iTinhtrang",
       "isDelete",
     ],
@@ -123,6 +124,11 @@ const getDetailTb_PhieuNX = async(ID_PhieuNX) => {
         model: Ent_Nam,
         attributes: ["ID_Nam", "Nam", "Giatri"],
       },
+       //Quy
+       {
+        model: Ent_Quy,
+        attributes: ["ID_Quy", "Quy"],
+      },
       {
         model: Ent_Thang,
         attributes: ["ID_Thang", "Thang", "iThang"],
@@ -205,7 +211,7 @@ const getAllTb_PhieuNX = async () => {
         "Ghichu",
         "ID_Nam",
         "ID_Thang",
-        "ThuocQuy",
+        "ID_Quy",
         "iTinhtrang",
         "isDelete",
       ],
@@ -291,6 +297,11 @@ const getAllTb_PhieuNX = async () => {
           model: Ent_Nam,
           attributes: ["ID_Nam", "Nam", "Giatri"],
         },
+        //Quy
+        {
+          model: Ent_Quy,
+          attributes: ["ID_Quy", "Quy"],
+        },
         // Thang
         {
           model: Ent_Thang,
@@ -364,6 +375,196 @@ const getAllTb_PhieuNX = async () => {
 
     return res;
   };
+
+const getPhieuNXByUser = async(ID_User, ID_Quy) => {
+  let whereClause = {
+    isDelete: 0,
+    ID_Quy: ID_Quy,
+    ID_Nghiepvu: 7,
+    iTinhtrang: 0
+  };
+
+  // Thực hiện truy vấn với Sequelize
+  const res = await Tb_PhieuNX.findAll({
+    attributes: [
+      "ID_PhieuNX",
+      "ID_Nghiepvu",
+      "Sophieu",
+      "ID_NoiNhap",
+      "ID_NoiXuat",
+      "ID_User",
+      "NgayNX",
+      "Ghichu",
+      "ID_Nam",
+      "ID_Thang",
+      "ID_Quy",
+      "iTinhtrang",
+      "isDelete",
+    ],
+    include: [
+      // Phong ban dự án
+      {
+        model: Ent_Phongbanda,
+        as: "NoiNhap", // Alias được sử dụng để phân biệt nơi nhập
+        attributes: [
+          "ID_Phongban",
+          "ID_Chinhanh",
+          "ID_Nhompb",
+          "Mapb",
+          "Tenphongban",
+          "Diachi",
+          "Ghichu",
+          "isDelete",
+        ],
+        include: [
+          {
+            model: Ent_Chinhanh,
+            attributes: ["ID_Chinhanh", "Tenchinhanh", "isDelete"],
+            where: {
+              isDelete: 0,
+            },
+          },
+          {
+            model: Ent_Nhompb,
+            attributes: ["ID_Nhompb","Nhompb", "isDelete"],
+            where: {
+              isDelete: 0,
+            },
+          },
+        ],
+        where: {
+          isDelete: 0,
+        },
+      },
+      {
+        model: Ent_Phongbanda,
+        as: "NoiXuat", // Alias được sử dụng để phân biệt nơi xuất
+        attributes: [
+          "ID_Phongban",
+          "ID_Chinhanh",
+          "ID_Nhompb",
+          "Mapb",
+          "Tenphongban",
+          "Diachi",
+          "Ghichu",
+          "isDelete",
+        ],
+        include: [
+          {
+            model: Ent_Chinhanh,
+            attributes: ["ID_Chinhanh", "Tenchinhanh", "isDelete"],
+            where: {
+              isDelete: 0,
+            },
+          },
+          {
+            model: Ent_Nhompb,
+            attributes: ["ID_Nhompb","Nhompb", "isDelete"],
+            where: {
+              isDelete: 0,
+            },
+          },
+        ],
+        where: {
+          isDelete: 0,
+        },
+      },
+      // Bao gồm các bảng liên kết khác
+      // Nghiep vu
+      {
+        model: Ent_Nghiepvu,
+        attributes: ["ID_Nghiepvu", "Nghiepvu", "isDelete"],
+        where: {
+          isDelete: 0,
+        },
+      },
+      // Nam
+      {
+        model: Ent_Nam,
+        attributes: ["ID_Nam", "Nam", "Giatri"],
+      },
+      //Quy
+      {
+        model: Ent_Quy,
+        attributes: ["ID_Quy", "Quy"],
+      },
+      // Thang
+      {
+        model: Ent_Thang,
+        attributes: ["ID_Thang", "Thang", "iThang"],
+      },
+      // User
+      {
+        model: Ent_User,
+        attributes: [
+          "ID_User",
+          "ID_Nhompb",
+          "ID_Chinhanh",
+          "MaPMC",
+          "Hoten",
+          "Gioitinh",
+          "Diachi",
+          "Sodienthoai",
+          "Emails",
+          "Anh",
+          "isDelete",
+          "ID_Chucvu",
+        ],
+        include: [
+          {
+            model: Ent_Nhompb,
+            attributes: ["ID_Nhompb","Nhompb", "isDelete"],
+            where: {
+              isDelete: 0,
+            },
+          },
+        ],
+        where: {
+          ID_User: ID_User,
+          isDelete: 0
+        }
+      },
+      // Phieu NXCT
+      {
+        model: Tb_PhieuNXCT,
+        as: "tb_phieunxct",
+        attributes: [
+          "ID_PhieuNXCT",
+          "ID_PhieuNX",
+          "ID_Taisan",
+          "Dongia",
+          "Namsx",
+          "Soluong",
+          "isDelete",
+        ],
+        include: [
+          {
+            model: Ent_Taisan,
+            attributes: [ "ID_Taisan",
+              "ID_Nhomts",
+              "ID_Donvi",
+              "Mats",
+              "Tents",
+              "Thongso",
+              "Ghichu",
+              "isDelete",],
+            where: {
+              isDelete: 0,
+            },
+          },
+        ],
+        where: {
+          isDelete: 0
+        },
+        required: false, // Allow null values
+      },
+      
+    ],
+    where: whereClause,
+  });
+
+  return res;
+}
   
 const updateTb_PhieuNX = async (data) => {
   let whereClause = {
@@ -382,7 +583,7 @@ const updateTb_PhieuNX = async (data) => {
       NgayNX: data.NgayNX,
       ID_User: data.ID_User,
       Ghichu: data.Ghichu,
-      ThuocQuy: data.ThuocQuy
+      ID_Quy: data.ID_Quy
     },
     {
       where: whereClause,
@@ -421,5 +622,6 @@ module.exports = {
   updateTb_PhieuNX,
   deleteTb_PhieuNX,
   getDetailTb_PhieuNX,
-  closeTb_PhieuNX
+  closeTb_PhieuNX,
+  getPhieuNXByUser
 };

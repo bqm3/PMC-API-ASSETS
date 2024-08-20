@@ -7,6 +7,7 @@ const Ent_Nhomts = require('./ent_nhomts.model')
 const Ent_Phongbanda = require('./ent_phongbanda.model')
 const Ent_Policy = require('./ent_policy.model')
 const Ent_User = require('./ent_user.model')
+const Ent_Quy = require('./ent_quy.model')
 const Tb_TaisanQrCode = require('./tb_taisanqrcode.model')
 const Ent_Nam = require('./ent_nam.models')
 const Ent_Taisan = require('./ent_taisan.model')
@@ -84,6 +85,12 @@ Tb_PhieuNX.belongsTo(Ent_Nam, {
   foreignKey: "ID_Nam",
 });
 
+Ent_Quy.hasMany(Tb_PhieuNX, { as: 'tb_phieunx', foreignKey: 'ID_Quy' });
+Tb_PhieuNX.belongsTo(Ent_Quy, {
+  foreignKey: "ID_Quy",
+});
+
+
 // Thiết lập quan hệ cho nơi nhập
 Ent_Phongbanda.hasMany(Tb_PhieuNX, { foreignKey: 'ID_NoiNhap', as: 'NhapPhieuNX' });
 Tb_PhieuNX.belongsTo(Ent_Phongbanda, { foreignKey: 'ID_NoiNhap', as: 'NoiNhap' });
@@ -91,8 +98,6 @@ Tb_PhieuNX.belongsTo(Ent_Phongbanda, { foreignKey: 'ID_NoiNhap', as: 'NoiNhap' }
 // Thiết lập quan hệ cho nơi xuất
 Ent_Phongbanda.hasMany(Tb_PhieuNX, { foreignKey: 'ID_NoiXuat', as: 'XuatPhieuNX' });
 Tb_PhieuNX.belongsTo(Ent_Phongbanda, { foreignKey: 'ID_NoiXuat', as: 'NoiXuat' });
-
-
 
 
 // Phieu NXCT
@@ -189,6 +194,7 @@ module.exports = {
     Ent_Phongbanda,
     Ent_Taisan,
     Ent_User,
+    Ent_Quy,
     Tb_TaisanQrCode,
     Ent_Thang,
     Ent_Nam,
@@ -198,6 +204,7 @@ module.exports = {
     Tb_SuachuaTS,
     Tb_Table,
     Ent_Chucvu,
-    Ent_GroupPolicy, Ent_Policy
+    Ent_GroupPolicy, 
+    Ent_Policy
   };
   

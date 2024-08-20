@@ -14,15 +14,15 @@ const createTb_PhieuNX = async (req, res) => {
       ID_NoiXuat,
       NgayNX,
       Ghichu,
+      ID_Quy,
       phieunxct,
-      ThuocQuy,
     } = req.body;
 
-    if (!Array.isArray(phieunxct) || phieunxct.length === 0) {
-      return res.status(400).json({
-        message: "Danh sách chi tiết phiếu nhập xuất không được trống.",
-      });
-    }
+    // if (!Array.isArray(phieunxct) || phieunxct.length === 0) {
+    //   return res.status(400).json({
+    //     message: "Danh sách chi tiết phiếu nhập xuất không được trống.",
+    //   });
+    // }
 
     // Get Thang and Nam details
     const Thang = await eThangService.getDetail(NgayNX);
@@ -39,7 +39,7 @@ const createTb_PhieuNX = async (req, res) => {
       NgayNX: NgayNX,
       ID_User: user.ID_User,
       Ghichu: Ghichu,
-      ThuocQuy: ThuocQuy,
+      ID_Quy: ID_Quy,
       iTinhtrang: 0,
       isDelete: 0,
     };
@@ -92,6 +92,24 @@ const getAllTb_PhieuNX = async (req, res) => {
   }
 };
 
+const getPhieuNXByUser = async (req, res) => {
+  try {
+    const userData = req.user.data;
+    const ID_Quy = req.params.id;
+
+    console.log('userData',userData)
+    console.log('ID_Quy',ID_Quy)
+
+    const data = await tbPhieuNXService.getPhieuNXByUser(userData.ID_User, ID_Quy);
+    res.status(200).json({
+      message: "Danh sách phiếu kiểm kê của nhân viên trong quý",
+      data: data,
+    });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+}
+
 const updateTb_PhieuNX = async (req, res) => {
   try {
     const user = req.user.data;
@@ -105,14 +123,14 @@ const updateTb_PhieuNX = async (req, res) => {
       NgayNX,
       Ghichu,
       phieunxct,
-      ThuocQuy
+      ID_Quy
     } = req.body;
 
-    if (!Array.isArray(phieunxct) || phieunxct.length === 0) {
-      return res.status(400).json({
-        message: "Danh sách chi tiết phiếu nhập xuất không được trống.",
-      });
-    }
+    // if (!Array.isArray(phieunxct) || phieunxct.length === 0) {
+    //   return res.status(400).json({
+    //     message: "Danh sách chi tiết phiếu nhập xuất không được trống.",
+    //   });
+    // }
 
     // Get Thang and Nam details
     const Thang = await eThangService.getDetail(NgayNX);
@@ -130,7 +148,7 @@ const updateTb_PhieuNX = async (req, res) => {
       NgayNX: NgayNX,
       ID_User: user.ID_User,
       Ghichu: Ghichu,
-      ThuocQuy: ThuocQuy,
+      ID_Quy: ID_Quy,
       isDelete: 0,
     };
 
@@ -169,11 +187,11 @@ const closeTb_PhieuNX = async (req, res) => {
       phieunxct,
     } = req.body;
 
-    if (!Array.isArray(phieunxct) || phieunxct.length === 0) {
-      return res.status(400).json({
-        message: "Danh sách chi tiết phiếu nhập xuất không được trống.",
-      });
-    }
+    // if (!Array.isArray(phieunxct) || phieunxct.length === 0) {
+    //   return res.status(400).json({
+    //     message: "Danh sách chi tiết phiếu nhập xuất không được trống.",
+    //   });
+    // }
 
     // Get Thang and Nam details
     const Thang = await eThangService.getDetail(NgayNX);
@@ -227,5 +245,6 @@ module.exports = {
   updateTb_PhieuNX,
   deleteTb_PhieuNX,
   getDetailTb_PhieuNX,
-  closeTb_PhieuNX
+  closeTb_PhieuNX,
+  getPhieuNXByUser
 };
