@@ -18,12 +18,6 @@ const createTb_PhieuNX = async (req, res) => {
       phieunxct,
     } = req.body;
 
-    // if (!Array.isArray(phieunxct) || phieunxct.length === 0) {
-    //   return res.status(400).json({
-    //     message: "Danh sách chi tiết phiếu nhập xuất không được trống.",
-    //   });
-    // }
-
     // Get Thang and Nam details
     const Thang = await eThangService.getDetail(NgayNX);
     const Nam = await eNamService.getDetail(NgayNX);
@@ -50,7 +44,7 @@ const createTb_PhieuNX = async (req, res) => {
     data = await tbPhieuNXService.createTb_PhieuNX(reqData);
 
     // Create Tb_PhieuNXCT
-    if(phieunxct[0].ID_Taisan !==  null){
+    if (phieunxct && Array.isArray(phieunxct) && phieunxct.length > 0 && phieunxct[0]?.ID_Taisan !== null) {
       await tbPhieuNXCTService.createTb_PhieuNXCT(phieunxct, data);
     }
 
