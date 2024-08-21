@@ -25,6 +25,13 @@ module.exports = (app) => {
     [isAuthenticated, isRole],
     tb_phieunx.closeTb_PhieuNX
   );
+
+  router.put(
+    "/close-fast/:id",
+    [isAuthenticated, isRole],
+    tb_phieunx.closeFastTb_PhieuNX
+  );
+
   router.put(
     "/delete/:id",
     [isAuthenticated, isRole],

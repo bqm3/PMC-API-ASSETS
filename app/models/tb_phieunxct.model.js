@@ -14,7 +14,7 @@ const Tb_PhieuNXCT = sequelize.define(
       type: DataTypes.INTEGER,
       allowNull: false,
     },
-    ID_TaisanQrcode: {
+    ID_TaisanQrCode: {
       type: DataTypes.INTEGER,
     },
     ID_Taisan: {

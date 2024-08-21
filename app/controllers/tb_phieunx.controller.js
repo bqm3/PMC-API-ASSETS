@@ -227,6 +227,21 @@ const closeTb_PhieuNX = async (req, res) => {
   }
 };
 
+const closeFastTb_PhieuNX = async (req, res) => {
+  try {
+    const ID_PhieuNX = req.params.id;
+    // Prepare data for Tb_PhieuNX creation
+  
+    await tbPhieuNXService.closeTb_PhieuNX(ID_PhieuNX);
+     
+    res.status(200).json({
+      message: "Khóa phiếu thành công!",
+    });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 const deleteTb_PhieuNX = async (req, res) => {
   try {
     const ID_PhieuNX = req.params.id;
@@ -246,5 +261,6 @@ module.exports = {
   deleteTb_PhieuNX,
   getDetailTb_PhieuNX,
   closeTb_PhieuNX,
-  getPhieuNXByUser
+  getPhieuNXByUser,
+  closeFastTb_PhieuNX
 };

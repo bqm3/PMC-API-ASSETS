@@ -195,7 +195,7 @@ const getDetailTb_PhieuNX = async(ID_PhieuNX) => {
 const getAllTb_PhieuNX = async () => {
     // Điều kiện để lấy các bản ghi không bị xóa
     let whereClause = {
-      isDelete: 0,
+      isDelete: 0
     };
   
     // Thực hiện truy vấn với Sequelize
@@ -366,11 +366,15 @@ const getAllTb_PhieuNX = async () => {
           where: {
             isDelete: 0
           },
+         
           required: false, // Allow null values
         },
         
       ],
       where: whereClause,
+      order: [
+        ['NgayNX', 'DESC'],
+    ],
     });
 
     return res;

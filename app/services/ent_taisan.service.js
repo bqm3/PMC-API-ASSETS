@@ -4,6 +4,7 @@ const {
   Ent_Nhompb,
   Ent_Nhomts,
   Ent_Donvi,
+  Ent_Loainhom,
 } = require("../models/setup.model");
 const { Op } = require("sequelize");
 
@@ -21,6 +22,8 @@ const getAlleEnt_taisan = async () => {
     attributes: [
       "ID_Taisan",
       "ID_Nhomts",
+      "Tentscu",
+      "i_MaQrCode",
       "ID_Donvi",
       "Mats",
       "Tents",
@@ -41,6 +44,7 @@ const getAlleEnt_taisan = async () => {
         attributes: ["ID_Donvi", "Donvi", "isDelete"],
         where: { isDelete: 0 },
       },
+      
     ],
     where: whereClause,
   });
@@ -52,7 +56,10 @@ const getDetailEnt_taisan = async (id) => {
     attributes: [
       "ID_Taisan",
       "ID_Nhomts",
+      
       "ID_Donvi",
+      "Tentscu",
+      "i_MaQrCode",
       "Mats",
       "Tents",
       "Thongso",
@@ -73,6 +80,7 @@ const getDetailEnt_taisan = async (id) => {
         attributes: ["ID_Donvi", "Donvi", "isDelete"],
         where: { isDelete: 0 },
       },
+      
     ],
     where: {
       isDelete: 0,
@@ -96,6 +104,8 @@ const updateleEnt_taisan = async (data) => {
       Thongso: data.Thongso,
       Nuocsx: data.Nuocsx,
       Ghichu: data.Ghichu,
+      Tentscu: data.Tentscu,
+      i_MaQrCode: data.i_MaQrCode,
     },
     {
       where: whereClause,

@@ -20,6 +20,7 @@ const Tb_SuachuaTS = require('./tb_suachuats.model')
 const Ent_GroupPolicy = require('./ent_grouppolicy.model')
 const Tb_Table = require('./tb_table.model')
 const Ent_Chucvu = require('./ent_chucvu.model')
+const Ent_Loainhom = require('./ent_loainhom.model')
 
 // User
 Ent_Nhompb.hasMany(Ent_User, { as: 'Ent_User', foreignKey: 'ID_Nhompb' });
@@ -133,6 +134,11 @@ Ent_Taisan.belongsTo(Ent_Nhomts, {
   foreignKey: "ID_Nhomts", as: 'ent_nhomts'
 });
 
+Ent_Loainhom.hasMany(Ent_Nhomts, { as: 'ent_nhomts', foreignKey: 'ID_LoaiNhom' });
+Ent_Nhomts.belongsTo(Ent_Loainhom, {
+  foreignKey: "ID_LoaiNhom", as: 'ent_loainhom'
+});
+
 // User
 Ent_Nhompb.hasMany(Ent_User, { as: 'ent_user', foreignKey: 'ID_Nhompb' })
 Ent_User.belongsTo(Ent_Nhompb, {
@@ -205,6 +211,7 @@ module.exports = {
     Tb_Table,
     Ent_Chucvu,
     Ent_GroupPolicy, 
-    Ent_Policy
+    Ent_Policy,
+    Ent_Loainhom
   };
   

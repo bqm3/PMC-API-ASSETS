@@ -12,26 +12,32 @@ const Ent_Taisan = sequelize.define("ent_taisan", {
   },
   ID_Nhomts: {
     type: DataTypes.INTEGER,
-    allowNull: false,
+    
   },
   ID_Donvi: {
     type: DataTypes.INTEGER,
-    allowNull: false,
+    
   },
   Mats: {
     type: DataTypes.CHAR,
-    allowNull: false,
+    
   },
   Tents: {
     type: DataTypes.CHAR,
-    allowNull: false,
+    
+  },
+  Tentscu: {
+    type: DataTypes.CHAR,
   },
   Thongso: {
     type: DataTypes.CHAR,
-    allowNull: false,
+    
   },
   Nuocsx: {
     type: DataTypes.CHAR,
+  },
+  i_MaQrCode: {
+    type: DataTypes.INTEGER,
   },
   Ghichu: {
     type: DataTypes.TEXT,

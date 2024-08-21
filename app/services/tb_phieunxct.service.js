@@ -1,3 +1,4 @@
+const { uploadFile } = require("../middleware/image.middleware");
 const {
   Ent_GroupPolicy,
   Tb_PhieuNXCT,
@@ -116,41 +117,27 @@ const getAllTb_PhieuNXCT = async () => {
   
     return res;
   };
+
+const scanTb_PhieuNXCT = async (data) => {
+  const file = await uploadFile(data.images);
+  const res = await Tb_PhieuNXCT.create(
+    {
+      Anhts: file ? file.id : "",
+      ID_TaisanQrCode: data.ID_TaisanQrCode,
+      ID_PhieuNX: data.ID_PhieuNX,
+      ID_Taisan: data.ID_Taisan,
+      Dongia: data.Dongia,
+      Soluong: data.Soluong || 1,
+      Namsx: data.Namsx,
+    },
+  );
+  return res;
+
+}
   
-
-// const updateTb_PhieuNXCT = async (data) => {
-//   let whereClause = {
-//     isDelete: 0,
-//     ID_Policy: data.ID_Policy,
-//   };
-
-//   const res = await Tb_PhieuNXCT.update(
-//     {
-//       Policy: data.Policy,
-//       ID_GroupPolicy: data.ID_GroupPolicy,
-//       GroupPolicy: data.GroupPolicy,
-//     },
-//     {
-//       where: whereClause,
-//     }
-//   );
-//   return res;
-// };
-
-// const deleteTb_PhieuNXCT = async (ID) => {
-//   const res = await Tb_PhieuNXCT.update(
-//     { isDelete: 1 },
-//     {
-//       where: {
-//         ID_Policy: ID,
-//       },
-//     }
-//   );
-//   return res;
-// };
-
 module.exports = {
   createTb_PhieuNXCT,
   getAllTb_PhieuNXCT,
-  updateTb_PhieuNXCT
+  updateTb_PhieuNXCT,
+  scanTb_PhieuNXCT
 };
