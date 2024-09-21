@@ -6,7 +6,7 @@ const createEnt_nghiepvu = async (data) => {
   return res;
 };
 
-const getAlleEnt_nghiepvu = async () => {
+const getAllEnt_nghiepvu = async () => {
   let whereClause = {
     isDelete: 0,
   };
@@ -17,7 +17,7 @@ const getAlleEnt_nghiepvu = async () => {
   return res;
 };
 
-const updateleEnt_nghiepvu = async (data) => {
+const updateEnt_nghiepvu = async (data) => {
   let whereClause = {
     isDelete: 0,
     ID_Nghiepvu: data.ID_Nghiepvu,
@@ -48,7 +48,7 @@ const deleteEnt_nghiepvu = async (id) => {
 
 module.exports = {
   createEnt_nghiepvu,
-  getAlleEnt_nghiepvu,
-  updateleEnt_nghiepvu,
+  getAllEnt_nghiepvu,
+  updateEnt_nghiepvu,
   deleteEnt_nghiepvu,
 };

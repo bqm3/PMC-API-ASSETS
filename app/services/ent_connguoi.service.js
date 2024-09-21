@@ -6,12 +6,12 @@ const createEnt_connguoi = async (data) => {
   if (data.user) {
     const reqData = {
       MaPMC: data.MaPMC,
-      ID_Nhompb: data.ID_Nhompb,
       Hoten: data.Hoten,
       Gioitinh: data.Gioitinh,
       Diachi: data.Diachi,
       Sodienthoai: data.Sodienthoai,
       Ghichu: data.Ghichu,
+      NgayGhinhan: data.NgayGhinhan,
       isDelete: 0,
     };
     if (!data.MaPMC || !data.Hoten || !data.Sodienthoai) {
@@ -30,23 +30,24 @@ const getDetailEnt_connguoi = async(data)=> {
       attributes: [
         "ID_Connguoi",
         "MaPMC",
-        "ID_Nhompb",
         "Hoten",
         "Gioitinh",
         "Diachi",
         "Sodienthoai",
+        "NgayGhinhan",
         "Ghichu",
       ],
       include: [
-        {
-          model: Ent_Nhompb,
-          attributes: [
-            "ID_Nhompb","Nhompb", "isDelete"
-          ],
-          where: {
-            isDelete: 0
-          }
-        }
+        // {
+        //   model: Ent_Nhompb,
+        //   as: "ent_nhompb",
+        //   attributes: [
+        //     "ID_Nhompb","Nhompb", "isDelete"
+        //   ],
+        //   where: {
+        //     isDelete: 0
+        //   }
+        // }
       ],
       where: {
         isDelete: 0,
@@ -62,12 +63,12 @@ const updateEnt_connguoi = async (data) => {
   if (data.user) {
     const reqData = {
       MaPMC: data.MaPMC,
-      ID_Nhompb: data.ID_Nhompb,
       Hoten: data.Hoten,
       Gioitinh: data.Gioitinh,
       Diachi: data.Diachi,
       Sodienthoai: data.Sodienthoai,
       Ghichu: data.Ghichu,
+      NgayGhinhan: data.NgayGhinhan,
       isDelete: 0,
     };
     if (!data.MaPMC || !data.Hoten || !data.Sodienthoai) {
@@ -90,24 +91,24 @@ const getAllEnt_connguoi = async (user) => {
       attributes: [
         "ID_Connguoi",
         "MaPMC",
-        "ID_Nhompb",
         "Hoten",
         "Gioitinh",
         "Diachi",
         "Sodienthoai",
         "Ghichu",
+        "NgayGhinhan"
       ],
-      include: [
-        {
-          model: Ent_Nhompb,
-          attributes: [
-            "ID_Nhompb","Nhompb", "isDelete"
-          ],
-          where: {
-            isDelete: 0
-          }
-        }
-      ],
+      // include: [
+      //   {
+      //     model: Ent_Nhompb,
+      //     attributes: [
+      //       "ID_Nhompb","Nhompb", "isDelete"
+      //     ],
+      //     where: {
+      //       isDelete: 0
+      //     }
+      //   }
+      // ],
       where: {
         isDelete: 0,
       },

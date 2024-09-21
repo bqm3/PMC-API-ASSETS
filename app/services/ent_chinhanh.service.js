@@ -6,7 +6,7 @@ const createEnt_chinhanh = async (data) => {
   return res;
 };
 
-const getAlleEnt_chinhanh = async () => {
+const getAllEnt_chinhanh = async () => {
   let whereClause = {
     isDelete: 0,
   };
@@ -17,7 +17,7 @@ const getAlleEnt_chinhanh = async () => {
   return res;
 };
 
-const updateleEnt_chinhanh = async (data) => {
+const updateEnt_chinhanh = async (data) => {
   let whereClause = {
     isDelete: 0,
     ID_Chinhanh: data.ID_Chinhanh,
@@ -48,7 +48,7 @@ const deleteEnt_chinhanh = async (id) => {
 
 module.exports = {
   createEnt_chinhanh,
-  getAlleEnt_chinhanh,
-  updateleEnt_chinhanh,
+  getAllEnt_chinhanh,
+  updateEnt_chinhanh,
   deleteEnt_chinhanh,
 };

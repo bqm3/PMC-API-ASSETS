@@ -13,7 +13,7 @@ const createEnt_taisan = async (data) => {
   return res;
 };
 
-const getAlleEnt_taisan = async () => {
+const getAllEnt_taisan = async () => {
   let whereClause = {
     isDelete: 0,
   };
@@ -36,7 +36,7 @@ const getAlleEnt_taisan = async () => {
       {
         model: Ent_Nhomts,
         as : "ent_nhomts",
-        attributes: ["ID_Nhomts", "Manhom", "Loaits", "isDelete"],
+        attributes: ["ID_Nhomts", "Manhom", "Tennhom", "isDelete"],
         where: { isDelete: 0 },
       },
       {
@@ -56,7 +56,6 @@ const getDetailEnt_taisan = async (id) => {
     attributes: [
       "ID_Taisan",
       "ID_Nhomts",
-      
       "ID_Donvi",
       "Tentscu",
       "i_MaQrCode",
@@ -71,7 +70,7 @@ const getDetailEnt_taisan = async (id) => {
       {
         model: Ent_Nhomts,
         as: "ent_nhomts",
-        attributes: ["ID_Nhomts", "Manhom", "Loaits", "isDelete"],
+        attributes: ["ID_Nhomts", "Manhom", "Tennhom", "isDelete"],
         where: { isDelete: 0 },
       },
       {
@@ -89,7 +88,7 @@ const getDetailEnt_taisan = async (id) => {
   return res;
 };
 
-const updateleEnt_taisan = async (data) => {
+const updateEnt_taisan = async (data) => {
   let whereClause = {
     isDelete: 0,
     ID_Taisan: data.ID_Taisan,
@@ -128,8 +127,8 @@ const deleteEnt_taisan = async (id) => {
 
 module.exports = {
   createEnt_taisan,
-  getAlleEnt_taisan,
-  updateleEnt_taisan,
+  getAllEnt_taisan,
+  updateEnt_taisan,
   deleteEnt_taisan,
-  getDetailEnt_taisan
+  getDetailEnt_taisan,
 };

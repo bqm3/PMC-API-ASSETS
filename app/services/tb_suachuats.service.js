@@ -35,7 +35,7 @@ const createTb_Suachuact = async (suachuact, data) => {
       })
       // Thực hiện insert dữ liệu từ mỗi item trong mảng phieunxct
       await Tb_SuachuaCT.create({
-        ID_SuachuaTS: data.ID_Suachua,
+        ID_SuachuaTS: data.ID_SuachuaTS,
         ID_TaisanQr: item.ID_TaisanQr,
         ID_Taisan: res.ID_Taisan,
         Ngaynhan: item.Ngaynhan,
@@ -47,10 +47,10 @@ const createTb_Suachuact = async (suachuact, data) => {
   );
 };
 
-const getDetailTb_Suachuats = async (ID_Suachua) => {
+const getDetailTb_Suachuats = async (ID_SuachuaTS) => {
   const res = await Tb_SuachuaTS.findOne({
     attributes: [
-      "ID_Suachua",
+      "ID_SuachuaTS",
       "Ngaygiao",
       "Sophieu",
       "Nguoitheodoi",
@@ -107,7 +107,7 @@ const getDetailTb_Suachuats = async (ID_Suachua) => {
                   {
                     model: Ent_Nhomts,
                     as: "ent_nhomts",
-                    attributes: ["ID_Nhomts", "Manhom", "Loaits", "isDelete"],
+                    attributes: ["ID_Nhomts", "Manhom", "Tennhom", "isDelete"],
                     where: { isDelete: 0 }, // Check if this is too restrictive
                   },
                   {
@@ -169,7 +169,7 @@ const getDetailTb_Suachuats = async (ID_Suachua) => {
     ],
     where: {
       isDelete: 0,
-      ID_Suachua: ID_Suachua,
+      ID_SuachuaTS: ID_SuachuaTS,
     },
     logging: console.log, // Enable SQL logging to debug the generated query
   });
@@ -185,7 +185,7 @@ const getAllTb_Suachuats = async () => {
 
   const res = await Tb_SuachuaTS.findAll({
     attributes: [
-      "ID_Suachua",
+      "ID_SuachuaTS",
       "Ngaygiao",
       "Sophieu",
       "Nguoitheodoi",
@@ -242,7 +242,7 @@ const getAllTb_Suachuats = async () => {
                   {
                     model: Ent_Nhomts,
                     as: "ent_nhomts",
-                    attributes: ["ID_Nhomts", "Manhom", "Loaits", "isDelete"],
+                    attributes: ["ID_Nhomts", "Manhom", "Tennhom", "isDelete"],
                     where: { isDelete: 0 }, // Check if this is too restrictive
                   },
                   {
@@ -312,7 +312,7 @@ const getAllTb_Suachuats = async () => {
 const updateTb_Suachuats = async (data) => {
   let whereClause = {
     isDelete: 0,
-    ID_Suachua: data.ID_Suachua,
+    ID_SuachuaTS: data.ID_SuachuaTS,
   };
 
   const res = await Tb_SuachuaTS.update(
@@ -346,7 +346,7 @@ const updateTb_Suachuact = async (suachuact, data) => {
 
       // Thực hiện insert dữ liệu từ mỗi item trong mảng phieunxct
       await Tb_SuachuaCT.update({
-        ID_SuachuaTS: data.ID_Suachua,
+        ID_SuachuaTS: data.ID_SuachuaTS,
         ID_TaisanQr: item.ID_TaisanQr,
         ID_Taisan: res.ID_Taisan,
         Ngaynhan: item.Ngaynhan,
@@ -368,7 +368,7 @@ const closeTb_SuachuaTs = async (ID) => {
     { iTinhtrang: 1 },
     {
       where: {
-        ID_Suachua: ID,
+        ID_SuachuaTS: ID,
       },
     }
   );
@@ -380,7 +380,7 @@ const deleteTb_Suachuats = async (id) => {
     { isDelete: 1 },
     {
       where: {
-        ID_Suachua: id,
+        ID_SuachuaTS: id,
       },
     }
   );

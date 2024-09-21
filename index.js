@@ -50,6 +50,8 @@ require("./app/routes/ent_user.route")(app);
 require("./app/routes/tb_phieunx.route")(app);
 require("./app/routes/tb_phieunxct.route")(app);
 require("./app/routes/tb_suachuats.route")(app);
+require("./app/routes/ent_nhacc.route")(app);
+require("./app/routes/ent_nhansupbda.route")(app);
 
 const PORT = process.env.PORT || 4444;
 

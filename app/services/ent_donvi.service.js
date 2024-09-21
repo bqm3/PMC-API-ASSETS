@@ -6,7 +6,7 @@ const createEnt_donvi = async (data) => {
   return res;
 };
 
-const getAlleEnt_donvi = async () => {
+const getAllEnt_donvi = async () => {
   let whereClause = {
     isDelete: 0,
   };
@@ -17,7 +17,7 @@ const getAlleEnt_donvi = async () => {
   return res;
 };
 
-const updateleEnt_donvi = async (data) => {
+const updateEnt_donvi = async (data) => {
   let whereClause = {
     isDelete: 0,
     ID_Donvi: data.ID_Donvi,
@@ -48,7 +48,7 @@ const deleteEnt_donvi = async (id) => {
 
 module.exports = {
   createEnt_donvi,
-  getAlleEnt_donvi,
-  updateleEnt_donvi,
+  getAllEnt_donvi,
+  updateEnt_donvi,
   deleteEnt_donvi,
 };

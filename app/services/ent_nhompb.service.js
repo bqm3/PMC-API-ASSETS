@@ -6,7 +6,7 @@ const createEnt_nhompb = async (data) => {
   return res;
 };
 
-const getAlleEnt_nhompb = async () => {
+const getAllEnt_nhompb = async () => {
   let whereClause = {
     isDelete: 0,
   };
@@ -17,7 +17,7 @@ const getAlleEnt_nhompb = async () => {
   return res;
 };
 
-const updateleEnt_nhompb = async (data) => {
+const updateEnt_nhompb = async (data) => {
   let whereClause = {
     isDelete: 0,
     ID_Nhompb: data.ID_Nhompb,
@@ -48,7 +48,7 @@ const deleteEnt_nhompb = async (id) => {
 
 module.exports = {
   createEnt_nhompb,
-  getAlleEnt_nhompb,
-  updateleEnt_nhompb,
+  getAllEnt_nhompb,
+  updateEnt_nhompb,
   deleteEnt_nhompb,
 };

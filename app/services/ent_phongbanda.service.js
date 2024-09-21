@@ -10,7 +10,7 @@ const createEnt_phongbanda = async (data) => {
   return res;
 };
 
-const getAlleEnt_phongbanda = async () => {
+const getAllEnt_phongbanda = async () => {
   let whereClause = {
     isDelete: 0,
   };
@@ -76,7 +76,7 @@ const getDetailEnt_phongbanda = async (id) => {
   return res;
 };
 
-const updateleEnt_phongbanda = async (data) => {
+const updateEnt_phongbanda = async (data) => {
   console.log(data)
   let whereClause = {
     isDelete: 0,
@@ -114,8 +114,8 @@ const deleteEnt_phongbanda = async (id) => {
 
 module.exports = {
   createEnt_phongbanda,
-  getAlleEnt_phongbanda,
-  updateleEnt_phongbanda,
+  getAllEnt_phongbanda,
+  updateEnt_phongbanda,
   deleteEnt_phongbanda,
   getDetailEnt_phongbanda
 };

@@ -56,7 +56,7 @@ const getAllTb_taisanqrcode = async () => {
           {
             model: Ent_Nhomts,
             as: "ent_nhomts",
-            attributes: ["ID_Nhomts", "Manhom", "Loaits", "isDelete"],
+            attributes: ["ID_Nhomts", "Manhom", "Tennhom", "isDelete"],
             where: { isDelete: 0 },
           },
           {
@@ -159,7 +159,7 @@ const getDetailTb_taisanqrcode = async (id) => {
           {
             model: Ent_Nhomts,
             as: "ent_nhomts",
-            attributes: ["ID_Nhomts", "Manhom", "Loaits", "isDelete"],
+            attributes: ["ID_Nhomts", "Manhom", "Tennhom", "isDelete"],
             where: { isDelete: 0 },
           },
           {
@@ -250,7 +250,7 @@ const insertDataToEntQRCode = async (phieunxct, data) => {
             {
               model: Ent_Nhomts,
               as: "ent_nhomts",
-              attributes: ["ID_Nhomts", "Manhom", "Loaits", "isDelete"],
+              attributes: ["ID_Nhomts", "Manhom", "Tennhom", "isDelete"],
               where: { isDelete: 0 },
             },
           ],
