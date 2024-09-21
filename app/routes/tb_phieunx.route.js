@@ -38,5 +38,5 @@ module.exports = (app) => {
     tb_phieunx.deleteTb_PhieuNX
   );
 
-  app.use("/api/tb_phieunx", router);
+  app.use("/api/v1/tb_phieunx", router);
 };

@@ -5,5 +5,5 @@ module.exports = (app) => {
 
   router.get("/all", ent_nam.getAllEnt_nam);
 
-  app.use("/api/ent_nam", router);
+  app.use("/api/v1/ent_nam", router);
 };

@@ -18,5 +18,5 @@ module.exports = (app) => {
     ent_user.updateProfile
   );
 
-  app.use("/api/ent_user", router);
+  app.use("/api/v1/ent_user", router);
 };

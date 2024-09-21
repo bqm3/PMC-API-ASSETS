@@ -20,5 +20,5 @@ module.exports = (app) => {
   );
 
 
-  app.use("/api/tb_taisanqrcode", router);
+  app.use("/api/v1/tb_taisanqrcode", router);
 };

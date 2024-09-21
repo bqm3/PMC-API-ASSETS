@@ -15,6 +15,6 @@ module.exports = (app) => {
     );
     // router.get("/all", tb_phieunxct.getAllTb_PhieuNXCT);
   
-    app.use("/api/tb_phieunxct", router);
+    app.use("/api/v1/tb_phieunxct", router);
   };
   

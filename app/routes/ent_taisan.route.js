@@ -7,10 +7,10 @@ module.exports = (app) => {
 
   
   router.post("/create",[isAuthenticated, isRole], ent_taisan.createEnt_taisan);
-  router.get("/all", ent_taisan.getAlleEnt_taisan);
+  router.get("/all", ent_taisan.getAllEnt_taisan);
   router.get("/:id",[isAuthenticated, isRole], ent_taisan.getDetaileEnt_taisan);
-  router.put("/update/:id",[isAuthenticated, isRole], ent_taisan.updateleEnt_taisan);
+  router.put("/update/:id",[isAuthenticated, isRole], ent_taisan.updateEnt_taisan);
   router.put("/delete/:id",[isAuthenticated, isRole], ent_taisan.deleteEnt_taisan);
 
-  app.use("/api/ent_taisan", router);
+  app.use("/api/v1/ent_taisan", router);
 };

@@ -22,5 +22,5 @@ module.exports = (app) => {
     ent_policy.deleteEnt_Policy
   );
 
-  app.use("/api/ent_policy", router);
+  app.use("/api/v1/ent_policy", router);
 };

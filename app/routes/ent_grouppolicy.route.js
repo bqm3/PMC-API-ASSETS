@@ -22,5 +22,5 @@ module.exports = (app) => {
     ent_grouppolicy.deleteEnt_GroupPolicy
   );
 
-  app.use("/api/ent_grouppolicy", router);
+  app.use("/api/v1/ent_grouppolicy", router);
 };

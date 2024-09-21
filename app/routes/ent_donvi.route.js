@@ -10,5 +10,5 @@ module.exports = (app) => {
   router.put("/update/:id", ent_donvi.updateEnt_donvi);
   router.put("/delete/:id", ent_donvi.deleteEnt_donvi);
 
-  app.use("/api/ent_donvi", router);
+  app.use("/api/v1/ent_donvi", router);
 };

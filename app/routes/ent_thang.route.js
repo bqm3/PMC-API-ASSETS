@@ -5,5 +5,5 @@ module.exports = (app) => {
 
   router.get("/all", ent_thang.getAllEnt_thang);
 
-  app.use("/api/ent_thang", router);
+  app.use("/api/v1/ent_thang", router);
 };

@@ -10,12 +10,12 @@ module.exports = (app) => {
     [isAuthenticated, isRole],
     ent_phongbanda.createEnt_phongbanda
   );
-  router.get("/all", ent_phongbanda.getAlleEnt_phongbanda);
+  router.get("/all", ent_phongbanda.getAllEnt_phongbanda);
   router.get("/:id", ent_phongbanda.getDetaileEnt_phongbanda);
   router.put(
     "/update/:id",
     [isAuthenticated, isRole],
-    ent_phongbanda.updateleEnt_phongbanda
+    ent_phongbanda.updateEnt_phongbanda
   );
   router.put(
     "/delete/:id",
@@ -23,5 +23,5 @@ module.exports = (app) => {
     ent_phongbanda.deleteEnt_phongbanda
   );
 
-  app.use("/api/ent_phongbanda", router);
+  app.use("/api/v1/ent_phongbanda", router);
 };

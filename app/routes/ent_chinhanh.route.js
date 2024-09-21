@@ -10,5 +10,5 @@ module.exports = (app) => {
   router.put("/update/:id", ent_chinhanh.updateEnt_chinhanh);
   router.put("/delete/:id", ent_chinhanh.deleteEnt_chinhanh);
 
-  app.use("/api/ent_chinhanh", router);
+  app.use("/api/v1/ent_chinhanh", router);
 };

@@ -6,6 +6,6 @@ module.exports = (app) => {
 
     router.get("/all", ent_chucvu.getAllEnt_chucvu);
   
-    app.use("/api/ent_chucvu", router);
+    app.use("/api/v1/ent_chucvu", router);
   };
   

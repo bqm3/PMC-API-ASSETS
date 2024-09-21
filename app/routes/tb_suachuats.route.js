@@ -31,6 +31,6 @@ module.exports = (app) => {
       tb_suachuats.deleteTb_Suachuats
     );
   
-    app.use("/api/tb_suachuats", router);
+    app.use("/api/v1/tb_suachuats", router);
   };
   

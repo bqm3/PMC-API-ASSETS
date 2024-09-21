@@ -14,5 +14,5 @@ module.exports = (app) => {
   router.put("/delete/:id", [isAuthenticated, isRole], ent_connguoi.deleteEnt_connguoi);
 
 
-  app.use("/api/ent_connguoi", router);
+  app.use("/api/v1/ent_connguoi", router);
 };

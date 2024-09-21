@@ -9,9 +9,9 @@ module.exports = (app) => {
 
   
   router.post("/create",[isAuthenticated, isRole], ent_nhomts.createEnt_nhomts);
-  router.get("/all", ent_nhomts.getAlleEnt_nhomts);
-  router.put("/update/:id",[isAuthenticated, isRole], ent_nhomts.updateleEnt_nhomts);
+  router.get("/all", ent_nhomts.getAllEnt_nhomts);
+  router.put("/update/:id",[isAuthenticated, isRole], ent_nhomts.updateEnt_nhomts);
   router.put("/delete/:id",[isAuthenticated, isRole], ent_nhomts.deleteEnt_nhomts);
 
-  app.use("/api/ent_nhomts", router);
+  app.use("/api/v1/ent_nhomts", router);
 };
