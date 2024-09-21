@@ -37,9 +37,9 @@ const getDetaileEnt_phongbanda = async(req, res) => {
   }
 }
 
-const getAlleEnt_phongbanda = async (req, res) => {
+const getAllEnt_phongbanda = async (req, res) => {
   try {
-    const data = await entPhongbandaService.getAlleEnt_phongbanda();
+    const data = await entPhongbandaService.getAllEnt_phongbanda();
     res.status(200).json({
       message: "Danh sách",
       data: data,
@@ -49,12 +49,12 @@ const getAlleEnt_phongbanda = async (req, res) => {
   }
 };
 
-const updateleEnt_phongbanda = async (req, res) => {
+const updateEnt_phongbanda = async (req, res) => {
   try {
     const { ID_Nhompb,ID_Chinhanh, Mapb, Tenphongban, Diachi, Ghichu, Thuoc } = req.body;
     const ID_Phongban = req.params.id;
 
-    await entPhongbandaService.updateleEnt_phongbanda({
+    await entPhongbandaService.updateEnt_phongbanda({
       ID_Phongban: ID_Phongban,
       ID_Chinhanh: ID_Chinhanh || null,
       ID_Nhompb: ID_Nhompb || null,
@@ -88,7 +88,7 @@ const deleteEnt_phongbanda = async (req, res) => {
 module.exports = {
   createEnt_phongbanda,
   getDetaileEnt_phongbanda,
-  getAlleEnt_phongbanda,
-  updateleEnt_phongbanda,
+  getAllEnt_phongbanda,
+  updateEnt_phongbanda,
   deleteEnt_phongbanda,
 };

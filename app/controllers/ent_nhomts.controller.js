@@ -2,11 +2,12 @@ const entNhomtsService = require("../services/ent_nhomts.service");
 
 const createEnt_nhomts = async (req, res) => {
   try {
-    const { Manhom, Loaits, ID_LoaiNhom } = req.body;
+    const { Manhom, Tennhom, ID_LoaiNhom,Ghichu } = req.body;
     const reqData = {
       Manhom: Manhom,
-      Loaits: Loaits,
+      Tennhom: Tennhom,
       ID_LoaiNhom: ID_LoaiNhom,
+      Ghichu: Ghichu,
       isDelete: 0,
     };
     const data = await entNhomtsService.createEnt_nhomts(reqData);
@@ -19,9 +20,9 @@ const createEnt_nhomts = async (req, res) => {
   }
 };
 
-const getAlleEnt_nhomts = async (req, res) => {
+const getAllEnt_nhomts = async (req, res) => {
   try {
-    const data = await entNhomtsService.getAlleEnt_nhomts();
+    const data = await entNhomtsService.getAllEnt_nhomts();
     res.status(200).json({
       message: "Danh sách",
       data: data,
@@ -31,14 +32,14 @@ const getAlleEnt_nhomts = async (req, res) => {
   }
 };
 
-const updateleEnt_nhomts = async (req, res) => {
+const updateEnt_nhomts = async (req, res) => {
   try {
-    const { Manhom, Loaits, ID_LoaiNhom } = req.body;
+    const { Manhom, Tennhom, ID_LoaiNhom } = req.body;
     const ID_Nhomts = req.params.id;
-    await entNhomtsService.updateleEnt_nhomts({
+    await entNhomtsService.updateEnt_nhomts({
       ID_Nhomts: ID_Nhomts,
       Manhom: Manhom,
-      Loaits: Loaits,
+      Tennhom: Tennhom,
       ID_LoaiNhom: ID_LoaiNhom,
     });
     res.status(200).json({
@@ -63,7 +64,7 @@ const deleteEnt_nhomts = async (req, res) => {
 
 module.exports = {
   createEnt_nhomts,
-  getAlleEnt_nhomts,
-  updateleEnt_nhomts,
+  getAllEnt_nhomts,
+  updateEnt_nhomts,
   deleteEnt_nhomts
 };

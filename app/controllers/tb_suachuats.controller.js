@@ -74,7 +74,7 @@ const updateTb_Suachuats = async (req, res) => {
     const ID_SuaChuaTs = req.params.id;
     
     const reqData = {
-      ID_Suachua: ID_SuaChuaTs,
+      ID_SuachuaTS: ID_SuaChuaTs,
       Ngaygiao: Ngaygiao || new Date(),
       Sophieu: Sophieu || "",
       Nguoitheodoi: Nguoitheodoi || '',  // Mats sẽ được tạo sau

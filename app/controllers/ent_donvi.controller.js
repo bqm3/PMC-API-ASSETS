@@ -19,7 +19,7 @@ const createEnt_donvi = async (req, res) => {
 
 const getAllEnt_donvi = async (req, res) => {
   try {
-    const data = await entDonviService.getAlleEnt_donvi();
+    const data = await entDonviService.getAllEnt_donvi();
     res.status(200).json({
       message: "Danh sách đơn vị",
       data: data,
@@ -33,7 +33,7 @@ const updateEnt_donvi = async (req, res) => {
   try {
     const { Donvi } = req.body;
     const ID_Donvi = req.params.id;
-    await entDonviService.updateleEnt_donvi({
+    await entDonviService.updateEnt_donvi({
       ID_Donvi: ID_Donvi,
       Donvi: Donvi,
     });

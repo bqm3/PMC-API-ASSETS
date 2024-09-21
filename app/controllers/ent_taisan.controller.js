@@ -1,5 +1,6 @@
 const entTaisanService = require("../services/ent_taisan.service");
 const entNhomtsService = require("../services/ent_nhomts.service");
+const {Tb_PhieuNXCT, Tb_SuachuaTS, Tb_SuachuaCT} = require("../models/setup.model");
 
 const createEnt_taisan = async (req, res) => {
   try {
@@ -37,7 +38,7 @@ const createEnt_taisan = async (req, res) => {
     const Mats = `${MaNhom}000${newAsset.ID_Taisan}`;
 
     // Bước 4: Cập nhật Mats cho bản ghi vừa tạo
-    const updatedAsset = await entTaisanService.updateleEnt_taisan({ Mats: Mats, ID_Taisan: newAsset.ID_Taisan });
+    const updatedAsset = await entTaisanService.updateEnt_taisan({ Mats: Mats, ID_Taisan: newAsset.ID_Taisan });
 
     res.status(200).json({
       message: "Tạo thành công và cập nhật Mats",
@@ -62,9 +63,9 @@ const getDetaileEnt_taisan = async(req, res) => {
   }
 }
 
-const getAlleEnt_taisan = async (req, res) => {
+const getAllEnt_taisan = async (req, res) => {
   try {
-    const data = await entTaisanService.getAlleEnt_taisan();
+    const data = await entTaisanService.getAllEnt_taisan();
     res.status(200).json({
       message: "Danh sách",
       data: data,
@@ -74,7 +75,7 @@ const getAlleEnt_taisan = async (req, res) => {
   }
 };
 
-const updateleEnt_taisan = async (req, res) => {
+const updateEnt_taisan = async (req, res) => {
   try {
     const { ID_Nhomts, ID_Donvi, Mats, Tents, Thongso, Ghichu, Nuocsx, Tentscu, i_MaQrCode } = req.body;
     const ID_Taisan = req.params.id;
@@ -99,13 +100,13 @@ const updateleEnt_taisan = async (req, res) => {
     }
 
     // Bước 3: Cập nhật tài sản với thông tin mới
-    await entTaisanService.updateleEnt_taisan({
-      ID_Nhomts: ID_Nhomts || currentAsset.ID_Nhomts, // Giữ nguyên nếu không có thay đổi
-      ID_Donvi: ID_Donvi || currentAsset.ID_Donvi, // Giữ nguyên nếu không có thay đổi
-      Mats: updatedMats || currentAsset.Mats, // Cập nhật hoặc giữ nguyên Mats
-      Tents: Tents || currentAsset.Tents, // Giữ nguyên nếu không có thay đổi
-      Thongso: Thongso || currentAsset.Thongso, // Giữ nguyên nếu không có thay đổi
-      Ghichu: Ghichu || currentAsset.Ghichu, // Giữ nguyên nếu không có thay đổi
+    await entTaisanService.updateEnt_taisan({
+      ID_Nhomts: ID_Nhomts || currentAsset.ID_Nhomts,
+      ID_Donvi: ID_Donvi || currentAsset.ID_Donvi,
+      Mats: updatedMats || currentAsset.Mats, 
+      Tents: Tents || currentAsset.Tents,
+      Thongso: Thongso || currentAsset.Thongso,
+      Ghichu: Ghichu || currentAsset.Ghichu,
       Nuocsx: Nuocsx || currentAsset.Nuocsx,
       Tentscu: Tentscu || currentAsset.Tentscu,
       i_MaQrCode: i_MaQrCode || currentAsset.i_MaQrCode,
@@ -124,6 +125,45 @@ const updateleEnt_taisan = async (req, res) => {
 const deleteEnt_taisan = async (req, res) => {
   try {
     const ID_Taisan = req.params.id;
+
+    const dataPhieuNXCT = await Tb_PhieuNXCT.findOne({
+      attributes: [
+        "ID_Taisan", "isDelete"
+      ],
+      where: {
+        ID_Taisan,
+        isDelete: 0
+      }
+    })
+
+    const dataSuachuaTS = await Tb_SuachuaTS.findOne({
+      attributes: [
+        "ID_SuachuaTS", "ID_Phongban", "Ngaygiao", "Sophieu", "Nguoitheodoi", "iTinhtrang", "isDelete"
+      ],
+      include: [
+        {
+          model: Tb_SuachuaCT,
+          as: "tb_suachuact",
+          attributes: [
+            "ID_PhieuSCCT", "ID_SuachuaTS", "ID_TaisanQr", "ID_Taisan", "Ngaynhan", "Sotien", "Ghichu", "isDelete"
+          ],
+          where: {
+            ID_Taisan,
+            isDelete: 0
+          }
+        }
+      ],
+      where: {
+        isDelete: 0
+      }
+    })
+
+    if(dataPhieuNXCT || dataSuachuaTS) {
+      return  res.status(200).json({
+        message: "Không thể xóa vì có liên quan đến phiếu hoặc sửa chữa!",
+      });
+    }
+
     await entTaisanService.deleteEnt_taisan(ID_Taisan);
     res.status(200).json({
       message: "Xóa thành công!",
@@ -136,7 +176,7 @@ const deleteEnt_taisan = async (req, res) => {
 module.exports = {
   createEnt_taisan,
   getDetaileEnt_taisan,
-  getAlleEnt_taisan,
-  updateleEnt_taisan,
+  getAllEnt_taisan,
+  updateEnt_taisan,
   deleteEnt_taisan,
 };

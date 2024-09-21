@@ -3,17 +3,17 @@ const entConnguoiService = require("../services/ent_connguoi.service");
 const createEnt_connguoi = async (req, res) => {
   try {
     const user = req.user.data;
-    const { MaPMC, ID_Nhompb, Hoten, Gioitinh, Diachi, Sodienthoai, Ghichu } =
+    const { MaPMC, Hoten, Gioitinh, Diachi, Sodienthoai, Ghichu, NgayGhinhan } =
       req.body;
     const reqData = {
       user: user,
       MaPMC: MaPMC,
-      ID_Nhompb: ID_Nhompb,
       Hoten: Hoten,
       Gioitinh: Gioitinh,
       Diachi: Diachi,
       Sodienthoai: Sodienthoai,
       Ghichu: Ghichu,
+      NgayGhinhan: NgayGhinhan,
     };
     const data = await entConnguoiService.createEnt_connguoi(reqData);
     res.status(200).json({
@@ -48,18 +48,18 @@ const updateEnt_connguoi = async (req, res) => {
   try {
     const user = req.user.data;
     const ID_Connguoi = req.params.id;
-    const { MaPMC, ID_Nhompb, Hoten, Gioitinh, Diachi, Sodienthoai, Ghichu } =
+    const { MaPMC, Hoten, Gioitinh, Diachi, Sodienthoai, Ghichu, NgayGhinhan } =
       req.body;
     const reqData = {
       ID_Connguoi: ID_Connguoi,
       user: user,
       MaPMC: MaPMC,
-      ID_Nhompb: ID_Nhompb,
       Hoten: Hoten,
       Gioitinh: Gioitinh,
       Diachi: Diachi,
       Sodienthoai: Sodienthoai,
       Ghichu: Ghichu,
+      NgayGhinhan: NgayGhinhan,
     };
     const data = await entConnguoiService.updateEnt_connguoi(reqData);
     res.status(200).json({

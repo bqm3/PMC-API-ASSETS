@@ -19,7 +19,7 @@ const createEnt_chinhanh = async (req, res) => {
 
 const getAllEnt_chinhanh = async (req, res) => {
   try {
-    const data = await entChinhanhService.getAlleEnt_chinhanh();
+    const data = await entChinhanhService.getAllEnt_chinhanh();
     res.status(200).json({
       message: "Danh sách đơn vị",
       data: data,
@@ -33,7 +33,7 @@ const updateEnt_chinhanh = async (req, res) => {
   try {
     const { Tenchinhanh } = req.body;
     const ID_Chinhanh = req.params.id;
-    await entChinhanhService.updateleEnt_chinhanh({
+    await entChinhanhService.updateEnt_chinhanh({
       ID_Chinhanh: ID_Chinhanh,
       Tenchinhanh: Tenchinhanh,
     });

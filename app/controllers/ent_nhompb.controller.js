@@ -17,9 +17,9 @@ const createEnt_nhompb = async (req, res) => {
   }
 };
 
-const getAlleEnt_nhompb = async (req, res) => {
+const getAllEnt_nhompb = async (req, res) => {
   try {
-    const data = await entNhompbService.getAlleEnt_nhompb();
+    const data = await entNhompbService.getAllEnt_nhompb();
     res.status(200).json({
       message: "Danh sách",
       data: data,
@@ -29,11 +29,11 @@ const getAlleEnt_nhompb = async (req, res) => {
   }
 };
 
-const updateleEnt_nhompb = async (req, res) => {
+const updateEnt_nhompb = async (req, res) => {
   try {
     const { Nhompb } = req.body;
     const ID_Nhompb = req.params.id;
-    await entNhompbService.updateleEnt_nhompb({
+    await entNhompbService.updateEnt_nhompb({
       ID_Nhompb: ID_Nhompb,
       Nhompb: Nhompb,
     });
@@ -59,7 +59,7 @@ const deleteEnt_nhompb = async (req, res) => {
 
 module.exports = {
   createEnt_nhompb,
-  getAlleEnt_nhompb,
-  updateleEnt_nhompb,
+  getAllEnt_nhompb,
+  updateEnt_nhompb,
   deleteEnt_nhompb
 };

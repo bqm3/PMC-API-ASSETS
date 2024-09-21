@@ -19,7 +19,7 @@ const createEnt_nghiepvu = async (req, res) => {
 
 const getAllEnt_nghiepvu = async (req, res) => {
   try {
-    const data = await entNghiepvuService.getAlleEnt_nghiepvu();
+    const data = await entNghiepvuService.getAllEnt_nghiepvu();
     res.status(200).json({
       message: "Danh sách nghiệp vụ",
       data: data,
@@ -33,7 +33,7 @@ const updateEnt_nghiepvu = async (req, res) => {
   try {
     const { Nghiepvu } = req.body;
     const ID_Nghiepvu = req.params.id;
-    await entNghiepvuService.updateleEnt_nghiepvu({
+    await entNghiepvuService.updateEnt_nghiepvu({
       ID_Nghiepvu: ID_Nghiepvu,
       Nghiepvu: Nghiepvu,
     });
