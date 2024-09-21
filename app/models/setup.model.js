@@ -21,6 +21,15 @@ const Ent_GroupPolicy = require('./ent_grouppolicy.model')
 const Tb_Table = require('./tb_table.model')
 const Ent_Chucvu = require('./ent_chucvu.model')
 const Ent_Loainhom = require('./ent_loainhom.model')
+const Ent_Nhacc = require('./ent_nhacc.model')
+const Ent_NhansuPBDA = require('./ent_nhansupbda.model')
+
+//
+Ent_Connguoi.hasMany(Ent_NhansuPBDA, {as: "Ent_NhansuPBDA", foreignKey: "ID_Connguoi"})
+Ent_NhansuPBDA.belongsTo(Ent_Connguoi, {foreignKey: "ID_Connguoi"})
+
+Ent_Phongbanda.hasMany(Ent_NhansuPBDA, {as: "Ent_NhansuPBDA", foreignKey: "ID_Phongban"})
+Ent_NhansuPBDA.belongsTo(Ent_Phongbanda, {foreignKey: "ID_Phongban"})
 
 // User
 Ent_Nhompb.hasMany(Ent_User, { as: 'Ent_User', foreignKey: 'ID_Nhompb' });
@@ -212,6 +221,8 @@ module.exports = {
     Ent_Chucvu,
     Ent_GroupPolicy, 
     Ent_Policy,
-    Ent_Loainhom
+    Ent_Loainhom,
+    Ent_Nhacc,
+    Ent_NhansuPBDA
   };
   

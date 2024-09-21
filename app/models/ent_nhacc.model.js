@@ -2,50 +2,53 @@
 const { Sequelize, DataTypes } = require("sequelize");
 const sequelize = require("../config/db.config");
 
-const Ent_Connguoi = sequelize.define("ent_connguoi", {
+const Ent_Nhacc = sequelize.define("ent_nhacc", {
     
-   ID_Connguoi: {
+   ID_NhaCC: {
     type: DataTypes.INTEGER,
     allowNull: false,
     autoIncrement: true,
     primaryKey: true
    },
-   MaPMC: {
+   MaNhacc: {
      type: DataTypes.CHAR,
-     allowNull: false,
+     allowNull: false
    },
-   Hoten: {
+   TenNhacc: {
     type: DataTypes.CHAR,
-    allowNull: false,
-  },
-  Gioitinh: {
+    allowNull: false
+   },
+   Masothue: {
     type: DataTypes.CHAR,
-    allowNull: false,
-  },
-  Diachi: {
+    allowNull: false
+   },
+   Sodienthoai: {
     type: DataTypes.CHAR,
-  },
-  Sodienthoai: {
+   },
+   Sotaikhoan: {
     type: DataTypes.CHAR,
-  },
-  NgayGhinhan: {
-    type: DataTypes.DATE,
-  },
-  Ghichu: {
-    type: DataTypes.TEXT,
-  },
+   },
+   Nganhang: {
+    type: DataTypes.CHAR,
+   },
+   Diachi: {
+    type: DataTypes.CHAR,
+   },
+   Ghichu: {
+    type: DataTypes.CHAR,
+   },
    isDelete: {
     type: DataTypes.INTEGER,
-    defaultValue: 0,
+    defaultValue: 0
    },
 },
  {
     freezeTableName: true,
     timestamps: false,
-    tableName: 'Ent_Connguoi'
+    tableName: 'Ent_Nhacc'
   }
 );
 
-module.exports = Ent_Connguoi;
+module.exports = Ent_Nhacc;
 
 

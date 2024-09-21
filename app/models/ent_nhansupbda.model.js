@@ -1,29 +1,30 @@
 const { Sequelize, DataTypes } = require("sequelize");
 const sequelize = require("../config/db.config");
 
-const Tb_SuachuaTS = sequelize.define(
-  "tb_suachuats",
+const Ent_NhansuPBDA = sequelize.define(
+  "ent_nhansupbda",
   {
-    ID_SuachuaTS: {
+    ID_NSPB: {
       type: DataTypes.INTEGER,
       allowNull: false,
       autoIncrement: true,
       primaryKey: true,
     },
-    Ngaygiao: {
+    ID_Phongban: {
+      type: DataTypes.INTEGER,
+    },
+    ID_Connguoi: {
+      type: DataTypes.INTEGER,
+    },
+    Ngayvao: {
       type: DataTypes.DATE,
     },
-    Sophieu: {
-      type: DataTypes.CHAR,
-    },
-    Nguoitheodoi: {
-      type: DataTypes.CHAR,
+    Ngay: {
+      type: DataTypes.DATE,
     },
     iTinhtrang: {
       type: DataTypes.INTEGER,
-      defaultValue: 0,
     },
-
     isDelete: {
       type: DataTypes.INTEGER,
       defaultValue: 0,
@@ -32,8 +33,8 @@ const Tb_SuachuaTS = sequelize.define(
   {
     freezeTableName: true,
     timestamps: false,
-    tableName: "Tb_SuachuaTS",
+    tableName: "Ent_NhansuPBDA",
   }
 );
 
-module.exports = Tb_SuachuaTS;
+module.exports = Ent_NhansuPBDA;

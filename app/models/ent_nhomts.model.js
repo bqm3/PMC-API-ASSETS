@@ -17,7 +17,7 @@ const Ent_Nhomts = sequelize.define("ent_nhomts", {
      type: DataTypes.CHAR,
      allowNull: false,
    },
-   Loaits: {
+   Tennhom: {
     type: DataTypes.CHAR,
     allowNull: false,
   },
