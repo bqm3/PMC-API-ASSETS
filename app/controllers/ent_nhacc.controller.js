@@ -114,6 +114,13 @@ const updateEnt_Nhacc = async (req, res) => {
       Ghichu: Ghichu,
       isDelete: 0,
     };
+
+    if (ID_Nhacc <= 5) {
+      return res.status(400).json({
+        message: "Không thể thay đổi nhà cung cấp",
+      });
+    }
+
     const dataDetail = await entNhaccService.getDetailByIDEnt_Nhacc({
       ID_Nhacc: ID_Nhacc,
       MaNhacc: MaNhacc,
@@ -122,20 +129,21 @@ const updateEnt_Nhacc = async (req, res) => {
     });
 
     if (dataDetail) {
-      res.status(500).json({
-        message: "Nhập lại thông tin",
+      return res.status(500).json({
+        message: "Đã tồn tại nhà cung cấp",
       });
     } else {
       const data = await entNhaccService.updateEnt_Nhacc(reqData);
-      res.status(200).json({
+      return res.status(200).json({
         message: "Cập nhật thành công",
         data: data,
       });
     }
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    return res.status(500).json({ message: error.message });
   }
 };
+
 
 const deleteEnt_Nhacc = async (req, res) => {
   try {

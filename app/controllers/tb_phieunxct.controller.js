@@ -30,7 +30,6 @@ const scanQrCodeTb_PhieuNXCT = async (req, res) => {
       message: "Kiểm kê tài sản thành công",
     });
   } catch (error) {
-    console.log('err', error)
     res.status(500).json({ message: error.message });
   }
 };

@@ -143,9 +143,9 @@ Ent_Taisan.belongsTo(Ent_Nhomts, {
   foreignKey: "ID_Nhomts", as: 'ent_nhomts'
 });
 
-Ent_Loainhom.hasMany(Ent_Nhomts, { as: 'ent_nhomts', foreignKey: 'ID_LoaiNhom' });
+Ent_Loainhom.hasMany(Ent_Nhomts, { as: 'ent_nhomts', foreignKey: 'ID_Loainhom' });
 Ent_Nhomts.belongsTo(Ent_Loainhom, {
-  foreignKey: "ID_LoaiNhom", as: 'ent_loainhom'
+  foreignKey: "ID_Loainhom", as: 'ent_loainhom'
 });
 
 // User

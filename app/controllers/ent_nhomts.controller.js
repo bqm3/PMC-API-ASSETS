@@ -2,14 +2,15 @@ const entNhomtsService = require("../services/ent_nhomts.service");
 
 const createEnt_nhomts = async (req, res) => {
   try {
-    const { Manhom, Tennhom, ID_LoaiNhom,Ghichu } = req.body;
+    const { Manhom, Tennhom, ID_Loainhom,Ghichu } = req.body;
     const reqData = {
       Manhom: Manhom,
       Tennhom: Tennhom,
-      ID_LoaiNhom: ID_LoaiNhom,
+      ID_Loainhom: ID_Loainhom,
       Ghichu: Ghichu,
       isDelete: 0,
     };
+
     const data = await entNhomtsService.createEnt_nhomts(reqData);
     res.status(200).json({
       message: "Tạo thành công",
@@ -34,13 +35,13 @@ const getAllEnt_nhomts = async (req, res) => {
 
 const updateEnt_nhomts = async (req, res) => {
   try {
-    const { Manhom, Tennhom, ID_LoaiNhom } = req.body;
+    const { Manhom, Tennhom, ID_Loainhom } = req.body;
     const ID_Nhomts = req.params.id;
     await entNhomtsService.updateEnt_nhomts({
       ID_Nhomts: ID_Nhomts,
       Manhom: Manhom,
       Tennhom: Tennhom,
-      ID_LoaiNhom: ID_LoaiNhom,
+      ID_Loainhom: ID_Loainhom,
     });
     res.status(200).json({
       message: "Cập nhật thành công"

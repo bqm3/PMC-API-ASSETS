@@ -24,6 +24,7 @@ const getDetailEnt_Nhacc = async (data) => {
   return res;
 };
 
+
 const getDetailByIDEnt_Nhacc = async (data) => {
   let whereClause = {
     isDelete: 0,

@@ -38,6 +38,13 @@ const getAllEnt_taisan = async () => {
         as : "ent_nhomts",
         attributes: ["ID_Nhomts", "Manhom", "Tennhom", "isDelete"],
         where: { isDelete: 0 },
+        include: [
+          {
+            model: Ent_Loainhom,
+            as : "ent_loainhom",
+            attributes: ["ID_Loainhom", "Loainhom"],
+          }
+        ]
       },
       {
         model: Ent_Donvi,

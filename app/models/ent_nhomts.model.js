@@ -10,7 +10,7 @@ const Ent_Nhomts = sequelize.define("ent_nhomts", {
     autoIncrement: true,
     primaryKey: true
    },
-   ID_LoaiNhom: {
+   ID_Loainhom: {
     type: DataTypes.INTEGER
   },
    Manhom: {

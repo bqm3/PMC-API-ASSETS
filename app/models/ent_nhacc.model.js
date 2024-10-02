@@ -4,7 +4,7 @@ const sequelize = require("../config/db.config");
 
 const Ent_Nhacc = sequelize.define("ent_nhacc", {
     
-   ID_NhaCC: {
+   ID_Nhacc: {
     type: DataTypes.INTEGER,
     allowNull: false,
     autoIncrement: true,

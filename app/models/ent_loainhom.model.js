@@ -4,7 +4,7 @@ const sequelize = require("../config/db.config");
 
 const Ent_Loainhom = sequelize.define("ent_loainhom", {
     
-   ID_LoaiNhom: {
+   ID_Loainhom: {
     type: DataTypes.INTEGER,
     allowNull: false,
     autoIncrement: true,

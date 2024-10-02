@@ -2,8 +2,15 @@ const { Ent_Nhomts, Ent_Loainhom } = require("../models/setup.model");
 const { Op } = require("sequelize");
 
 const createEnt_nhomts = async (data) => {
-  const findData = await Ent_Nhomts.findOne( {
-    attributes: ["ID_Nhomts", "ID_LoaiNhom", "Manhom", "Tennhom",'Ghichu', "isDelete"],
+  const findData = await Ent_Nhomts.findOne({
+    attributes: [
+      "ID_Nhomts",
+      "ID_Loainhom",
+      "Manhom",
+      "Tennhom",
+      "Ghichu",
+      "isDelete",
+    ],
     include: [
       {
         model: Ent_Loainhom,
@@ -15,11 +22,11 @@ const createEnt_nhomts = async (data) => {
     where: {
       isDelete: 0,
       Manhom: data.Manhom,
-      Tennhom: data.Tennhom
+      Tennhom: data.Tennhom,
     },
   });
 
-  if(findData){
+  if (findData) {
     throw new Error("Đã tồn tại nhóm tài sản.");
   }
 
@@ -29,7 +36,7 @@ const createEnt_nhomts = async (data) => {
 
 const getDetailEnt_taisan = async (ID) => {
   const res = await Ent_Nhomts.findByPk(ID, {
-    attributes: ["ID_Nhomts", "ID_LoaiNhom", "Manhom", "Tennhom", "isDelete"],
+    attributes: ["ID_Nhomts", "ID_Loainhom", "Manhom", "Tennhom", "isDelete"],
     include: [
       {
         model: Ent_Loainhom,
@@ -45,13 +52,14 @@ const getDetailEnt_taisan = async (ID) => {
   return res;
 };
 
+
 const getAllEnt_nhomts = async () => {
   let whereClause = {
     isDelete: 0,
   };
 
   const res = await Ent_Nhomts.findAll({
-    attributes: ["ID_Nhomts", "ID_LoaiNhom", "Manhom", "Tennhom", "isDelete"],
+    attributes: ["ID_Nhomts", "ID_Loainhom", "Manhom", "Tennhom", "isDelete"],
     include: [
       {
         model: Ent_Loainhom,
@@ -70,10 +78,27 @@ const updateEnt_nhomts = async (data) => {
     ID_Nhomts: data.ID_Nhomts,
   };
 
+  const filterData = await Ent_Nhomts.findOne({
+    where: {
+      isDelete: 0,
+      ID_Nhomts: !data.ID_Nhomts,
+      [Op.and]: [
+        { Manhom: data.Manhom },
+        {
+          Tennhom: data.Tennhom,
+        },
+      ],
+    },
+  });
+
+  if(filterData){
+    throw new Error("Đã tồn tại nhóm tài sản."); 
+  }
+
   const res = await Ent_Nhomts.update(
     {
       Manhom: data.Manhom,
-      ID_LoaiNhom: data.ID_LoaiNhom,
+      ID_Loainhom: data.ID_Loainhom,
       Tennhom: data.Tennhom,
     },
     {

@@ -37,6 +37,7 @@ require("./app/routes/ent_chucvu.route")(app);
 require("./app/routes/ent_policy.route")(app);
 require("./app/routes/ent_connguoi.route")(app);
 require("./app/routes/ent_nhompb.route")(app);
+require("./app/routes/ent_loainhom.route")(app);
 require("./app/routes/ent_chinhanh.route")(app);
 require("./app/routes/ent_nhomts.route")(app);
 require("./app/routes/ent_grouppolicy.route")(app);

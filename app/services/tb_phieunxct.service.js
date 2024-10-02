@@ -10,7 +10,8 @@ const {
   Ent_Phongbanda,
   Ent_Chinhanh,
 } = require("../models/setup.model");
-const { Op } = require("sequelize");
+const sequelize = require("../config/db.config");
+const { Op, where, Sequelize } = require("sequelize");
 
 const createTb_PhieuNXCT = async (phieunxct,data) => {
 
@@ -44,56 +45,83 @@ const createTb_PhieuNXCT = async (phieunxct,data) => {
 };
 
 const updateTb_PhieuNXCT = async (phieunxct, ID_PhieuNX) => {
-  const groupedItems = {};
+  const transaction = await sequelize.transaction();
+  try {
+    const groupedItems = {};
 
-  // Group items by ID_Taisan
-  phieunxct.forEach(item => {
-    const { ID_Taisan, Dongia, Soluong, ID_PhieuNXCT,Namsx, isDelete } = item;
-    if (!groupedItems[ID_Taisan]) {
-      groupedItems[ID_Taisan] = {
-        ID_Taisan,
-        items: []
-      };
-    }
-    groupedItems[ID_Taisan].items.push({ ID_PhieuNXCT, Dongia, Soluong,Namsx, isDelete });
-  });
-
-  // Process grouped items
-  await Promise.all(Object.values(groupedItems).map(async (group) => {
-    const { ID_Taisan, items } = group;
-
-
-    // Iterate through items for the same ID_Taisan
-    for (const item of items) {
-      const { ID_PhieuNXCT, Dongia, Soluong,Namsx, isDelete } = item;
-
-      if (ID_PhieuNXCT) {
-        // Update existing record
-        await Tb_PhieuNXCT.update({
-          ID_PhieuNX: ID_PhieuNX,
+    // Group items by ID_Taisan
+    phieunxct.forEach(item => {
+      const { ID_Taisan, Dongia, Soluong, ID_PhieuNXCT, Namsx, isDelete } = item;
+      if (!groupedItems[ID_Taisan]) {
+        groupedItems[ID_Taisan] = {
           ID_Taisan,
-          Dongia,
-          Soluong,
-          Namsx,
-          isDelete: isDelete
-        }, {
-          where: { ID_PhieuNXCT }
-        });
-      } else {
-        // Create new record
-        await Tb_PhieuNXCT.create({
-          ID_PhieuNX: ID_PhieuNX,
-          ID_Taisan,
-          Dongia,
-          Soluong,
-          Namsx,
-          isDelete: 0
-        });
+          items: []
+        };
       }
-    }
-  }));
-};
+      groupedItems[ID_Taisan].items.push({ ID_PhieuNXCT, Dongia, Soluong, Namsx, isDelete });
+    });
 
+    // Arrays for bulk operations
+    const updatePromises = [];
+    const createItems = [];
+
+    // Process grouped items
+    Object.values(groupedItems).forEach(group => {
+      const { ID_Taisan, items } = group;
+
+      items.forEach(item => {
+        const { ID_PhieuNXCT, Dongia, Soluong, Namsx, isDelete } = item;
+
+        if (ID_PhieuNXCT) {
+          // Prepare update for existing record
+          updatePromises.push(
+            Tb_PhieuNXCT.update(
+              {
+                ID_PhieuNX,
+                ID_Taisan,
+                Dongia,
+                Soluong,
+                Namsx,
+                isDelete
+              },
+              {
+                where: { ID_PhieuNXCT },
+                transaction
+              }
+            )
+          );
+        } else {
+          // Prepare new record for bulk insert
+          createItems.push({
+            ID_PhieuNX,
+            ID_Taisan,
+            Dongia,
+            Soluong,
+            Namsx,
+            isDelete: 0
+          });
+        }
+      });
+    });
+
+    // Execute bulk update
+    await Promise.all(updatePromises);
+
+    // Execute bulk create if there are items to insert
+    if (createItems.length > 0) {
+      await Tb_PhieuNXCT.bulkCreate(createItems, { transaction });
+    }
+
+    // Commit the transaction
+    await transaction.commit();
+    return true; // Return a success indicator
+  } catch (error) {
+    // Rollback the transaction in case of an error
+    await transaction.rollback();
+    console.error("Error in updating Tb_PhieuNXCT:", error);
+    return false; // Return a failure indicator
+  }
+};
 
 const getAllTb_PhieuNXCT = async () => {
     // Điều kiện để lấy các bản ghi không bị XCTóa
