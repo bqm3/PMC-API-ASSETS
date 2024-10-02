@@ -20,7 +20,8 @@ const getAllEnt_phongbanda = async () => {
       "ID_Phongban",
       "ID_Chinhanh",
       "ID_Nhompb",
-      "Mapb", "Thuoc",
+      "Mapb",
+      "Thuoc",
       "Tenphongban",
       "Diachi",
       "Ghichu",
@@ -34,7 +35,7 @@ const getAllEnt_phongbanda = async () => {
       },
       {
         model: Ent_Nhompb,
-        attributes: ["ID_Nhompb","Nhompb", "isDelete"],
+        attributes: ["ID_Nhompb", "Nhompb", "isDelete"],
         where: { isDelete: 0 },
       },
     ],
@@ -49,7 +50,8 @@ const getDetailEnt_phongbanda = async (id) => {
       "ID_Phongban",
       "ID_Chinhanh",
       "ID_Nhompb",
-      "Mapb", "Thuoc",
+      "Mapb",
+      "Thuoc",
       "Tenphongban",
       "Diachi",
       "Ghichu",
@@ -65,7 +67,7 @@ const getDetailEnt_phongbanda = async (id) => {
       {
         model: Ent_Nhompb,
         as: "ent_phongban",
-        attributes: ["ID_Nhompb","Nhompb", "isDelete"],
+        attributes: ["ID_Nhompb", "Nhompb", "isDelete"],
         where: { isDelete: 0 },
       },
     ],
@@ -77,7 +79,7 @@ const getDetailEnt_phongbanda = async (id) => {
 };
 
 const updateEnt_phongbanda = async (data) => {
-  console.log(data)
+  console.log(data);
   let whereClause = {
     isDelete: 0,
     ID_Phongban: Number(data.ID_Phongban),
@@ -100,16 +102,63 @@ const updateEnt_phongbanda = async (data) => {
   return res;
 };
 
+// const deleteEnt_phongbanda = async (id) => {
+//   const res = await Ent_Phongbanda.update(
+//     { isDelete: 1 },
+//     {
+//       where: {
+//         ID_Phongban: id,
+//       },
+//     }
+//   );
+//   return res;
+// };
+
+
 const deleteEnt_phongbanda = async (id) => {
-  const res = await Ent_Phongbanda.update(
-    { isDelete: 1 },
-    {
-      where: {
-        ID_Phongban: id,
-      },
-    }
+  // Kiểm tra sự tồn tại của ID_Phongban trong bảng Ent_Phongbanda
+  const phongban = await Ent_Phongbanda.findOne({ where: { ID_Phongban: id } });
+
+  if (!phongban) {
+    throw new Error("ID_Phongban không tồn tại trong bảng Ent_Phongbanda.");
+  }
+
+  // Kiểm tra xem ID_Phongban có tồn tại trong các bảng liên quan khác không
+  const isInOtherTables = await checkRelatedTables(id);
+
+  if (isInOtherTables) {
+    throw new Error(
+      "Không thể xóa, ID_Phongban tồn tại trong các bảng liên quan."
+    );
+  } else {
+    // Cập nhật trạng thái isDelete nếu ID không tồn tại trong các bảng liên quan
+    const res = await Ent_Phongbanda.update(
+      { isDelete: 1 },
+      {
+        where: {
+          ID_Phongban: id,
+        },
+      }
+    );
+    return res;
+  }
+};
+
+const checkRelatedTables = async (id) => {
+  const tables = [
+    Ent_NhansuPBDA,
+    Tb_GiaonhanTS,
+    Tb_PhieuNX,
+    Tb_SuachuaTS,
+    Tb_TaisanQrCode,
+    Tb_Tonkho
+  ];
+
+  const results = await Promise.all(
+    tables.map(table => table.findOne({ where: { ID_Phongban: id } }))
   );
-  return res;
+
+  return results.some(result => result !== null);
 };
 
 module.exports = {
@@ -117,5 +166,5 @@ module.exports = {
   getAllEnt_phongbanda,
   updateEnt_phongbanda,
   deleteEnt_phongbanda,
-  getDetailEnt_phongbanda
+  getDetailEnt_phongbanda,
 };

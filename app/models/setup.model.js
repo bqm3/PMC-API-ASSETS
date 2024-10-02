@@ -23,6 +23,7 @@ const Ent_Chucvu = require('./ent_chucvu.model')
 const Ent_Loainhom = require('./ent_loainhom.model')
 const Ent_Nhacc = require('./ent_nhacc.model')
 const Ent_NhansuPBDA = require('./ent_nhansupbda.model')
+const Tb_Tonkho = require('./tb_tonkho.model')
 
 //
 Ent_Connguoi.hasMany(Ent_NhansuPBDA, {as: "Ent_NhansuPBDA", foreignKey: "ID_Connguoi"})
@@ -192,6 +193,31 @@ Tb_TaisanQrCode.belongsTo(Ent_User, {
   foreignKey: "ID_User",
 });
 
+// Ton kho
+Ent_Nam.hasMany(Tb_Tonkho, { as: 'tb_tonkho', foreignKey: 'ID_Nam' });
+Tb_Tonkho.belongsTo(Ent_Nam, {
+  foreignKey: "ID_Nam",
+});
+
+Ent_Phongbanda.hasMany(Tb_Tonkho, { as: 'tb_tonkho', foreignKey: 'ID_Phongban' });
+Tb_Tonkho.belongsTo(Ent_Phongbanda, {
+  foreignKey: "ID_Phongban",
+});
+
+Ent_Thang.hasMany(Tb_Tonkho, { as: 'tb_tonkho', foreignKey: 'ID_Thang' });
+Tb_Tonkho.belongsTo(Ent_Thang, {
+  foreignKey: "ID_Thang",
+});
+
+Ent_Quy.hasMany(Tb_Tonkho, { as: 'tb_tonkho', foreignKey: 'ID_Quy' });
+Tb_Tonkho.belongsTo(Ent_Quy, {
+  foreignKey: "ID_Quy",
+});
+
+Ent_Taisan.hasMany(Tb_Tonkho, { as: 'tb_tonkho', foreignKey: 'ID_Taisan' });
+Tb_Tonkho.belongsTo(Ent_Taisan, {
+  foreignKey: "ID_Taisan",
+});
 
 // Chucvu
 Ent_Chucvu.hasMany(Ent_User, { as: 'ent_user', foreignKey: 'ID_Chucvu' })
