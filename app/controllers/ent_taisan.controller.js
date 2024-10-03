@@ -99,7 +99,15 @@ const updateEnt_taisan = async (req, res) => {
       updatedMats = `${MaNhom}000${ID_Taisan}`;
     }
 
-    // Bước 3: Cập nhật tài sản với thông tin mới
+    // Bước 3: Check 
+    // const roomExists = await entTaisanService.check_taisan(updatedMats, Tents, ID_Taisan);
+    // if (roomExists) {
+    //   return res.status(400).json({
+    //     message: "Mã tài sản hoặc tên tài sản đã tồn tại. Vui lòng nhập lại thông tin.",
+    //   });
+    // }
+    
+    // Bước 4: Cập nhật tài sản với thông tin mới
     await entTaisanService.updateEnt_taisan({
       ID_Nhomts: ID_Nhomts || currentAsset.ID_Nhomts,
       ID_Donvi: ID_Donvi || currentAsset.ID_Donvi,

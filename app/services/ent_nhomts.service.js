@@ -1,5 +1,6 @@
 const { Ent_Nhomts, Ent_Loainhom } = require("../models/setup.model");
 const { Op } = require("sequelize");
+const sequelize = require("../config/db.config");
 
 const createEnt_nhomts = async (data) => {
   const findData = await Ent_Nhomts.findOne({
@@ -109,6 +110,29 @@ const updateEnt_nhomts = async (data) => {
 };
 
 const deleteEnt_nhomts = async (id) => {
+  const [tables] = await sequelize.query(
+    `SELECT table_name AS tableName
+     FROM information_schema.columns
+     WHERE column_name = 'ID_Nhomts'
+     AND table_name != 'Ent_Nhomts'
+     AND table_schema = DATABASE()` 
+  );
+
+  for (const table of tables) {
+    const tableName = table.tableName;
+    console.log(tableName)
+    const [results] = await sequelize.query(
+      `SELECT 1 FROM \`${tableName}\` WHERE ID_Nhomts = :id LIMIT 1`,
+      {
+        replacements: { id },
+        type: sequelize.QueryTypes.SELECT,
+      }
+    );
+    if (results) {
+      throw new Error(`Không thể xóa, ID_Nhomts tồn tại trong bảng ${tableName}.`);
+    }
+  }
+
   const res = await Ent_Nhomts.update(
     { isDelete: 1 },
     {

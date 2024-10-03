@@ -4,11 +4,50 @@ const {
   Ent_Nhompb,
 } = require("../models/setup.model");
 const { Op } = require("sequelize");
+const sequelize = require("../config/db.config");
 
 const createEnt_phongbanda = async (data) => {
   const res = await Ent_Phongbanda.create(data);
   return res;
 };
+
+// const check_phongbanda = async (Mapb, Tenphongban) => {
+//   const existingRoom = await Ent_Phongbanda.findOne({
+//     where: {
+//       [Op.or]: [
+//         { Mapb: Mapb },
+//         { Tenphongban: Tenphongban }
+//       ],
+//       isDelete: 0,
+//     },
+//     attributes: ["ID_Phongban"],
+//   });
+//   return existingRoom !== null;
+// };
+
+const check_phongbanda = async (Mapb, Tenphongban, excludeId = null) => {
+  const conditions = {
+    [Op.or]: [
+      { Mapb: Mapb },
+      { Tenphongban: Tenphongban }
+    ],
+    isDelete: 0,
+  };
+
+  if (excludeId) {
+    conditions.ID_Phongban = {
+      [Op.ne]: excludeId 
+    };
+  }
+
+  const existingRoom = await Ent_Phongbanda.findOne({
+    where: conditions,
+    attributes: ["ID_Phongban"],
+  });
+
+  return existingRoom !== null;
+};
+
 
 const getAllEnt_phongbanda = async () => {
   let whereClause = {
@@ -79,7 +118,6 @@ const getDetailEnt_phongbanda = async (id) => {
 };
 
 const updateEnt_phongbanda = async (data) => {
-  console.log(data);
   let whereClause = {
     isDelete: 0,
     ID_Phongban: Number(data.ID_Phongban),
@@ -116,22 +154,34 @@ const updateEnt_phongbanda = async (data) => {
 
 
 const deleteEnt_phongbanda = async (id) => {
-  // Kiểm tra sự tồn tại của ID_Phongban trong bảng Ent_Phongbanda
-  const phongban = await Ent_Phongbanda.findOne({ where: { ID_Phongban: id } });
-
-  if (!phongban) {
-    throw new Error("ID_Phongban không tồn tại trong bảng Ent_Phongbanda.");
-  }
-
-  // Kiểm tra xem ID_Phongban có tồn tại trong các bảng liên quan khác không
-  const isInOtherTables = await checkRelatedTables(id);
-
-  if (isInOtherTables) {
-    throw new Error(
-      "Không thể xóa, ID_Phongban tồn tại trong các bảng liên quan."
+  try {
+    // Truy vấn danh sách các bảng có chứa cột ID_Phongban
+    const [tables] = await sequelize.query(
+      `SELECT table_name AS tableName
+       FROM information_schema.columns
+       WHERE column_name = 'ID_Phongban'
+       AND table_name != 'Ent_PhongbanDa'
+       AND table_schema = DATABASE()` 
     );
-  } else {
-    // Cập nhật trạng thái isDelete nếu ID không tồn tại trong các bảng liên quan
+
+    // Duyệt qua các bảng tìm kiếm xem ID_Phongban có tồn tại hay không
+    for (const table of tables) {
+      const tableName = table.tableName;
+  
+      // Kiểm tra sự tồn tại của ID_Phongban trong từng bảng
+      const [results] = await sequelize.query(
+        `SELECT 1 FROM \`${tableName}\` WHERE ID_Phongban = :id LIMIT 1`,
+        {
+          replacements: { id },
+          type: sequelize.QueryTypes.SELECT,
+        }
+      );
+      if (results) {
+        throw new Error(`Không thể xóa, ID_Phongban tồn tại trong bảng ${tableName}.`);
+      }
+    }
+
+    // Nếu không có ID_Phongban trong bảng nào, cập nhật isDelete = 1
     const res = await Ent_Phongbanda.update(
       { isDelete: 1 },
       {
@@ -141,25 +191,14 @@ const deleteEnt_phongbanda = async (id) => {
       }
     );
     return res;
+  } catch (error) {
+    console.error("Lỗi khi xóa phòng ban:", error.message);
+    throw error;
   }
 };
 
-const checkRelatedTables = async (id) => {
-  const tables = [
-    Ent_NhansuPBDA,
-    Tb_GiaonhanTS,
-    Tb_PhieuNX,
-    Tb_SuachuaTS,
-    Tb_TaisanQrCode,
-    Tb_Tonkho
-  ];
 
-  const results = await Promise.all(
-    tables.map(table => table.findOne({ where: { ID_Phongban: id } }))
-  );
 
-  return results.some(result => result !== null);
-};
 
 module.exports = {
   createEnt_phongbanda,
@@ -167,4 +206,5 @@ module.exports = {
   updateEnt_phongbanda,
   deleteEnt_phongbanda,
   getDetailEnt_phongbanda,
+  check_phongbanda,
 };
