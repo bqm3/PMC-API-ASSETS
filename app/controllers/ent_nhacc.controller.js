@@ -148,6 +148,12 @@ const updateEnt_Nhacc = async (req, res) => {
 const deleteEnt_Nhacc = async (req, res) => {
   try {
     const ID_Nhacc = req.params.id;
+
+    if (ID_Nhacc <= 5) {
+      return res.status(400).json({
+        message: "Không xóa nhà cung cấp",
+      });
+    }
     await entNhaccService.deleteEnt_Nhacc(ID_Nhacc);
     res.status(200).json({
       message: "Xóa thành công!",

@@ -59,7 +59,17 @@ const deleteEnt_nhomts = async (req, res) => {
       message: "Xóa thành công!",
     });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    if (error.message.includes("Không thể xóa")) {
+      return res.status(400).json({
+        status: 400,
+        message: error.message,
+      });
+    }
+    res.status(500).json({
+      status: 500,
+      message: "Đã xảy ra lỗi không xác định.",
+      error: error.message,
+    });
   }
 };
 

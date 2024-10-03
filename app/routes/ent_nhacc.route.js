@@ -10,7 +10,7 @@ module.exports = (app) => {
     router.get("/detail/:id", ent_nhacc.getDetailEnt_Nhacc);
     router.put("/update/:id", ent_nhacc.updateEnt_Nhacc);
     
-    // router.put("/delete/:id", ent_nhacc.deleteEnt_nhacc);
+    router.put("/delete/:id", ent_nhacc.deleteEnt_Nhacc);
   
     app.use("/api/v1/ent_nhacc", router);
   };

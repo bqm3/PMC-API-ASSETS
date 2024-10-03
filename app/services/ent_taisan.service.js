@@ -95,6 +95,30 @@ const getDetailEnt_taisan = async (id) => {
   return res;
 };
 
+const check_taisan = async (Mats, Tents, excludeId = null) => {
+  const conditions = {
+    [Op.or]: [
+      { Mats: Mats },
+      { Tents: Tents }
+    ],
+    isDelete: 0,
+  };
+
+  // Nếu excludeId có giá trị, thêm điều kiện để loại trừ bản ghi đó
+  if (excludeId) {
+    conditions.ID_Taisan = {
+      [Op.ne]: excludeId // Không lấy bản ghi có ID bằng excludeId
+    };
+  }
+
+  const existingRoom = await Ent_Taisan.findOne({
+    where: conditions,
+    attributes: ["ID_Taisan"],
+  });
+
+  return existingRoom !== null;
+};
+
 const updateEnt_taisan = async (data) => {
   let whereClause = {
     isDelete: 0,
@@ -138,4 +162,5 @@ module.exports = {
   updateEnt_taisan,
   deleteEnt_taisan,
   getDetailEnt_taisan,
+  check_taisan,
 };
