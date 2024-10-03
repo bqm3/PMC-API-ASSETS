@@ -26,10 +26,10 @@ const Ent_NhansuPBDA = require('./ent_nhansupbda.model')
 const Tb_Tonkho = require('./tb_tonkho.model')
 
 //
-Ent_Connguoi.hasMany(Ent_NhansuPBDA, {as: "Ent_NhansuPBDA", foreignKey: "ID_Connguoi"})
+Ent_Connguoi.hasMany(Ent_NhansuPBDA, {as: "ent_nhansupbda", foreignKey: "ID_Connguoi"})
 Ent_NhansuPBDA.belongsTo(Ent_Connguoi, {foreignKey: "ID_Connguoi"})
 
-Ent_Phongbanda.hasMany(Ent_NhansuPBDA, {as: "Ent_NhansuPBDA", foreignKey: "ID_Phongban"})
+Ent_Phongbanda.hasMany(Ent_NhansuPBDA, {as: "ent_nhansupbda", foreignKey: "ID_Phongban"})
 Ent_NhansuPBDA.belongsTo(Ent_Phongbanda, {foreignKey: "ID_Phongban"})
 
 // User
@@ -249,6 +249,7 @@ module.exports = {
     Ent_Policy,
     Ent_Loainhom,
     Ent_Nhacc,
-    Ent_NhansuPBDA
+    Ent_NhansuPBDA,
+    Tb_Tonkho
   };
   

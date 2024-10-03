@@ -143,56 +143,60 @@ const getAllEnt_NhansuPBDA = async (req, res) => {
       });
     }
 
-    await Ent_NhansuPBDA.findAll({
+    await Ent_Connguoi.findAll({
       attributes: [
-        "ID_NSPB",
-        "ID_Phongban",
         "ID_Connguoi",
-        "Ngayvao",
-        "iTinhtrang",
-        "Ngay",
+        "MaPMC",
+        "Hoten",
+        "Gioitinh",
+        "Diachi",
+        "Sodienthoai",
+        "Ghichu",
+        "NgayGhinhan",
         "isDelete",
       ],
+      where: {isDelete: 0},
       include: [
         {
-          model: Ent_Connguoi,
+          model: Ent_NhansuPBDA,
+          as: "ent_nhansupbda",
           attributes: [
-            "ID_Connguoi",
-            "MaPMC",
-            "Hoten",
-            "Gioitinh",
-            "Diachi",
-            "Sodienthoai",
-            "Ghichu",
-            "NgayGhinhan",
-            "isDelete",
-          ],
-        },
-        {
-          model: Ent_Phongbanda,
-          attributes: [
+            "ID_NSPB",
             "ID_Phongban",
-            "ID_Chinhanh",
-            "ID_Nhompb",
-            "Mapb",
-            "Thuoc",
-            "Tenphongban",
-            "Diachi",
-            "Ghichu",
+            "ID_Connguoi",
+            "Ngayvao",
+            "iTinhtrang",
+            "Ngay",
             "isDelete",
           ],
           include: [
             {
-              model: Ent_Chinhanh,
-              attributes: ["Tenchinhanh"],
+              model: Ent_Phongbanda,
+              attributes: [
+                "ID_Phongban",
+                "ID_Chinhanh",
+                "ID_Nhompb",
+                "Mapb",
+                "Thuoc",
+                "Tenphongban",
+                "Diachi",
+                "Ghichu",
+                "isDelete",
+              ],
+              include: [
+                {
+                  model: Ent_Chinhanh,
+                  attributes: ["Tenchinhanh"],
+                },
+                {
+                  model: Ent_Nhompb,
+                  attributes: ["Nhompb"],
+                },
+              ],
             },
-            {
-              model: Ent_Nhompb,
-              attributes: ["Nhompb"],
-            },
-          ],
-        },
-      ],
+          ]
+        }
+      ]
     })
       .then((data) => {
         res.status(200).json({
