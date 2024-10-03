@@ -12,6 +12,7 @@ const createTb_PhieuNX = async (req, res) => {
       Sophieu,
       ID_NoiNhap,
       ID_NoiXuat,
+      ID_Loainhom,
       NgayNX,
       Ghichu,
       ID_Quy,
@@ -95,9 +96,6 @@ const getPhieuNXByUser = async (req, res) => {
   try {
     const userData = req.user.data;
     const ID_Quy = req.params.id;
-
-    console.log("userData", userData);
-    console.log("ID_Quy", ID_Quy);
 
     const data = await tbPhieuNXService.getPhieuNXByUser(
       userData.ID_User,

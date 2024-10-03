@@ -25,7 +25,7 @@ const getAllTb_taisanqrcode = async () => {
 
   const res = await Tb_TaisanQrCode.findAll({
     attributes: [
-      "ID_TaisanQr",
+      "ID_TaisanQrcode",
       "ID_Taisan",
       "Giatri",
       "MaQrCode",
@@ -125,7 +125,7 @@ const getAllTb_taisanqrcode = async () => {
 const getDetailTb_taisanqrcode = async (id) => {
   const res = await Tb_TaisanQrCode.findByPk(id, {
     attributes: [
-      "ID_TaisanQr",
+      "ID_TaisanQrcode",
       "ID_Taisan",
       "Giatri",
       "MaQrCode",

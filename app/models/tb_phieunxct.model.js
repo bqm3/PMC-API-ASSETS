@@ -30,6 +30,9 @@ const Tb_PhieuNXCT = sequelize.define(
       type: DataTypes.INTEGER,
       allowNull: false,
     },
+    Chietkhau: {
+      type: DataTypes.INTEGER,
+    },
     Namsx: {
       type: DataTypes.INTEGER,
     },

@@ -15,6 +15,7 @@ const { Op, where, Sequelize } = require("sequelize");
 
 const createTb_PhieuNXCT = async (phieunxct,data) => {
 
+    console.log('vao day')
   const groupedItems = {};
 
   // Nhóm và tính tổng theo ID_Taisan
