@@ -120,17 +120,12 @@ const updateTb_PhieuNX = async (req, res) => {
       Sophieu,
       ID_NoiNhap,
       ID_NoiXuat,
+      ID_Loainhom,
       NgayNX,
       Ghichu,
       phieunxct,
       ID_Quy,
     } = req.body;
-
-    // if (!Array.isArray(phieunxct) || phieunxct.length === 0) {
-    //   return res.status(400).json({
-    //     message: "Danh sách chi tiết phiếu nhập xuất không được trống.",
-    //   });
-    // }
 
     // Get Thang and Nam details
     const Thang = await eThangService.getDetail(NgayNX);
@@ -144,6 +139,7 @@ const updateTb_PhieuNX = async (req, res) => {
       ID_NoiNhap: ID_NoiNhap,
       ID_NoiXuat: ID_NoiXuat,
       ID_Nam: Nam.ID_Nam,
+      ID_Loainhom: ID_Loainhom,
       ID_Thang: Thang.ID_Thang,
       NgayNX: NgayNX,
       ID_User: user.ID_User,
@@ -152,7 +148,9 @@ const updateTb_PhieuNX = async (req, res) => {
       isDelete: 0,
     };
 
-    const  updatePhieuNXResult = await tbPhieuNXService.updateTb_PhieuNX(reqData);
+    const updatePhieuNXResult = await tbPhieuNXService.updateTb_PhieuNX(
+      reqData
+    );
     if (!updatePhieuNXResult) {
       return res.status(500).json({
         message: "Đã xảy ra lỗi khi cập nhật phiếu nhập xuất",

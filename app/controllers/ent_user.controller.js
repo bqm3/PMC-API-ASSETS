@@ -41,23 +41,25 @@ const register = async (req, res) => {
       ID_Nhompb,
       ID_Chinhanh,
       ID_Chucvu,
+      ID_Phongban,
       Ghichu,
-      UserName
+      UserName,
     } = req.body;
 
     const data = {
       Emails,
       Password,
       Hoten,
-      MaPMC : MaPMC ? MaPMC : UserName,
+      MaPMC: MaPMC ? MaPMC : UserName,
       Gioitinh,
       Diachi,
       Sodienthoai,
       Anh,
       ID_Nhompb,
+      ID_Phongban,
       ID_Chinhanh,
       ID_Chucvu,
-      Ghichu
+      Ghichu,
     };
 
     const info = await entUserService.register(data);
@@ -68,23 +70,58 @@ const register = async (req, res) => {
 };
 
 const checkAuth = async (req, res) => {
-  try{
+  try {
     const userData = req.user.data;
 
     const info = await entUserService.checkAuth(userData.ID_User);
     res.status(200).json({
       message: "Thông tin cá nhân",
-      data: info
+      data: info,
     });
-  }catch(error){
+  } catch (error) {
     res.status(400).json({ message: error.message });
   }
-}
+};
+
+const getAll = async (req, res) => {
+  try {
+    const user = req.user.data;
+    if (user) {
+      const data = await entUserService.getAll();
+      res.status(200).json({
+        message: "Danh sách",
+        data: data,
+      });
+    } else {
+      res.status(400).json({ message: "Không có quyền xem thông tin" });
+    }
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+const getDetail = async (req, res) => {
+  try {
+    const user = req.user.data;
+    const ID_User = req.params.id;
+    if (user) {
+      const data = await entUserService.getDetail(ID_User);
+      res.status(200).json({
+        message: "Danh sách",
+        data: data,
+      });
+    } else {
+      res.status(400).json({ message: "Không có quyền xem thông tin" });
+    }
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
 
 const changePassword = async (req, res) => {
   try {
     const user = req.user.data;
-   
+
     const { currentPassword, newPassword } = req.body;
     const reqData = {
       user,
@@ -92,10 +129,10 @@ const changePassword = async (req, res) => {
       newPassword,
     };
     await entUserService.changePassword(reqData);
- 
-    res.clearCookie('token');
+
+    res.clearCookie("token");
     res.status(200).json({
-      message: "Đổi mật khẩu thành công"
+      message: "Đổi mật khẩu thành công",
     });
   } catch (error) {
     res.status(400).json({ message: error.message });
@@ -105,7 +142,7 @@ const changePassword = async (req, res) => {
 const updateProfile = async (req, res) => {
   try {
     const user = req.user.data;
-   
+
     const {
       Emails,
       Password,
@@ -114,15 +151,16 @@ const updateProfile = async (req, res) => {
       Gioitinh,
       Diachi,
       Sodienthoai,
+      ID_Phongban,
       Anh,
       ID_Nhompb,
       ID_Chinhanh,
       ID_Chucvu,
-      Ghichu
+      Ghichu,
     } = req.body;
 
     const images = req.file;
-    
+
     const reqData = {
       user,
       images,
@@ -132,28 +170,125 @@ const updateProfile = async (req, res) => {
       MaPMC,
       Gioitinh,
       Diachi,
+      ID_Phongban,
       Sodienthoai,
       Anh,
       ID_Nhompb,
       ID_Chinhanh,
       ID_Chucvu,
-      Ghichu
+      Ghichu,
     };
 
     await entUserService.updateProfile(reqData);
- 
+
     res.status(200).json({
-      message: "Cập nhật thông tin thành công"
+      message: "Cập nhật thông tin thành công",
     });
   } catch (error) {
     res.status(400).json({ message: error.message });
   }
-}
+};
+
+const updateUser = async (req, res) => {
+  try {
+    const user = req.user.data;
+    const ID_User = req.params.id;
+    if (user) {
+      const {
+        Emails,
+        Hoten,
+        MaPMC,
+        Gioitinh,
+        Diachi,
+        Sodienthoai,
+        ID_Phongban,
+        Password,
+        ID_Chucvu,
+        IDNHOMNGUOIDUNG,
+        Ghichu,
+      } = req.body;
+
+      const reqData = {
+        Emails,
+        Password,
+        Hoten,
+        MaPMC,
+        Gioitinh,
+        Diachi,
+        ID_Phongban,
+        Sodienthoai,
+        ID_Chucvu,
+        IDNHOMNGUOIDUNG,
+        Ghichu,
+        ID_User
+      };
+
+      await entUserService.updateUser(reqData);
+
+      res.status(200).json({
+        message: "Cập nhật thông tin thành công",
+      });
+    } else {
+      res.status(500).json({ message: "Không cấp quyền cập nhật thông tin" });
+    }
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+};
+
+const createUser = async (req, res) => {
+  try {
+    const user = req.user.data;
+    if (user) {
+      const {
+        Emails,
+        Hoten,
+        MaPMC,
+        Gioitinh,
+        Diachi,
+        Sodienthoai,
+        ID_Phongban,
+        Password,
+        ID_Chucvu,
+        IDNHOMNGUOIDUNG,
+        Ghichu,
+      } = req.body;
+
+      const reqData = {
+        Emails,
+        Hoten,
+        MaPMC,
+        Gioitinh,
+        Diachi,
+        Sodienthoai,
+        ID_Phongban,
+        Password,
+        ID_Chucvu,
+        IDNHOMNGUOIDUNG,
+        Ghichu,
+      };
+
+      await entUserService.register(reqData);
+
+      res.status(200).json({
+        message: "Cập nhật thông tin thành công",
+      });
+    } else {
+      res.status(500).json({ message: "Không cấp quyền cập nhật thông tin" });
+    }
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+};
 
 module.exports = {
   login,
+  createUser,
   register,
   changePassword,
   updateProfile,
-  checkAuth
+  checkAuth,
+  getAll,
+  getDetail,
+  updateUser
 };

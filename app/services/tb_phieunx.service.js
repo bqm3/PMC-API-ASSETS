@@ -13,6 +13,7 @@ const {
   Ent_Taisan,
   Ent_User,
   Ent_Quy,
+  Ent_Loainhom,
 } = require("../models/setup.model");
 const { Op } = require("sequelize");
 
@@ -34,6 +35,7 @@ const getDetailTb_PhieuNX = async(ID_PhieuNX) => {
       "Sophieu",
       "ID_NoiNhap",
       "ID_NoiXuat",
+      "ID_Loainhom",
       "ID_User",
       "NgayNX",
       "Ghichu",
@@ -120,6 +122,11 @@ const getDetailTb_PhieuNX = async(ID_PhieuNX) => {
           isDelete: 0,
         },
       },
+         // Loainhom
+         {
+          model: Ent_Loainhom,
+          attributes: ["ID_Loainhom", "Loainhom", "isDelete"],
+        },
       {
         model: Ent_Nam,
         attributes: ["ID_Nam", "Nam", "Giatri"],
@@ -206,6 +213,7 @@ const getAllTb_PhieuNX = async () => {
         "Sophieu",
         "ID_NoiNhap",
         "ID_NoiXuat",
+        "ID_Loainhom",
         "ID_User",
         "NgayNX",
         "Ghichu",
@@ -283,7 +291,11 @@ const getAllTb_PhieuNX = async () => {
             isDelete: 0,
           },
         },
-        // Bao gồm các bảng liên kết khác
+         // Loainhom
+         {
+          model: Ent_Loainhom,
+          attributes: ["ID_Loainhom", "Loainhom", "isDelete"],
+        },
         // Nghiep vu
         {
           model: Ent_Nghiepvu,
@@ -583,6 +595,7 @@ const updateTb_PhieuNX = async (data) => {
       ID_NoiNhap: data.ID_NoiNhap,
       ID_NoiXuat: data.ID_NoiXuat,
       ID_Nam: data.ID_Nam,
+      ID_Loainhom: data.ID_Loainhom,
       ID_Thang: data.ID_Thang,
       NgayNX: data.NgayNX,
       ID_User: data.ID_User,

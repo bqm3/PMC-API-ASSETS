@@ -13,6 +13,9 @@ const Ent_User = sequelize.define(
     ID_Nhompb: {
       type: DataTypes.INTEGER,
     },
+    ID_Phongban: {
+      type: DataTypes.INTEGER,
+    },
     ID_Chinhanh: {
       type: DataTypes.INTEGER,
     },
@@ -22,7 +25,9 @@ const Ent_User = sequelize.define(
     ID_Policy: {
       type: DataTypes.JSON,
     },
-    
+    IDNHOMNGUOIDUNG: {
+      type: DataTypes.JSON,
+    },
     MaPMC: {
       type: DataTypes.CHAR,
     },
@@ -48,7 +53,6 @@ const Ent_User = sequelize.define(
     },
     Password: {
       type: DataTypes.CHAR,
-      allowNull: false,
     },
     Anh: {
       type: DataTypes.CHAR,

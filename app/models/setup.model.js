@@ -27,7 +27,7 @@ const Tb_Tonkho = require('./tb_tonkho.model')
 const Tb_GiaonhanTS = require('./tb_giaonhants')
 const Tb_GiaonhanTSCT = require('./tb_giaonhantsct')
 const Ent_PhieuNCC = require('./ent_phieuncc.model.js')
-const Ent_PhieuNCCCT = require('./ent_phieunccct.model.js/index.js')
+const Ent_PhieuNCCCT = require('./ent_phieunccct.model.js')
 
 //
 Ent_Connguoi.hasMany(Ent_NhansuPBDA, {as: "ent_nhansupbda", foreignKey: "ID_Connguoi"})
@@ -40,6 +40,11 @@ Ent_NhansuPBDA.belongsTo(Ent_Phongbanda, {foreignKey: "ID_Phongban"})
 Ent_Nhompb.hasMany(Ent_User, { as: 'Ent_User', foreignKey: 'ID_Nhompb' });
 Ent_User.belongsTo(Ent_Nhompb, {
   foreignKey: "ID_Nhompb"
+})
+
+Ent_Phongbanda.hasMany(Ent_User, { as: 'Ent_User', foreignKey: 'ID_Phongban' });
+Ent_User.belongsTo(Ent_Phongbanda, {
+  foreignKey: "ID_Phongban"
 })
 
 Ent_Chinhanh.hasMany(Ent_User, { as: 'Ent_User', foreignKey: 'ID_Chinhanh' });
@@ -83,6 +88,16 @@ Tb_NameField.belongsTo(Tb_Table, {
 Ent_Nghiepvu.hasMany(Tb_PhieuNX, { as: 'tb_phieunx', foreignKey: 'ID_Nghiepvu' });
 Tb_PhieuNX.belongsTo(Ent_Nghiepvu, {
   foreignKey: "ID_Nghiepvu",
+});
+
+Ent_Loainhom.hasMany(Tb_PhieuNX, { as: 'tb_phieunx', foreignKey: 'ID_Loainhom' });
+Tb_PhieuNX.belongsTo(Ent_Loainhom, {
+  foreignKey: "ID_Loainhom",
+});
+
+Ent_Phongbanda.hasMany(Tb_PhieuNX, { as: 'tb_phieunx', foreignKey: 'ID_Phongban' });
+Tb_PhieuNX.belongsTo(Ent_Phongbanda, {
+  foreignKey: "ID_Phongban",
 });
 
 Ent_User.hasMany(Tb_PhieuNX, { as: 'tb_phieunx', foreignKey: 'ID_User' });

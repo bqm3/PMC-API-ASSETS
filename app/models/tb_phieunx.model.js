@@ -20,16 +20,22 @@ const Tb_PhieuNX = sequelize.define(
       allowNull: false,
       references: {
         model: Ent_Phongbanda, // Tên bảng tham chiếu
-        key: 'ID_Phongban' // Khóa chính của bảng Ent_Phongbanda
-      }
+        key: "ID_Phongban", // Khóa chính của bảng Ent_Phongbanda
+      },
     },
     ID_NoiXuat: {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
         model: Ent_Phongbanda, // Tên bảng tham chiếu
-        key: 'ID_Phongban' // Khóa chính của bảng Ent_Phongbanda
-      }
+        key: "ID_Phongban", // Khóa chính của bảng Ent_Phongbanda
+      },
+    },
+    ID_Loainhom: {
+      type: DataTypes.INTEGER,
+    },
+    ID_Phongban: {
+      type: DataTypes.INTEGER,
     },
     Sophieu: {
       type: DataTypes.CHAR,

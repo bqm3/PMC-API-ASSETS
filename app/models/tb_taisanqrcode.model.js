@@ -2,9 +2,9 @@ const { Sequelize, DataTypes } = require("sequelize");
 const sequelize = require("../config/db.config");
 
 const Tb_TaisanQrCode = sequelize.define(
-  "tb_taisanqr",
+  "tb_taisanqrcode",
   {
-    ID_TaisanQr: {
+    ID_TaisanQrcode: {
       type: DataTypes.INTEGER,
       allowNull: false,
       autoIncrement: true,
