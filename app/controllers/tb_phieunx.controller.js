@@ -28,6 +28,7 @@ const createTb_PhieuNX = async (req, res) => {
 
     // Prepare data for Tb_PhieuNX creation
     const reqData = {
+      ID_Phongban: user.ID_Phongban,
       ID_Nghiepvu: ID_Nghiepvu,
       Sophieu: Sophieu,
       ID_NoiNhap: ID_NoiNhap,
@@ -43,32 +44,33 @@ const createTb_PhieuNX = async (req, res) => {
       isDelete: 0,
     };
 
-    const checkPhieuNX = await Tb_PhieuNX.findOne({
-      attributes: ["ID_Nghiepvu", "Sophieu", "ID_NoiNhap", "ID_NoiXuat", "iTinhtrang", "isDelete", "ID_Nam", "ID_Quy", "isDelete"],
-      where: {
-        [Op.or]: [
-          {
-            ID_Nam: Nam.ID_Nam,
-            ID_Quy: ID_Quy,
-            ID_Nghiepvu: ID_Nghiepvu,
-            ID_NoiNhap: ID_NoiNhap,
-            ID_NoiXuat: ID_NoiXuat,
-            isDelete: 0,
-          },
-          {
-            Sophieu: {
-              [Op.like]: `%${Sophieu}%`
-            }
-          }
-        ]
-      }
-    })
+
+    // const checkPhieuNX = await Tb_PhieuNX.findOne({
+    //   attributes: ["ID_Nghiepvu", "Sophieu", "ID_NoiNhap", "ID_NoiXuat", "iTinhtrang", "isDelete", "ID_Nam", "ID_Quy", "isDelete"],
+    //   where: {
+    //     [Op.or]: [
+    //       {
+    //         ID_Nam: Nam.ID_Nam,
+    //         ID_Quy: ID_Quy,
+    //         ID_Nghiepvu: ID_Nghiepvu,
+    //         ID_NoiNhap: ID_NoiNhap,
+    //         ID_NoiXuat: ID_NoiXuat,
+    //         isDelete: 0,
+    //       },
+    //       {
+    //         Sophieu: {
+    //           [Op.like]: `%${Sophieu}%`
+    //         }
+    //       }
+    //     ]
+    //   }
+    // })
   
-    if(checkPhieuNX) {
-      return  res.status(400).json({
-        message: "Đã có phiếu tồn tại",
-      });
-    }
+    // if(checkPhieuNX) {
+    //   return  res.status(400).json({
+    //     message: "Đã có phiếu tồn tại",
+    //   });
+    // }
 
     let data;
 
@@ -196,7 +198,8 @@ const updateTb_PhieuNX = async (req, res) => {
     ) {
       const updatePhieuNXCTResult = await tbPhieuNXCTService.updateTb_PhieuNXCT(
         phieunxct,
-        ID_PhieuNX
+        ID_PhieuNX,
+        reqData
       );
       if (!updatePhieuNXCTResult) {
         return res.status(500).json({

@@ -12,79 +12,79 @@ const Tb_Tonkho = sequelize.define(
     },
     ID_Nam: {
       type: DataTypes.INTEGER,
-      allowNull: false,
+      allowNull: true,
     },
     ID_Phongban: {
       type: DataTypes.INTEGER,
-      allowNull: false,
+      allowNull: true,
     },
     ID_Thang: {
       type: DataTypes.INTEGER,
-      allowNull: false,
+      allowNull: true,
     },
     ID_Quy: {
       type: DataTypes.INTEGER,
-      allowNull: false,
+      allowNull: true,
     },
     ID_Taisan: {
       type: DataTypes.INTEGER,
-      allowNull: false,
+      allowNull: true,
     },
     Tondau: {
       type: DataTypes.DOUBLE,
-      allowNull: false,
+      allowNull: true,
     },
     Tientondau: {
       type: DataTypes.DOUBLE,
-      allowNull: false,
+      allowNull: true,
     },
     Nhapngoai: {
       type: DataTypes.DOUBLE,
-      allowNull: false,
+      allowNull: true,
     },
     Tiennhapngoai: {
       type: DataTypes.DOUBLE,
-      allowNull: false,
+      allowNull: true,
     },
     NhapNB: {
       type: DataTypes.DOUBLE,
-      allowNull: false,
+      allowNull: true,
     },
     Nhapkhac: {
       type: DataTypes.DOUBLE,
-      allowNull: false,
+      allowNull: true,
     },
     XuatNB: {
       type: DataTypes.DOUBLE,
-      allowNull: false,
+      allowNull: true,
     },
     XuattraNCC: {
       type: DataTypes.DOUBLE,
-      allowNull: false,
+      allowNull: true,
     },
     XuatgiaoNV: {
       type: DataTypes.DOUBLE,
-      allowNull: false,
+      allowNull: true,
     },
     XuatThanhly: {
       type: DataTypes.DOUBLE,
-      allowNull: false,
+      allowNull: true,
     },
     XuatHuy: {
       type: DataTypes.DOUBLE,
-      allowNull: false,
+      allowNull: true,
     },
     TonSosach: {
       type: DataTypes.DOUBLE,
-      allowNull: false,
+      allowNull: true,
     },
     Kiemke: {
       type: DataTypes.DOUBLE,
-      allowNull: false,
+      allowNull: true,
     },
     Giatb: {
       type: DataTypes.DOUBLE,
-      allowNull: false,
+      allowNull: true,
     },
     isDelete: {
       type: DataTypes.INTEGER,

@@ -88,6 +88,7 @@ const login = async (data) => {
         "Emails",
         "Anh",
         "isDelete",
+        "ID_Phongban",
       ],
       include: [
         {
@@ -101,6 +102,10 @@ const login = async (data) => {
         {
           model: Ent_Chucvu,
           attributes: ["Chucvu"],
+        },
+        {
+          model: Ent_Phongbanda,
+          attributes: ["ID_Phongban", "Tenphongban"],
         },
       ],
       where: {
