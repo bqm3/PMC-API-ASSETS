@@ -26,8 +26,8 @@ const Ent_NhansuPBDA = require('./ent_nhansupbda.model')
 const Tb_Tonkho = require('./tb_tonkho.model')
 const Tb_GiaonhanTS = require('./tb_giaonhants')
 const Tb_GiaonhanTSCT = require('./tb_giaonhantsct')
-const Ent_PhieuNCC = require('./ent_phieuncc.model.js')
-const Ent_PhieuNCCCT = require('./ent_phieunccct.model.js')
+const Tb_PhieuNCC = require('./tb_phieuncc.model.js')
+const Tb_PhieuNCCCT = require('./tb_phieunccct.model.js')
 
 //
 Ent_Connguoi.hasMany(Ent_NhansuPBDA, {as: "ent_nhansupbda", foreignKey: "ID_Connguoi"})
@@ -263,54 +263,54 @@ Tb_TaisanQrCode.belongsTo(Tb_GiaonhanTSCT,{
 })
 
 // Phieu nx ncc
-Ent_Phongbanda.hasMany(Ent_PhieuNCC, { as: 'ent_phieuncc', foreignKey: 'ID_Phongban' });
-Ent_PhieuNCC.belongsTo(Ent_Nghiepvu, {
+Ent_Phongbanda.hasMany(Tb_PhieuNCC, { as: 'tb_phieuncc', foreignKey: 'ID_Phongban' });
+Tb_PhieuNCC.belongsTo(Ent_Nghiepvu, {
   foreignKey: "ID_Phongban",
 });
 
-Ent_Nghiepvu.hasMany(Ent_PhieuNCC, { as: 'ent_phieuncc', foreignKey: 'ID_Nghiepvu' });
-Ent_PhieuNCC.belongsTo(Ent_Nghiepvu, {
+Ent_Nghiepvu.hasMany(Tb_PhieuNCC, { as: 'tb_phieuncc', foreignKey: 'ID_Nghiepvu' });
+Tb_PhieuNCC.belongsTo(Ent_Nghiepvu, {
   foreignKey: "ID_Nghiepvu",
 });
 
-Ent_Loainhom.hasMany(Ent_PhieuNCC, { as: 'ent_phieuncc', foreignKey: 'ID_Loainhom' });
-Ent_PhieuNCC.belongsTo(Ent_Loainhom, {
+Ent_Loainhom.hasMany(Tb_PhieuNCC, { as: 'tb_phieuncc', foreignKey: 'ID_Loainhom' });
+Tb_PhieuNCC.belongsTo(Ent_Loainhom, {
   foreignKey: "ID_Loainhom", as: 'ent_loainhom'
 });
 
-Ent_User.hasMany(Ent_PhieuNCC, { as: 'ent_phieuncc', foreignKey: 'ID_User' });
-Ent_PhieuNCC.belongsTo(Ent_User, {
+Ent_User.hasMany(Tb_PhieuNCC, { as: 'tb_phieuncc', foreignKey: 'ID_User' });
+Tb_PhieuNCC.belongsTo(Ent_User, {
   foreignKey: "ID_User",
 });
 
-Ent_Nam.hasMany(Ent_PhieuNCC, { as: 'ent_phieuncc', foreignKey: 'ID_Nam' });
-Ent_PhieuNCC.belongsTo(Ent_Nam, {
+Ent_Nam.hasMany(Tb_PhieuNCC, { as: 'tb_phieuncc', foreignKey: 'ID_Nam' });
+Tb_PhieuNCC.belongsTo(Ent_Nam, {
   foreignKey: "ID_Nam",
 });
 
-Ent_Quy.hasMany(Ent_PhieuNCC, { as: 'ent_phieuncc', foreignKey: 'ID_Quy' });
-Ent_PhieuNCC.belongsTo(Ent_Quy, {
+Ent_Quy.hasMany(Tb_PhieuNCC, { as: 'tb_phieuncc', foreignKey: 'ID_Quy' });
+Tb_PhieuNCC.belongsTo(Ent_Quy, {
   foreignKey: "ID_Quy",
 });
 
-Ent_Thang.hasMany(Ent_PhieuNCC, { as: 'ent_phieuncc', foreignKey: 'ID_Thang' });
-Ent_PhieuNCC.belongsTo(Ent_Thang, {
+Ent_Thang.hasMany(Tb_PhieuNCC, { as: 'tb_phieuncc', foreignKey: 'ID_Thang' });
+Tb_PhieuNCC.belongsTo(Ent_Thang, {
   foreignKey: "ID_Thang",
 });
 
 // Phieu nx nccct
-Ent_PhieuNCC.hasMany(Ent_PhieuNCCCT, { as: 'ent_phieunccct', foreignKey: 'ID_PhieuNCC' });
-Ent_PhieuNCCCT.belongsTo(Ent_PhieuNCC, {
+Tb_PhieuNCC.hasMany(Tb_PhieuNCCCT, { as: 'tb_phieunccct', foreignKey: 'ID_PhieuNCC' });
+Tb_PhieuNCCCT.belongsTo(Tb_PhieuNCC, {
   foreignKey: "ID_PhieuNCC",
 });
 
-Ent_Taisan.hasMany(Ent_PhieuNCCCT, { as: 'ent_phieunccct', foreignKey: 'ID_Taisan' });
-Ent_PhieuNCCCT.belongsTo(Ent_Taisan, {
+Ent_Taisan.hasMany(Tb_PhieuNCCCT, { as: 'tb_phieunccct', foreignKey: 'ID_Taisan' });
+Tb_PhieuNCCCT.belongsTo(Ent_Taisan, {
   foreignKey: "ID_Taisan",
 });
 
-Tb_TaisanQrCode.hasMany(Ent_PhieuNCCCT, { as: 'ent_phieunccct', foreignKey: 'ID_TaisanQr' });
-Ent_PhieuNCCCT.belongsTo(Tb_TaisanQrCode, { 
+Tb_TaisanQrCode.hasMany(Tb_PhieuNCCCT, { as: 'tb_phieunccct', foreignKey: 'ID_TaisanQr' });
+Tb_PhieuNCCCT.belongsTo(Tb_TaisanQrCode, { 
   foreignKey: 'ID_TaisanQr', as: 'tb_taisanqr' 
 });
 
@@ -346,7 +346,7 @@ module.exports = {
     Ent_Nhacc,
     Ent_NhansuPBDA,
     Tb_Tonkho,
-    Ent_PhieuNCC,
-    Ent_PhieuNCCCT,
+    Tb_PhieuNCC,
+    Tb_PhieuNCCCT,
   };
   

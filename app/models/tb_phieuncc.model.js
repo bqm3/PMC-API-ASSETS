@@ -1,43 +1,59 @@
 const { Sequelize, DataTypes } = require("sequelize");
 const sequelize = require("../config/db.config");
 
-const Ent_PhieuNCCCT = sequelize.define(
-  "ent_phieunccct",
+// Định nghĩa mô hình Tb_GiaonhanTS
+const Tb_PhieuNCC = sequelize.define(
+  "tb_phieuncc",
   {
-    ID_PhieuNCCCT: {
+    ID_PhieuNCC: {
       type: DataTypes.INTEGER,
       allowNull: false,
       autoIncrement: true,
       primaryKey: true,
     },
-    ID_TaisanQrCode: {
-      type: DataTypes.INTEGER,
-    },
-    ID_PhieuNX: {
+    ID_Phongban: {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
-    ID_Taisan: {
+    ID_Nghiepvu: {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
-    Dongia: {
-      type: DataTypes.DOUBLE,
-      allowNull: false,
-    },
-    Soluong: {
+    ID_Loainhom: {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
-    Chietkhau: {
-      type: DataTypes.INTEGER,
-      allowNull: false
+    Sophieu: {
+      type: DataTypes.CHAR,
     },
-    Namsx: {
+    ID_NoiNhap: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+    ID_NoiXuat: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+    ID_User: {
       type: DataTypes.INTEGER,
     },
-    Anhts: {
+    NgayNX: {
+      type: DataTypes.DATE,
+    },
+    Ghichu: {
       type: DataTypes.TEXT,
+    },
+    ID_Nam: {
+      type: DataTypes.INTEGER,
+    },
+    ID_Thang: {
+      type: DataTypes.INTEGER,
+    },
+    iTinhtrang: {
+      type: DataTypes.INTEGER,
+    },
+    ID_Quy: {
+      type: DataTypes.INTEGER,
     },
     isDelete: {
       type: DataTypes.INTEGER,
@@ -47,8 +63,8 @@ const Ent_PhieuNCCCT = sequelize.define(
   {
     freezeTableName: true,
     timestamps: false,
-    tableName: "Ent_PhieuNCCCT",
+    tableName: "Tb_PhieuNCC",
   }
 );
 
-module.exports = Ent_PhieuNCCCT;
+module.exports = Tb_PhieuNCC;
