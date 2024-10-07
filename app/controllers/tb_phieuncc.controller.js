@@ -19,7 +19,7 @@ const createTb_PhieuNCC = async (req, res) => {
       NgayNX,
       Ghichu,
       ID_Quy,
-      phieunxct,
+      phieunccct,
     } = req.body;
 
     // Get Thang and Nam details
@@ -77,12 +77,12 @@ const createTb_PhieuNCC = async (req, res) => {
 
     // Create Tb_PhieuNCCCT
     if (
-      phieunxct &&
-      Array.isArray(phieunxct) &&
-      phieunxct.length > 0 &&
-      phieunxct[0]?.ID_Taisan !== null
+      phieunccct &&
+      Array.isArray(phieunccct) &&
+      phieunccct.length > 0 &&
+      phieunccct[0]?.ID_Taisan !== null
     ) {
-      await tbPhieuNCCCTService.createTb_PhieuNCCCT(phieunxct, data);
+      await tbPhieuNCCCTService.createTb_PhieuNCCCT(phieunccct, data);
     }
 
     // Send success response
@@ -99,9 +99,9 @@ const createTb_PhieuNCC = async (req, res) => {
 
 const getDetailTb_PhieuNCC = async (req, res) => {
   try {
-    const ID_PhieuNX = req.params.id;
+    const ID_PhieuNCC = req.params.id;
 
-    const data = await tbPhieuNCCService.getDetailTb_PhieuNCC(ID_PhieuNX);
+    const data = await tbPhieuNCCService.getDetailTb_PhieuNCC(ID_PhieuNCC);
     res.status(200).json({
       message: "Dữ liệu",
       data: data,
@@ -123,12 +123,12 @@ const getAllTb_PhieuNCC = async (req, res) => {
   }
 };
 
-const getPhieuNXByUser = async (req, res) => {
+const getPhieuNCCByUser = async (req, res) => {
   try {
     const userData = req.user.data;
     const ID_Quy = req.params.id;
 
-    const data = await tbPhieuNCCService.getPhieuNXByUser(
+    const data = await tbPhieuNCCService.getPhieuNCCByUser(
       userData.ID_User,
       ID_Quy
     );
@@ -154,7 +154,7 @@ const updateTb_PhieuNCC = async (req, res) => {
       ID_Loainhom,
       NgayNX,
       Ghichu,
-      phieunxct,
+      phieunccct,
       ID_Quy,
     } = req.body;
 
@@ -188,17 +188,17 @@ const updateTb_PhieuNCC = async (req, res) => {
       });
     }
 
-    // Update Tb_PhieuNCCCT if `phieunxct` contains valid items
+    // Update Tb_PhieuNCCCT if `phieunccct` contains valid items
     if (
-      Array.isArray(phieunxct) &&
-      phieunxct.length > 0 &&
-      phieunxct[0].ID_Taisan !== null
+      Array.isArray(phieunccct) &&
+      phieunccct.length > 0 &&
+      phieunccct[0].ID_Taisan !== null
     ) {
-      const updatePhieuNXCTResult = await tbPhieuNCCCTService.updateTb_PhieuNCCCT(
-        phieunxct,
+      const updatePhieuNccCTResult = await tbPhieuNCCCTService.updateTb_PhieuNCCCT(
+        phieunccct,
         ID_PhieuNX
       );
-      if (!updatePhieuNXCTResult) {
+      if (!updatePhieuNccCTResult) {
         return res.status(500).json({
           message: "Đã xảy ra lỗi khi cập nhật chi tiết phiếu nhập xuất",
         });
@@ -229,7 +229,7 @@ const closeTb_PhieuNCC = async (req, res) => {
       ID_NoiXuat,
       NgayNX,
       Ghichu,
-      phieunxct,
+      phieunccct,
       ID_Quy
     } = req.body;
 
@@ -257,9 +257,9 @@ const closeTb_PhieuNCC = async (req, res) => {
     
     if (
       (ID_Nghiepvu == 1 || ID_Nghiepvu == 2) &&
-      phieunxct[0].ID_Taisan !== null
+      phieunccct[0].ID_Taisan !== null
     ) {
-      await tbTaiSanQrService.insertDataToEntQRCode(phieunxct, reqData, { transaction });
+      await tbTaiSanQrService.insertDataToEntQRCode(phieunccct, reqData, { transaction });
     }
 
     await transaction.commit();
@@ -308,6 +308,6 @@ module.exports = {
   deleteTb_PhieuNCC,
   getDetailTb_PhieuNCC,
   closeTb_PhieuNCC,
-  getPhieuNXByUser,
+  getPhieuNCCByUser,
   closeFastTb_PhieuNCC,
 };

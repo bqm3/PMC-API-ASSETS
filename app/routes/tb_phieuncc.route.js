@@ -13,7 +13,7 @@ module.exports = (app) => {
   router.get("/all", tb_phieuncc.getAllTb_PhieuNCC);
   router.get("/:id", tb_phieuncc.getDetailTb_PhieuNCC);
 
-  router.get("/kiemke/:id", [isAuthenticated], tb_phieuncc.getPhieuNXByUser);
+  router.get("/kiemke/:id", [isAuthenticated], tb_phieuncc.getPhieuNCCByUser);
 
   router.put(
     "/update/:id",
