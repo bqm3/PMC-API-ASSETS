@@ -49,6 +49,7 @@ require("./app/routes/ent_phongbanda.route")(app);
 require("./app/routes/tb_taisanqrcode.route")(app);
 require("./app/routes/ent_user.route")(app);
 require("./app/routes/tb_phieunx.route")(app);
+require("./app/routes/tb_phieuncc.route")(app);
 require("./app/routes/tb_phieunxct.route")(app);
 require("./app/routes/tb_suachuats.route")(app);
 require("./app/routes/ent_nhacc.route")(app);
