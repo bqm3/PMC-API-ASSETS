@@ -152,6 +152,9 @@ Tb_TaisanQrCode.hasMany(Tb_SuachuaCT, { as: 'tb_suachuact', foreignKey: 'ID_Tais
 Tb_SuachuaCT.belongsTo(Tb_TaisanQrCode, { foreignKey: 'ID_TaisanQr', as: 'tb_taisanqr' });
 
 
+Tb_PhieuNXCT.hasMany(Tb_TaisanQrCode, {as: 'tb_taisanqrcode', foreignKey: 'ID_PhieuNXCT'});
+Tb_TaisanQrCode.belongsTo(Tb_PhieuNXCT, {foreignKey: "ID_PhieuNXCT"})
+
 // Tai san
 Ent_Donvi.hasMany(Ent_Taisan, { as: 'ent_taisan', foreignKey: 'ID_Donvi' });
 Ent_Taisan.belongsTo(Ent_Donvi, {

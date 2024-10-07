@@ -273,6 +273,7 @@ const insertDataToEntQRCode = async (phieunxct, data) => {
 
           await Tb_TaisanQrCode.create({
             ID_Taisan: item.ID_Taisan,
+            ID_PhieuNXCT: item.ID_PhieuNXCT,
             Ngaykhoitao: data.NgayNX,
             Giatri: item.Dongia,
             Namsx: item.Namsx,
@@ -280,7 +281,7 @@ const insertDataToEntQRCode = async (phieunxct, data) => {
             Ghichu: "",
             ID_Nam: data.ID_Nam,
             iTinhtrang: 0,
-            ID_Thang: data.ID_Thang,
+            ID_Quy: data.ID_Quy,
             ID_Phongban: data.ID_NoiNhap,
             ID_User: data.ID_User,
           });

@@ -13,7 +13,9 @@ const Tb_TaisanQrCode = sequelize.define(
     ID_Taisan: {
       type: DataTypes.INTEGER,
     },
-
+    ID_PhieuNXCT: {
+      type: DataTypes.INTEGER,
+    },
     MaQrCode: {
       type: DataTypes.CHAR,
     },
@@ -26,7 +28,7 @@ const Tb_TaisanQrCode = sequelize.define(
     ID_Nam: {
       type: DataTypes.INTEGER,
     },
-    ID_Thang: {
+    ID_Quy: {
       type: DataTypes.INTEGER,
     },
     ID_Phongban: {

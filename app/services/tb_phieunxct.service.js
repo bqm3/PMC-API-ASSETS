@@ -14,8 +14,6 @@ const sequelize = require("../config/db.config");
 const { Op, where, Sequelize } = require("sequelize");
 
 const createTb_PhieuNXCT = async (phieunxct,data) => {
-
-    console.log('vao day')
   const groupedItems = {};
 
   // Nhóm và tính tổng theo ID_Taisan
@@ -61,6 +59,27 @@ const updateTb_PhieuNXCT = async (phieunxct, ID_PhieuNX) => {
       }
       groupedItems[ID_Taisan].items.push({ ID_PhieuNXCT, Dongia, Soluong, Namsx, isDelete });
     });
+
+    // Get all current items in Tb_PhieuNXCT for the given ID_PhieuNX
+    const currentItems = await Tb_PhieuNXCT.findAll({
+      where: { ID_PhieuNX },
+      transaction
+    });
+
+    // Determine which items need to be deleted
+    const currentItemIds = currentItems.map(item => item.ID_PhieuNXCT);
+    const newItemIds = phieunxct.filter(item => item.ID_PhieuNXCT).map(item => item.ID_PhieuNXCT);
+    const itemsToDelete = currentItemIds.filter(id => !newItemIds.includes(id));
+
+    // Delete the items that are no longer in the updated list
+    if (itemsToDelete.length > 0) {
+      await Tb_PhieuNXCT.destroy({
+        where: {
+          ID_PhieuNXCT: itemsToDelete
+        },
+        transaction
+      });
+    }
 
     // Arrays for bulk operations
     const updatePromises = [];
@@ -115,11 +134,10 @@ const updateTb_PhieuNXCT = async (phieunxct, ID_PhieuNX) => {
 
     // Commit the transaction
     await transaction.commit();
-    return true; // Return a success indicator
+    return true;
   } catch (error) {
     // Rollback the transaction in case of an error
     await transaction.rollback();
-    console.error("Error in updating Tb_PhieuNXCT:", error);
     return false; // Return a failure indicator
   }
 };
