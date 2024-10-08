@@ -26,11 +26,11 @@ const Tb_PhieuNCC = sequelize.define(
     Sophieu: {
       type: DataTypes.CHAR,
     },
-    ID_NoiNhap: {
+    ID_Phieu1: {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
-    ID_NoiXuat: {
+    ID_Phieu2: {
       type: DataTypes.INTEGER,
       allowNull: false,
     },

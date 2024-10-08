@@ -19,8 +19,9 @@ const createTb_PhieuNCC = async (req, res) => {
       NgayNX,
       Ghichu,
       ID_Quy,
-      phieunccct,
+      phieunxct,
     } = req.body;
+    const phieunccct = phieunxct;
 
     // Get Thang and Nam details
     const Thang = await eThangService.getDetail(NgayNX);
@@ -30,8 +31,8 @@ const createTb_PhieuNCC = async (req, res) => {
     const reqData = {
       ID_Nghiepvu: ID_Nghiepvu,
       Sophieu: Sophieu,
-      ID_NoiNhap: ID_NoiNhap,
-      ID_NoiXuat: ID_NoiXuat,
+      ID_Phieu1: ID_Nghiepvu == 5 ? ID_NoiXuat : ID_NoiNhap,
+      ID_Phieu2: ID_Nghiepvu == 5 ? ID_NoiNhap : ID_NoiXuat,
       ID_Loainhom: ID_Loainhom,
       ID_Nam: Nam.ID_Nam,
       ID_Thang: Thang.ID_Thang,
@@ -41,34 +42,35 @@ const createTb_PhieuNCC = async (req, res) => {
       ID_Quy: ID_Quy,
       iTinhtrang: 0,
       isDelete: 0,
+      ID_Phongban: user.ID_Phongban
     };
 
-    const checkPhieuNX = await Tb_PhieuNCC.findOne({
-      attributes: ["ID_Nghiepvu", "Sophieu", "ID_NoiNhap", "ID_NoiXuat", "iTinhtrang", "isDelete", "ID_Nam", "ID_Quy", "isDelete"],
-      where: {
-        [Op.or]: [
-          {
-            ID_Nam: Nam.ID_Nam,
-            ID_Quy: ID_Quy,
-            ID_Nghiepvu: ID_Nghiepvu,
-            ID_NoiNhap: ID_NoiNhap,
-            ID_NoiXuat: ID_NoiXuat,
-            isDelete: 0,
-          },
-          {
-            Sophieu: {
-              [Op.like]: `%${Sophieu}%`
-            }
-          }
-        ]
-      }
-    })
+    // const checkPhieuNX = await Tb_PhieuNCC.findOne({
+    //   attributes: ["ID_Nghiepvu", "Sophieu", "ID_NoiNhap", "ID_NoiXuat", "iTinhtrang", "isDelete", "ID_Nam", "ID_Quy", "isDelete"],
+    //   where: {
+    //     [Op.or]: [
+    //       {
+    //         ID_Nam: Nam.ID_Nam,
+    //         ID_Quy: ID_Quy,
+    //         ID_Nghiepvu: ID_Nghiepvu,
+    //         ID_NoiNhap: ID_NoiNhap,
+    //         ID_NoiXuat: ID_NoiXuat,
+    //         isDelete: 0,
+    //       },
+    //       {
+    //         Sophieu: {
+    //           [Op.like]: `%${Sophieu}%`
+    //         }
+    //       }
+    //     ]
+    //   }
+    // })
   
-    if(checkPhieuNX) {
-      return  res.status(400).json({
-        message: "Đã có phiếu tồn tại",
-      });
-    }
+    // if(checkPhieuNX) {
+    //   return  res.status(400).json({
+    //     message: "Đã có phiếu tồn tại",
+    //   });
+    // }
 
     let data;
 
