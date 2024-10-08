@@ -9,6 +9,7 @@ module.exports = (app) => {
 
   
   router.post("/create", tb_taisanqrcode.createTb_Taisanqrcode);
+  router.post("/generate-qr-codes", tb_taisanqrcode.downloadQrCodes)
   router.get("/all", tb_taisanqrcode.getAllTb_Taisanqrcode);
   router.get("/:id", tb_taisanqrcode.getDetailTb_Taisanqrcode);
   router.put("/update/:id", tb_taisanqrcode.updateleTb_Taisanqrcode);

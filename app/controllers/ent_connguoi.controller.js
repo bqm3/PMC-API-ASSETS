@@ -73,6 +73,36 @@ const updateEnt_connguoi = async (req, res) => {
   }
 };
 
+const updateStatus = async (req, res) => {
+  try {
+    const user = req.user.data;
+    const ID_Connguoi = req.params.id;
+    const Status = req.params.status;
+    const { MaPMC, Hoten, Gioitinh, Diachi, Sodienthoai, Ghichu, NgayGhinhan, ID_Phongban } =
+      req.body;
+    const reqData = {
+      ID_Connguoi: ID_Connguoi,
+      user: user,
+      MaPMC: MaPMC,
+      Hoten: Hoten,
+      Gioitinh: Gioitinh,
+      Diachi: Diachi,
+      Sodienthoai: Sodienthoai,
+      Ghichu: Ghichu,
+      NgayGhinhan: NgayGhinhan,
+      ID_Phongban: ID_Phongban,
+      Status: Status
+    };
+    const data = await entConnguoiService.updateStatus(reqData);
+    res.status(200).json({
+      message: "Cập nhật thông tin thành công",
+      data: data,
+    });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 const getAllEnt_connguoi = async (req, res) => {
   try {
     const user = req.user.data;
@@ -109,4 +139,5 @@ module.exports = {
   getAllEnt_connguoi,
   deleteEnt_connguoi,
   getDetailEnt_connguoi,
+  updateStatus
 };

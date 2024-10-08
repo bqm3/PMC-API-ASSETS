@@ -182,6 +182,81 @@ const updateEnt_connguoi = async (data) => {
   }
 };
 
+const updateStatus = async (data) => {
+  if (data) {
+    const reqData = {
+      MaPMC: data.MaPMC,
+      Hoten: data.Hoten,
+      Gioitinh: data.Gioitinh,
+      Diachi: data.Diachi,
+      Sodienthoai: data.Sodienthoai,
+      Ghichu: data.Ghichu,
+      NgayGhinhan: data.NgayGhinhan,
+      ID_Phongban: data.ID_Phongban,
+      isDelete: 0,
+    };
+    if (!data.MaPMC || !data.Hoten || !data.Sodienthoai) {
+      throw new CustomError("400", "Thiếu thông tin dữ liệu.");
+    }
+
+    if (`${data.Status}` == "1") {
+      await Ent_NhansuPBDA.create({
+        isDelete: 0,
+        ID_Phongban: data.ID_Phongban,
+        ID_Connguoi: data.ID_Connguoi,
+        Ngayvao: data.NgayGhinhan,
+        iTinhtrang: data.Status,
+        Ngay: null,
+      });
+    } else if (`${data.Status}` == "2") {
+      await Ent_NhansuPBDA.update(
+        {
+          isDelete: 1,
+          Ngay: data.NgayGhinhan,
+          iTinhtrang: data.Status,
+        },
+        {
+          where: {
+            isDelete: 0,
+            ID_Connguoi: data.ID_Connguoi,
+          },
+        }
+      );
+
+      await Ent_NhansuPBDA.create({
+        isDelete: 0,
+        ID_Phongban: data.ID_Phongban,
+        ID_Connguoi: data.ID_Connguoi,
+        Ngayvao: data.NgayGhinhan,
+        iTinhtrang: 1,
+        Ngay: null,
+      });
+    } else {
+      await Ent_NhansuPBDA.update(
+        {
+          isDelete: 1,
+          Ngay: data.NgayGhinhan,
+          iTinhtrang: data.Status,
+        },
+        {
+          where: {
+            isDelete: 0,
+            ID_Connguoi: data.ID_Connguoi,
+          },
+        }
+      );
+    }
+    const res = await Ent_Connguoi.update(reqData, {
+      where: {
+        ID_Connguoi: data.ID_Connguoi,
+      },
+    });
+    return res;
+  } else {
+    throw new Error("Không có quyền tạo thông tin.");
+  }
+};
+
 const getAllEnt_connguoi = async (user) => {
   if (user) {
     const res = await Ent_Connguoi.findAll({
@@ -276,4 +351,5 @@ module.exports = {
   getAllEnt_connguoi,
   deleteEnt_connguoi,
   getDetailEnt_connguoi,
+  updateStatus,
 };

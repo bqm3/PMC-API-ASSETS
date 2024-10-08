@@ -12,7 +12,7 @@ module.exports = (app) => {
   router.get("/:id", [isAuthenticated, isRole], ent_connguoi.getDetailEnt_connguoi);
   router.put("/update/:id", [isAuthenticated, isRole], ent_connguoi.updateEnt_connguoi);
   router.put("/delete/:id", [isAuthenticated, isRole], ent_connguoi.deleteEnt_connguoi);
-
+  router.put("/status/:id/:status", [isAuthenticated, isRole], ent_connguoi.updateStatus);
 
   app.use("/api/v1/ent_connguoi", router);
 };

@@ -13,6 +13,7 @@ module.exports = (app) => {
   router.get("/all", [isAuthenticated], ent_user.getAll);
   router.get("/:id", [isAuthenticated], ent_user.getDetail);
   router.put("/update/:id", [isAuthenticated], ent_user.updateUser);
+  
   router.post("/create", [isAuthenticated], ent_user.createUser);
   router.post("/change-password", [isAuthenticated], ent_user.changePassword);
   router.post(

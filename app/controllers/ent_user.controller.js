@@ -236,6 +236,54 @@ const updateUser = async (req, res) => {
   }
 };
 
+const updateStatusUser = async (req, res) => {
+  try {
+    const user = req.user.data;
+    const ID_User = req.params.id;
+    const Status = req.params.status;
+    if (user) {
+      const {
+        Emails,
+        Hoten,
+        MaPMC,
+        Gioitinh,
+        Diachi,
+        Sodienthoai,
+        ID_Phongban,
+        Password,
+        ID_Chucvu,
+        IDNHOMNGUOIDUNG,
+        Ghichu,
+      } = req.body;
+
+      const reqData = {
+        Emails,
+        Password,
+        Hoten,
+        MaPMC,
+        Gioitinh,
+        Diachi,
+        ID_Phongban,
+        Sodienthoai,
+        ID_Chucvu,
+        IDNHOMNGUOIDUNG,
+        Ghichu,
+        ID_User
+      };
+
+      await entUserService.updateUser(reqData);
+
+      res.status(200).json({
+        message: "Cập nhật thông tin thành công",
+      });
+    } else {
+      res.status(500).json({ message: "Không cấp quyền cập nhật thông tin" });
+    }
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+};
+
 const createUser = async (req, res) => {
   try {
     const user = req.user.data;
@@ -290,5 +338,6 @@ module.exports = {
   checkAuth,
   getAll,
   getDetail,
-  updateUser
+  updateUser,
+  updateStatusUser
 };
