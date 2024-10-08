@@ -37,7 +37,7 @@ const Tb_GiaonhanTSCT = sequelize.define(
   },
   {
     freezeTableName: true,
-    timestamps: false,
+    timestamps: true,
     tableName: "Tb_GiaonhanTSCT",
   }
 );

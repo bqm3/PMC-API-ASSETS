@@ -35,7 +35,7 @@ const Tb_Table = sequelize.define(
   },
   {
     freezeTableName: true,
-    timestamps: false,
+    timestamps: true,
     tableName: "Tb_Table",
   }
 );

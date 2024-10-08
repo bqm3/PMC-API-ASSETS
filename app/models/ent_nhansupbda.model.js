@@ -32,7 +32,7 @@ const Ent_NhansuPBDA = sequelize.define(
   },
   {
     freezeTableName: true,
-    timestamps: false,
+    timestamps: true,
     tableName: "Ent_NhansuPBDA",
   }
 );

@@ -13,7 +13,7 @@ const Ent_Policy = sequelize.define(
     Policy: {
       type: DataTypes.CHAR,
     },
-   
+
     ID_GroupPolicy: {
       type: DataTypes.INTEGER,
     },
@@ -27,7 +27,7 @@ const Ent_Policy = sequelize.define(
   },
   {
     freezeTableName: true,
-    timestamps: false,
+    timestamps: true,
     tableName: "Ent_Policy",
   }
 );

@@ -21,7 +21,7 @@ const Tb_PhieuNXCT = sequelize.define(
       type: DataTypes.INTEGER,
       allowNull: false,
     },
-    
+
     Dongia: {
       type: DataTypes.DOUBLE,
       allowNull: false,
@@ -46,7 +46,7 @@ const Tb_PhieuNXCT = sequelize.define(
   },
   {
     freezeTableName: true,
-    timestamps: false,
+    timestamps: true,
     tableName: "Tb_PhieuNXCT",
   }
 );

@@ -30,7 +30,7 @@ const Tb_NameField = sequelize.define(
       type: DataTypes.INTEGER,
       allowNull: false,
     },
-    
+
     NameFieldParent: {
       type: DataTypes.CHAR,
       defaultValue: 0,
@@ -38,7 +38,7 @@ const Tb_NameField = sequelize.define(
   },
   {
     freezeTableName: true,
-    timestamps: false,
+    timestamps: true,
     tableName: "Tb_NameField",
   }
 );

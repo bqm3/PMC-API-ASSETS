@@ -16,6 +16,9 @@ const Tb_TaisanQrCode = sequelize.define(
     ID_PhieuNXCT: {
       type: DataTypes.INTEGER,
     },
+    ID_PhieuNCCCT: {
+      type: DataTypes.INTEGER,
+    },
     MaQrCode: {
       type: DataTypes.CHAR,
     },
@@ -35,7 +38,7 @@ const Tb_TaisanQrCode = sequelize.define(
       type: DataTypes.INTEGER,
     },
     Image: {
-      type: DataTypes.CHAR
+      type: DataTypes.CHAR,
     },
     ID_User: {
       type: DataTypes.INTEGER,
@@ -60,7 +63,7 @@ const Tb_TaisanQrCode = sequelize.define(
   },
   {
     freezeTableName: true,
-    timestamps: false,
+    timestamps: true,
     tableName: "Tb_TaisanQrCode",
   }
 );

@@ -26,8 +26,8 @@ const Tb_GiaonhanTS = sequelize.define(
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
-        model: Ent_NhansuPBDA, 
-        key: 'ID_NSPB' 
+        model: Ent_NhansuPBDA,
+        key: "ID_NSPB",
       },
     },
     Ngay: {
@@ -35,15 +35,15 @@ const Tb_GiaonhanTS = sequelize.define(
       allowNull: true,
     },
     Ghichu: {
-      type: DataTypes.TEXT, 
+      type: DataTypes.TEXT,
       allowNull: false,
     },
     Nguoigiao: {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
-        model: Ent_NhansuPBDA, 
-        key: 'ID_NSPB' 
+        model: Ent_NhansuPBDA,
+        key: "ID_NSPB",
       },
     },
     isDelete: {
@@ -53,7 +53,7 @@ const Tb_GiaonhanTS = sequelize.define(
   },
   {
     freezeTableName: true,
-    timestamps: false,
+    timestamps: true,
     tableName: "Tb_GiaonhanTS",
   }
 );

@@ -13,7 +13,7 @@ const Tb_PhieuNCCCT = sequelize.define(
     ID_TaisanQrCode: {
       type: DataTypes.INTEGER,
     },
-    ID_PhieuNX: {
+    ID_PhieuNCC: {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
@@ -31,7 +31,6 @@ const Tb_PhieuNCCCT = sequelize.define(
     },
     Chietkhau: {
       type: DataTypes.INTEGER,
-      allowNull: false
     },
     Namsx: {
       type: DataTypes.INTEGER,
@@ -46,7 +45,7 @@ const Tb_PhieuNCCCT = sequelize.define(
   },
   {
     freezeTableName: true,
-    timestamps: false,
+    timestamps: true,
     tableName: "Tb_PhieuNCCCT",
   }
 );

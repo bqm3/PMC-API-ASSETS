@@ -68,7 +68,7 @@ const Tb_PhieuNX = sequelize.define(
   },
   {
     freezeTableName: true,
-    timestamps: false,
+    timestamps: true,
     tableName: "Tb_PhieuNX",
   }
 );

@@ -33,23 +33,18 @@ const Ent_User = sequelize.define(
     },
     Hoten: {
       type: DataTypes.CHAR,
-      
     },
     Gioitinh: {
       type: DataTypes.CHAR,
-      
     },
     Diachi: {
       type: DataTypes.CHAR,
-      
     },
     Sodienthoai: {
       type: DataTypes.CHAR,
-      
     },
     Emails: {
       type: DataTypes.CHAR,
-      
     },
     Password: {
       type: DataTypes.CHAR,
@@ -67,7 +62,7 @@ const Ent_User = sequelize.define(
   },
   {
     freezeTableName: true,
-    timestamps: false,
+    timestamps: true,
     tableName: "Ent_User",
   }
 );

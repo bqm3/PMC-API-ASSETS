@@ -29,7 +29,7 @@ const Tb_SuachuaCT = sequelize.define(
     Ghichu: {
       type: DataTypes.TEXT,
     },
-    
+
     isDelete: {
       type: DataTypes.INTEGER,
       defaultValue: 0,
@@ -37,7 +37,7 @@ const Tb_SuachuaCT = sequelize.define(
   },
   {
     freezeTableName: true,
-    timestamps: false,
+    timestamps: true,
     tableName: "Tb_SuachuaCT",
   }
 );

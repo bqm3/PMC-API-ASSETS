@@ -93,7 +93,7 @@ const Tb_Tonkho = sequelize.define(
   },
   {
     freezeTableName: true,
-    timestamps: false,
+    timestamps: true,
     tableName: "Tb_Tonkho",
   }
 );
