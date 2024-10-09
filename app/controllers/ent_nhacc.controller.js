@@ -25,7 +25,7 @@ const createEnt_Nhacc = async (req, res) => {
       isDelete: 0,
     };
 
-    const dataDetail = await entNhaccService.getDetailEnt_Nhacc({
+    const dataDetail = await entNhaccService.getDetail({
       MaNhacc: MaNhacc,
       TenNhacc: TenNhacc,
       Masothue: Masothue,
@@ -35,7 +35,7 @@ const createEnt_Nhacc = async (req, res) => {
         message: "Nhập lại thông tin",
       });
     } else {
-      const data = await entNhaccService.createEnt_Nhacc(reqData);
+      const data = await entNhaccService.create(reqData);
       res.status(200).json({
         message: "Tạo thành công",
         data: data,
@@ -48,7 +48,7 @@ const createEnt_Nhacc = async (req, res) => {
 
 const getAllEnt_Nhacc = async (req, res) => {
   try {
-    const data = await entNhaccService.getAllEnt_Nhacc();
+    const data = await entNhaccService.getAll();
     res.status(200).json({
       message: "Danh sách",
       data: data,
@@ -121,7 +121,7 @@ const updateEnt_Nhacc = async (req, res) => {
       });
     }
 
-    const dataDetail = await entNhaccService.getDetailByIDEnt_Nhacc({
+    const dataDetail = await entNhaccService.getDetailByID({
       ID_Nhacc: ID_Nhacc,
       MaNhacc: MaNhacc,
       TenNhacc: TenNhacc,
@@ -133,7 +133,7 @@ const updateEnt_Nhacc = async (req, res) => {
         message: "Đã tồn tại nhà cung cấp",
       });
     } else {
-      const data = await entNhaccService.updateEnt_Nhacc(reqData);
+      const data = await entNhaccService.update(reqData);
       return res.status(200).json({
         message: "Cập nhật thành công",
         data: data,
@@ -154,7 +154,7 @@ const deleteEnt_Nhacc = async (req, res) => {
         message: "Không xóa nhà cung cấp",
       });
     }
-    await entNhaccService.deleteEnt_Nhacc(ID_Nhacc);
+    await entNhaccService.deleteNhaCC(ID_Nhacc);
     res.status(200).json({
       message: "Xóa thành công!",
     });

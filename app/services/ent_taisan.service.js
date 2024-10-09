@@ -7,11 +7,42 @@ const {
   Ent_Loainhom,
 } = require("../models/setup.model");
 const { Op } = require("sequelize");
+const sequelize = require("../config/db.config");
 
 const createEnt_taisan = async (data) => {
   const res = await Ent_Taisan.create(data);
   return res;
 };
+
+const findTaisan = async (Tents) => {
+  const res = await Ent_Taisan.findOne({
+    attributes: [
+      "ID_Taisan",
+      "ID_Nhomts",
+      "ID_Donvi",
+      "Tentscu",
+      "i_MaQrCode",
+      "Mats",
+      "Tents",
+      "Thongso",
+      "Nuocsx",
+      "Ghichu",
+      "isDelete",
+    ],
+    where: {
+      isDelete: 0,
+      Tents: sequelize.where(
+        sequelize.fn(
+          "UPPER",
+          sequelize.fn("TRIM", sequelize.col("Tents"))
+        ),
+        "LIKE",
+        Tents.trim().toUpperCase()
+      ),
+    },
+  });
+  return res;
+}
 
 const getAllEnt_taisan = async () => {
   let whereClause = {
@@ -163,4 +194,5 @@ module.exports = {
   deleteEnt_taisan,
   getDetailEnt_taisan,
   check_taisan,
+  findTaisan
 };

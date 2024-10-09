@@ -2,6 +2,27 @@ const { Ent_Loainhom } = require("../models/setup.model");
 const { Op } = require("sequelize");
 
 const createEnt_Loainhom = async (data) => {
+  const find = await Ent_Loainhom.findOne({
+    attributes: [
+      "ID_Loainhom",
+      "Loainhom",
+      "isDelete",
+    ],
+    where: {
+      isDelete: 0,
+      Loainhom: sequelize.where(
+        sequelize.fn(
+          "UPPER",
+          sequelize.fn("TRIM", sequelize.col("Loainhom"))
+        ),
+        "LIKE",
+        data.Loainhom.trim().toUpperCase()
+      ),
+    },
+  });
+  if(find) {
+    throw new Error("Đã tồn tại");
+  }
   const res = await Ent_Loainhom.create(data);
   return res;
 };

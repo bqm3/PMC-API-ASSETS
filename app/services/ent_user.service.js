@@ -77,6 +77,7 @@ const login = async (data) => {
         "ID_User",
         "ID_Nhompb",
         "ID_Chinhanh",
+        "ID_Phongban",
         "ID_Policy",
         "ID_Chucvu",
         "MaPMC",
@@ -88,7 +89,7 @@ const login = async (data) => {
         "Emails",
         "Anh",
         "isDelete",
-        "ID_Phongban",
+       
       ],
       include: [
         {
@@ -281,7 +282,6 @@ const getAll = async () => {
       "IDNHOMNGUOIDUNG",
       "ID_Chucvu",
       "MaPMC",
-      "Password",
       "Hoten",
       "Gioitinh",
       "Diachi",
@@ -334,7 +334,6 @@ const getDetail = async (ID_User) => {
       "ID_Phongban",
       "IDNHOMNGUOIDUNG",
       "ID_Chucvu",
-      "Password",
       "MaPMC",
       "Hoten",
       "Gioitinh",

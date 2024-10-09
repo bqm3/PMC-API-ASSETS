@@ -318,10 +318,10 @@ const updateTb_PhieuNXCT = async (phieunxct, ID_PhieuNX, reqData) => {
 
     // Fetch necessary data in parallel
     const [currentItems, phieunx] = await Promise.all([
-      Tb_PhieuNXCT.findAll({ where: { ID_PhieuNX }, transaction }),
+      Tb_PhieuNXCT.findAll({ where: { ID_PhieuNX, isDelete: 0 }, transaction }),
       Tb_PhieuNX.findOne({
-        where: { ID_PhieuNX },
-        attributes: ["ID_Phongban", "ID_Nam", "ID_Quy", "ID_Thang"],
+        where: { ID_PhieuNX, isDelete: 0 },
+        attributes: ["ID_Phongban", "ID_Nam", "ID_Quy", "ID_Thang", "isDelete"],
       }),
     ]);
 

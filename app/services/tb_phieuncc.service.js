@@ -196,7 +196,6 @@ const getDetailTb_PhieuNCC = async (ID_PhieuNCC) => {
   return res;
 };
 
-
 const getAllTb_PhieuNCC = async () => {
   // Điều kiện để lấy các bản ghi không bị xóa
   let whereClause = {

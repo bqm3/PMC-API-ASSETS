@@ -23,12 +23,11 @@ const createEnt_nhomts = async (data) => {
     where: {
       isDelete: 0,
       Manhom: data.Manhom,
-      Tennhom: data.Tennhom,
     },
   });
 
   if (findData) {
-    throw new Error("Đã tồn tại nhóm tài sản.");
+    throw new Error("Đã tồn tại mã tài sản.");
   }
 
   const res = await Ent_Nhomts.create(data);

@@ -6,6 +6,12 @@ const eNamService = require("../services/ent_nam.service");
 const Tb_PhieuNCC = require("../models/tb_phieuncc.model");
 const { Op } = require("sequelize");
 const sequelize = require("../config/db.config");
+const Ent_Nghiepvu = require("../models/ent_nghiepvu.model");
+const Ent_Phongbanda = require("../models/ent_phongbanda.model");
+const Ent_Nhacc = require("../models/ent_nhacc.model");
+const Ent_User = require("../models/ent_user.model");
+const Ent_Nhompb = require("../models/ent_nhompb.model");
+const Tb_PhieuNCCCT = require("../models/tb_phieunccct.model");
 
 const createTb_PhieuNCC = async (req, res) => {
   try {
@@ -27,6 +33,8 @@ const createTb_PhieuNCC = async (req, res) => {
     const Thang = await eThangService.getDetail(NgayNX);
     const Nam = await eNamService.getDetail(NgayNX);
 
+    console.log("user", user);
+
     // Prepare data for Tb_PhieuNCC creation
     const reqData = {
       ID_Nghiepvu: ID_Nghiepvu,
@@ -42,35 +50,45 @@ const createTb_PhieuNCC = async (req, res) => {
       ID_Quy: ID_Quy,
       iTinhtrang: 0,
       isDelete: 0,
-      ID_Phongban: user.ID_Phongban
+      ID_Phongban: user.ID_Phongban,
     };
 
-    // const checkPhieuNX = await Tb_PhieuNCC.findOne({
-    //   attributes: ["ID_Nghiepvu", "Sophieu", "ID_NoiNhap", "ID_NoiXuat", "iTinhtrang", "isDelete", "ID_Nam", "ID_Quy", "isDelete"],
-    //   where: {
-    //     [Op.or]: [
-    //       {
-    //         ID_Nam: Nam.ID_Nam,
-    //         ID_Quy: ID_Quy,
-    //         ID_Nghiepvu: ID_Nghiepvu,
-    //         ID_NoiNhap: ID_NoiNhap,
-    //         ID_NoiXuat: ID_NoiXuat,
-    //         isDelete: 0,
-    //       },
-    //       {
-    //         Sophieu: {
-    //           [Op.like]: `%${Sophieu}%`
-    //         }
-    //       }
-    //     ]
-    //   }
-    // })
-  
-    // if(checkPhieuNX) {
-    //   return  res.status(400).json({
-    //     message: "Đã có phiếu tồn tại",
-    //   });
-    // }
+    const checkPhieuNX = await Tb_PhieuNCC.findOne({
+      attributes: [
+        "ID_Nghiepvu",
+        "Sophieu",
+        "ID_Phieu1",
+        "ID_Phieu2",
+        "iTinhtrang",
+        "isDelete",
+        "ID_Nam",
+        "ID_Quy",
+        "isDelete",
+      ],
+      where: {
+        [Op.or]: [
+          {
+            ID_Nam: Nam.ID_Nam,
+            ID_Quy: ID_Quy,
+            ID_Nghiepvu: ID_Nghiepvu,
+            ID_Phieu1: ID_Nghiepvu == 5 ? ID_NoiXuat : ID_NoiNhap,
+            ID_Phieu2: ID_Nghiepvu == 5 ? ID_NoiNhap : ID_NoiXuat,
+            isDelete: 0,
+          },
+          {
+            Sophieu: {
+              [Op.like]: `%${Sophieu}%`,
+            },
+          },
+        ],
+      },
+    });
+
+    if (checkPhieuNX) {
+      return res.status(400).json({
+        message: "Đã có phiếu tồn tại",
+      });
+    }
 
     let data;
 
@@ -143,6 +161,118 @@ const getPhieuNCCByUser = async (req, res) => {
   }
 };
 
+const getPhieuNCCFilter = async (req, res) => {
+  const { ID_Nghiepvu, ID_NoiXuat, ID_Loainhom, ID_Quy, NgayNX } = req.body;
+  const Nam = await eNamService.getDetail(NgayNX);
+  const resData = await Tb_PhieuNCC.findAll({
+    attributes: [
+      "ID_PhieuNCC",
+      "ID_Nghiepvu",
+      "Sophieu",
+      "ID_Phieu1",
+      "ID_Phieu2",
+      "ID_Loainhom",
+      "ID_User",
+      "NgayNX",
+      "Ghichu",
+      "ID_Nam",
+      "ID_Thang",
+      "ID_Quy",
+      "iTinhtrang",
+      "isDelete",
+      "ID_Phongban",
+    ],
+    include: [
+      {
+        model: Ent_Nghiepvu,
+        attributes: ["ID_Nghiepvu", "Nghiepvu", "isDelete"],
+        where: {
+          isDelete: 0,
+        },
+      },
+      {
+        model: Ent_Phongbanda,
+        as: "ent_phongbanda",
+        attributes: [
+          "ID_Phongban",
+          "ID_Chinhanh",
+          "ID_Nhompb",
+          "Mapb",
+          "Tenphongban",
+          "Diachi",
+          "Ghichu",
+          "isDelete",
+        ],
+      },
+      {
+        model: Ent_Nhacc,
+        as: "ent_nhacc",
+        attributes: ["ID_Nhacc", "MaNhacc", "TenNhacc", "Masothue"],
+      },
+      {
+        model: Ent_User,
+        attributes: [
+          "ID_User",
+          "ID_Nhompb",
+          "ID_Chinhanh",
+          "MaPMC",
+          "Hoten",
+          "Gioitinh",
+          "Diachi",
+          "Sodienthoai",
+          "Emails",
+          "Anh",
+          "isDelete",
+          "ID_Chucvu",
+          "ID_Phongban",
+        ],
+        include: [
+          {
+            model: Ent_Nhompb,
+            attributes: ["ID_Nhompb", "Nhompb", "isDelete"],
+            where: {
+              isDelete: 0,
+            },
+          },
+          {
+            model: Ent_Phongbanda,
+            as: "ent_phongbanda",
+            attributes: ["ID_Phongban", "TenPhongban"],
+          },
+        ],
+      },
+    ],
+    where: {
+      isDelete: 0,
+      ID_Phieu1: ID_NoiXuat,
+      ID_Loainhom: ID_Loainhom,
+      ID_Quy: ID_Quy,
+      ID_Nam: Nam.ID_Nam,
+    },
+    order: [["NgayNX", "DESC"]],
+  });
+  const arrayOfIDs = resData.map((item) => item.ID_PhieuNCC);
+  const resPhieuNCCCT = await Tb_PhieuNCCCT.findAll({
+    where: {
+      ID_PhieuNCC: arrayOfIDs,
+    },
+    attributes: [
+      "ID_PhieuNCCCT",
+      "ID_PhieuNCC",
+      "ID_Taisan",
+      "Soluong",
+      "Dongia",
+      "Namsx",
+    ],
+  });
+
+  return res.status(200).json({
+    message: "Thành công",
+    data: resData,
+    phieunccct: resPhieuNCCCT,
+  });
+};
+
 const updateTb_PhieuNCC = async (req, res) => {
   try {
     const user = req.user.data;
@@ -197,11 +327,12 @@ const updateTb_PhieuNCC = async (req, res) => {
       phieunccct.length > 0 &&
       phieunccct[0].ID_Taisan !== null
     ) {
-      const updatePhieuNccCTResult = await tbPhieuNCCCTService.updateTb_PhieuNCCCT(
-        phieunccct,
-        ID_PhieuNCC,
-        reqData
-      );
+      const updatePhieuNccCTResult =
+        await tbPhieuNCCCTService.updateTb_PhieuNCCCT(
+          phieunccct,
+          ID_PhieuNCC,
+          reqData
+        );
       if (!updatePhieuNccCTResult) {
         return res.status(500).json({
           message: "Đã xảy ra lỗi khi cập nhật chi tiết phiếu nhập xuất",
@@ -234,7 +365,7 @@ const closeTb_PhieuNCC = async (req, res) => {
       NgayNX,
       Ghichu,
       phieunccct,
-      ID_Quy
+      ID_Quy,
     } = req.body;
 
     // Get Thang and Nam details
@@ -258,12 +389,14 @@ const closeTb_PhieuNCC = async (req, res) => {
     };
 
     await tbPhieuNCCService.closeTb_PhieuNCC(ID_PhieuNX, { transaction });
-    
+
     if (
       (ID_Nghiepvu == 1 || ID_Nghiepvu == 2) &&
       phieunccct[0].ID_Taisan !== null
     ) {
-      await tbTaiSanQrService.insertDataToEntQRCode(phieunccct, reqData, { transaction });
+      await tbTaiSanQrService.insertDataToEntQRCode(phieunccct, reqData, {
+        transaction,
+      });
     }
 
     await transaction.commit();
@@ -314,4 +447,5 @@ module.exports = {
   closeTb_PhieuNCC,
   getPhieuNCCByUser,
   closeFastTb_PhieuNCC,
+  getPhieuNCCFilter,
 };

@@ -2,12 +2,12 @@ const { Ent_Nhacc } = require("../models/setup.model");
 const { Op } = require("sequelize");
 const sequelize = require("../config/db.config");
 
-const createEnt_Nhacc = async (data) => {
+const create = async (data) => {
   const res = await Ent_Nhacc.create(data);
   return res;
 };
 
-const getDetailEnt_Nhacc = async (data) => {
+const getDetail = async (data) => {
   let whereClause = {
     isDelete: 0,
     [Op.or]: [
@@ -25,7 +25,7 @@ const getDetailEnt_Nhacc = async (data) => {
   return res;
 };
 
-const getDetailByIDEnt_Nhacc = async (data) => {
+const getDetailByID = async (data) => {
   let whereClause = {
     isDelete: 0,
     ID_Nhacc: !data.ID_Nhacc,
@@ -44,7 +44,7 @@ const getDetailByIDEnt_Nhacc = async (data) => {
   return res;
 };
 
-const getAllEnt_Nhacc = async () => {
+const getAll = async () => {
   let whereClause = {
     isDelete: 0,
   };
@@ -55,7 +55,7 @@ const getAllEnt_Nhacc = async () => {
   return res;
 };
 
-const updateEnt_Nhacc = async (data) => {
+const update = async (data) => {
   let whereClause = {
     isDelete: 0,
     ID_Nhacc: data.ID_Nhacc,
@@ -80,7 +80,7 @@ const updateEnt_Nhacc = async (data) => {
   return res;
 };
 
-// const deleteEnt_Nhacc = async (id) => {
+// const delete = async (id) => {
 //   const res = await Ent_Nhacc.update(
 //     { isDelete: 1 },
 //     {
@@ -92,7 +92,7 @@ const updateEnt_Nhacc = async (data) => {
 //   return res;
 // };
 
-const deleteEnt_Nhacc = async (id) => {
+const deleteNhaCC = async (id) => {
   try {
     const [tables] = await sequelize.query(
       `SELECT table_name AS tableName
@@ -135,10 +135,10 @@ const deleteEnt_Nhacc = async (id) => {
 };
 
 module.exports = {
-  createEnt_Nhacc,
-  getAllEnt_Nhacc,
-  updateEnt_Nhacc,
-  deleteEnt_Nhacc,
-  getDetailEnt_Nhacc,
-  getDetailByIDEnt_Nhacc,
+  create,
+  getAll,
+  update,
+  deleteNhaCC,
+  getDetail,
+  getDetailByID,
 };

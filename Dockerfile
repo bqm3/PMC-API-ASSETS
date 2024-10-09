@@ -2,6 +2,6 @@ FROM node:20
 WORKDIR /app
 COPY package.json .
 COPY . .
-RUN yarn install
+EXPOSE 8888
 
-CMD npm start
+CMD ["node","index.js"]

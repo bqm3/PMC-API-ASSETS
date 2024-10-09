@@ -20,7 +20,7 @@ const createEnt_phongbanda = async (data) => {
 //       ],
 //       isDelete: 0,
 //     },
-//     attributes: ["ID_Phongban"],
+//     attributes: ["ID_Phongban", "Mapb", "Tenphongban", "isDelete"],
 //   });
 //   return existingRoom !== null;
 // };
@@ -42,7 +42,7 @@ const check_phongbanda = async (Mapb, Tenphongban, excludeId = null) => {
 
   const existingRoom = await Ent_Phongbanda.findOne({
     where: conditions,
-    attributes: ["ID_Phongban"],
+    attributes: ["ID_Phongban", "Mapb", "Tenphongban", "isDelete"],
   });
 
   return existingRoom !== null;

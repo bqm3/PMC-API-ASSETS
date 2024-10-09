@@ -10,7 +10,6 @@ var corsOptions = {
   origin: [
     "*",
     "http://localhost:3006",
-    "http://localhost:3000",
     "https://qlts.pmcweb.vn",
     "https://checklist.pmcweb.vn",
   ],

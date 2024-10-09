@@ -1,7 +1,29 @@
 const { Ent_Donvi } = require("../models/setup.model");
 const { Op } = require("sequelize");
+const sequelize = require("../config/db.config");
 
 const createEnt_donvi = async (data) => {
+  const find = await Ent_Donvi.findOne({
+    attributes: [
+      "ID_Donvi",
+      "Donvi",
+      "isDelete",
+    ],
+    where: {
+      isDelete: 0,
+      Donvi: sequelize.where(
+        sequelize.fn(
+          "UPPER",
+          sequelize.fn("TRIM", sequelize.col("Donvi"))
+        ),
+        "LIKE",
+        data.Donvi.trim().toUpperCase()
+      ),
+    },
+  });
+  if(find) {
+    throw new Error("Đã tồn tại");
+  }
   const res = await Ent_Donvi.create(data);
   return res;
 };

@@ -20,6 +20,11 @@ const createEnt_taisan = async (req, res) => {
       isDelete: 0,
     };
 
+    const findTaisan = await entTaisanService.findTaisan(Tents)
+    if(findTaisan){
+      return res.status(500).json({ message: "Đã tồn tại tên tài sản" });
+    }
+
     const newAsset = await entTaisanService.createEnt_taisan(reqData);
 
     if (!newAsset || !newAsset.ID_Taisan) {
