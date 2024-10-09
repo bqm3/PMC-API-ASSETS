@@ -10,7 +10,7 @@ const Tb_PhieuNCCCT = sequelize.define(
       autoIncrement: true,
       primaryKey: true,
     },
-    ID_TaisanQrCode: {
+    ID_TaisanQrcode: {
       type: DataTypes.INTEGER,
     },
     ID_PhieuNCC: {

@@ -411,10 +411,10 @@ Tb_PhieuNCCCT.belongsTo(Ent_Taisan, {
 
 Tb_TaisanQrCode.hasMany(Tb_PhieuNCCCT, {
   as: "tb_phieunccct",
-  foreignKey: "ID_TaisanQr",
+  foreignKey: "ID_TaisanQrcode",
 });
 Tb_PhieuNCCCT.belongsTo(Tb_TaisanQrCode, {
-  foreignKey: "ID_TaisanQr",
+  foreignKey: "ID_TaisanQrcode",
   as: "tb_taisanqr",
 });
 

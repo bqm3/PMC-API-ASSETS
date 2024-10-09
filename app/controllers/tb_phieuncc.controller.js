@@ -146,7 +146,7 @@ const getPhieuNCCByUser = async (req, res) => {
 const updateTb_PhieuNCC = async (req, res) => {
   try {
     const user = req.user.data;
-    const ID_PhieuNX = req.params.id;
+    const ID_PhieuNCC = req.params.id;
 
     const {
       ID_Nghiepvu,
@@ -166,7 +166,7 @@ const updateTb_PhieuNCC = async (req, res) => {
 
     // Prepare data for Tb_PhieuNCC creation
     const reqData = {
-      ID_PhieuNX: ID_PhieuNX,
+      ID_PhieuNCC: ID_PhieuNCC,
       ID_Nghiepvu: ID_Nghiepvu,
       Sophieu: Sophieu,
       ID_NoiNhap: ID_NoiNhap,
@@ -179,6 +179,7 @@ const updateTb_PhieuNCC = async (req, res) => {
       Ghichu: Ghichu,
       ID_Quy: ID_Quy,
       isDelete: 0,
+      ID_Phongban: user.ID_Phongban,
     };
 
     const updatePhieuNXResult = await tbPhieuNCCService.updateTb_PhieuNCC(
@@ -198,7 +199,8 @@ const updateTb_PhieuNCC = async (req, res) => {
     ) {
       const updatePhieuNccCTResult = await tbPhieuNCCCTService.updateTb_PhieuNCCCT(
         phieunccct,
-        ID_PhieuNX
+        ID_PhieuNCC,
+        reqData
       );
       if (!updatePhieuNccCTResult) {
         return res.status(500).json({
