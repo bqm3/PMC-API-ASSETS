@@ -24,7 +24,6 @@ const Tb_PhieuNXCT = sequelize.define(
 
     Dongia: {
       type: DataTypes.DOUBLE,
-      allowNull: false,
     },
     Soluong: {
       type: DataTypes.INTEGER,

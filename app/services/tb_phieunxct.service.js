@@ -108,7 +108,7 @@ const createTb_PhieuNXCT = async (phieunxct, data) => {
             ID_Nam: data.ID_Nam,
             ID_Thang : data.ID_Thang,
             ID_Quy: data.ID_Quy,
-            ID_Phongban: data.ID_Phongban,
+            ID_Phongban: data.ID_NoiNhap,
             Tondau: item.Soluong,
             Tientondau: item.Dongia * item.Soluong,
           });
@@ -123,7 +123,7 @@ const createTb_PhieuNXCT = async (phieunxct, data) => {
         );
         const ID_PhieuNXCT = matchedItem ? matchedItem.ID_PhieuNXCT : null;
 
-        const [duan, taisanDetails] = await getDuanVsTaisanDetails(data.ID_Phongban, ID_Taisan);
+        const [duan, taisanDetails] = await getDuanVsTaisanDetails(data.ID_NoiNhap, ID_Taisan);
         // Tạo QR code
         const Thuoc = duan?.Thuoc;
         const ManhomTs = taisanDetails.ent_nhomts.Manhom;
@@ -141,7 +141,7 @@ const createTb_PhieuNXCT = async (phieunxct, data) => {
               ID_Quy: data.ID_Quy,
               ID_Taisan: ID_Taisan,
               ID_PhieuNXCT: ID_PhieuNXCT,
-              ID_Phongban: data.ID_Phongban,
+              ID_Phongban: data.ID_NoiNhap,
               Giatri: item.Dongia,
               Ngaykhoitao: data.NgayNX,
               MaQrCode: MaQrCode,
@@ -321,11 +321,11 @@ const updateTb_PhieuNXCT = async (phieunxct, ID_PhieuNX, reqData) => {
       Tb_PhieuNXCT.findAll({ where: { ID_PhieuNX, isDelete: 0 }, transaction }),
       Tb_PhieuNX.findOne({
         where: { ID_PhieuNX, isDelete: 0 },
-        attributes: ["ID_Phongban", "ID_Nam", "ID_Quy", "ID_Thang", "isDelete"],
+        attributes: ["ID_NoiNhap", "ID_Nam", "ID_Quy", "ID_Thang", "isDelete"],
       }),
     ]);
 
-    const { ID_Phongban, ID_Nam, ID_Quy, ID_Thang } = phieunx?.dataValues || {};
+    const { ID_NoiNhap, ID_Nam, ID_Quy, ID_Thang } = phieunx?.dataValues || {};
 
     // Find items to delete
     const currentItemIds = currentItems.map(item => item.ID_PhieuNXCT);
@@ -345,7 +345,7 @@ const updateTb_PhieuNXCT = async (phieunxct, ID_PhieuNX, reqData) => {
 
     // Helper function to update/create QR codes
     const handleQrCodes = async (taisan, matchedItem, Dongia, Soluong, reqData,isDelete) => {
-      const [duan, taisanDetails] = await getDuanVsTaisanDetails(ID_Phongban, taisan.ID_Taisan);
+      const [duan, taisanDetails] = await getDuanVsTaisanDetails(ID_NoiNhap, taisan.ID_Taisan);
       const Thuoc = duan?.Thuoc;
       const ManhomTs = taisanDetails.ent_nhomts.Manhom;
       const MaID = taisanDetails.ID_Taisan;
@@ -359,7 +359,7 @@ const updateTb_PhieuNXCT = async (phieunxct, ID_PhieuNX, reqData) => {
         
         await Tb_TaisanQrCode.create({
           ID_Nam, ID_Quy, ID_Taisan: taisan.ID_Taisan, ID_PhieuNXCT: matchedItem.ID_PhieuNXCT,
-          ID_Phongban, Giatri: Dongia, Ngaykhoitao: reqData.NgayNX, MaQrCode, Namsx: matchedItem.Namsx,
+          ID_Phongban:ID_NoiNhap , Giatri: Dongia, Ngaykhoitao: reqData.NgayNX, MaQrCode, Namsx: matchedItem.Namsx,
           Ghichu: "",
           iTinhtrang: 0,
           isDelete: isDelete
@@ -395,7 +395,7 @@ const updateTb_PhieuNXCT = async (phieunxct, ID_PhieuNX, reqData) => {
           // Update Tb_Tonkho
           await Tb_Tonkho.update(
             { Tondau: Soluong, Tientondau: Dongia * Soluong },
-            { where: { ID_Taisan, ID_Nam, ID_Thang, ID_Quy, ID_Phongban }, transaction }
+            { where: { ID_Taisan, ID_Nam, ID_Thang, ID_Quy, ID_Phongban:ID_NoiNhap }, transaction }
           );
 
           const taisan = await Ent_Taisan.findOne({
@@ -421,7 +421,7 @@ const updateTb_PhieuNXCT = async (phieunxct, ID_PhieuNX, reqData) => {
           ID_PhieuNXCT_Items.push({ ID_Taisan, ID_PhieuNXCT: newPhieuNXCT.ID_PhieuNXCT });
 
           // Insert into Tb_Tonkho
-          await Tb_Tonkho.create({ ID_Taisan, ID_Nam, ID_Thang, ID_Quy, ID_Phongban, Tondau: Soluong, Tientondau: Dongia * Soluong }, { transaction });
+          await Tb_Tonkho.create({ ID_Taisan, ID_Nam, ID_Thang, ID_Quy, ID_Phongban: ID_NoiNhap, Tondau: Soluong, Tientondau: Dongia * Soluong }, { transaction });
 
           const taisan = await Ent_Taisan.findOne({ where: { ID_Taisan, isDelete: 0 }, attributes: ['ID_Taisan', 'i_MaQrCode'], transaction });
 

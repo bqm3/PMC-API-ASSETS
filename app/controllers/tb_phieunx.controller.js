@@ -1,5 +1,6 @@
 const tbPhieuNXService = require("../services/tb_phieunx.service");
 const tbPhieuNXCTService = require("../services/tb_phieunxct.service");
+const tbPhieuNXNBCTService = require("../services/tb_phieunxnoibo.service");
 const tbTaiSanQrService = require("../services/tb_taisanqrcode.service");
 const eThangService = require("../services/ent_thang.service");
 const eNamService = require("../services/ent_nam.service");
@@ -44,38 +45,53 @@ const createTb_PhieuNX = async (req, res) => {
       isDelete: 0,
     };
 
+    // const checkPhieuNX = await Tb_PhieuNX.findOne({
+    //   attributes: ["ID_Nghiepvu", "Sophieu", "ID_NoiNhap", "ID_NoiXuat", "iTinhtrang", "isDelete", "ID_Nam", "ID_Quy", "isDelete"],
+    //   where: {
+    //     [Op.or]: [
+    //       {
+    //         ID_Nam: Nam.ID_Nam,
+    //         ID_Quy: ID_Quy,
+    //         ID_Nghiepvu: ID_Nghiepvu,
+    //         ID_NoiNhap: ID_NoiNhap,
+    //         ID_NoiXuat: ID_NoiXuat,
+    //         isDelete: 0,
+    //       },
+    //       {
+    //         Sophieu: {
+    //           [Op.like]: `%${Sophieu}%`
+    //         }
+    //       }
+    //     ]
+    //   }
+    // })
 
-    const checkPhieuNX = await Tb_PhieuNX.findOne({
-      attributes: ["ID_Nghiepvu", "Sophieu", "ID_NoiNhap", "ID_NoiXuat", "iTinhtrang", "isDelete", "ID_Nam", "ID_Quy", "isDelete"],
-      where: {
-        [Op.or]: [
-          {
-            ID_Nam: Nam.ID_Nam,
-            ID_Quy: ID_Quy,
-            ID_Nghiepvu: ID_Nghiepvu,
-            ID_NoiNhap: ID_NoiNhap,
-            ID_NoiXuat: ID_NoiXuat,
-            isDelete: 0,
-          },
-          {
-            Sophieu: {
-              [Op.like]: `%${Sophieu}%`
-            }
-          }
-        ]
-      }
-    })
-  
-    if(checkPhieuNX) {
-      return  res.status(400).json({
-        message: "Đã có phiếu tồn tại",
-      });
-    }
+    // if(checkPhieuNX) {
+    //   return  res.status(400).json({
+    //     message: "Đã có phiếu tồn tại",
+    //   });
+    // }
 
     let data;
 
     // Create Tb_PhieuNX
     data = await tbPhieuNXService.createTb_PhieuNX(reqData);
+
+    switch (ID_Nghiepvu) {
+      case "1":
+        if (
+          phieunxct &&
+          Array.isArray(phieunxct) &&
+          phieunxct.length > 0 &&
+          phieunxct[0]?.ID_Taisan !== null
+        ) {
+          await tbPhieuNXCTService.createTb_PhieuNXCT(phieunxct, data);
+        }
+        break;
+      case "3":
+        await tbPhieuNXNBCTService.createTb_PhieuNXNBCT(phieunxct, data);
+        break;
+    }
 
     // Create Tb_PhieuNXCT
     if (
@@ -95,7 +111,7 @@ const createTb_PhieuNX = async (req, res) => {
   } catch (error) {
     // Handle errors
     console.error("Error in creating Tb_PhieuNX:", error);
-    res.status(500).json({ message: "Đã xảy ra lỗi khi tạo phiếu nhập xuất" });
+    res.status(400).json({ message: error.message || "Đã xảy ra lỗi khi tạo phiếu nhập xuất" });
   }
 };
 
@@ -233,7 +249,7 @@ const closeTb_PhieuNX = async (req, res) => {
       NgayNX,
       Ghichu,
       phieunxct,
-      ID_Quy
+      ID_Quy,
     } = req.body;
 
     // Get Thang and Nam details
@@ -257,12 +273,14 @@ const closeTb_PhieuNX = async (req, res) => {
     };
 
     await tbPhieuNXService.closeTb_PhieuNX(ID_PhieuNX, { transaction });
-    
+
     if (
       (ID_Nghiepvu == 1 || ID_Nghiepvu == 2) &&
       phieunxct[0].ID_Taisan !== null
     ) {
-      await tbTaiSanQrService.insertDataToEntQRCode(phieunxct, reqData, { transaction });
+      await tbTaiSanQrService.insertDataToEntQRCode(phieunxct, reqData, {
+        transaction,
+      });
     }
 
     await transaction.commit();

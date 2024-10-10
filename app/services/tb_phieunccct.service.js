@@ -68,10 +68,11 @@ const createTb_PhieuNCCCT = async (phieunxct,data) => {
         // Nếu bản ghi đã tồn tại, cập nhật Nhapngoai và Tiennhapngoai
         await Tb_Tonkho.update({
           Nhapngoai: tonkho.Nhapngoai + groupedItem.Soluong,
-          Tiennhapngoai: tonkho.Tiennhapngoai + groupedItem.Dongia * groupedItem.Soluong
+          Tiennhapngoai: tonkho.Tiennhapngoai + groupedItem.Dongia * groupedItem.Soluong,
+          TonSosach: tonkho.TonSosach + groupedItem.Soluong
         }, {
           where: {
-            ID_Phongban: data.ID_Phongban,
+            ID_Phongban: data.ID_Phieu1,
             ID_Nam: data.ID_Nam,
             ID_Quy: data.ID_Quy,
             ID_Taisan: groupedItem.ID_Taisan
@@ -84,9 +85,10 @@ const createTb_PhieuNCCCT = async (phieunxct,data) => {
           ID_Nam: data.ID_Nam,
           ID_Quy: data.ID_Quy,
           ID_Thang: data.ID_Thang,
-          ID_Phongban: data.ID_Phongban,
+          ID_Phongban: data.ID_Phieu1,
           Nhapngoai: groupedItem.Soluong,
-          Tiennhapngoai: groupedItem.Dongia * groupedItem.Soluong
+          Tiennhapngoai: groupedItem.Dongia * groupedItem.Soluong,
+          TonSosach: groupedItem.Soluong
         });
       }
     }));    
@@ -123,7 +125,7 @@ const createTb_PhieuNCCCT = async (phieunxct,data) => {
             ID_Quy: data.ID_Quy,
             ID_Taisan: foundItem.ID_Taisan,
             ID_PhieuNCCCT: foundItem.ID_PhieuNCCCT,
-            ID_Phongban: data.ID_Phongban,
+            ID_Phongban: data.ID_Phieu1,
             Giatri: groupedItem.Dongia,
             Ngaykhoitao: data.NgayNX,
             MaQrCode: MaQrCode,
@@ -348,7 +350,7 @@ const updateTb_PhieuNCCCT = async (phieunxct, ID_PhieuNCC, data) => {
         if (data.ID_Nghiepvu == 2) {
           const tonkho = await Tb_Tonkho.findOne({
             where: {
-              ID_Phongban: data.ID_Phongban,
+              ID_Phongban: data.ID_Phieu1,
               ID_Nam: data.ID_Nam,
               ID_Quy: data.ID_Quy,
               ID_Taisan: groupedItem.ID_Taisan
@@ -359,10 +361,11 @@ const updateTb_PhieuNCCCT = async (phieunxct, ID_PhieuNCC, data) => {
           if (tonkho) {
             await Tb_Tonkho.update({
               Nhapngoai: tonkho.Nhapngoai + groupedItem.Soluong,
+              TonSosach: tonkho.TonSosach + groupedItem.Soluong,
               Tiennhapngoai: tonkho.Tiennhapngoai + groupedItem.Dongia * groupedItem.Soluong
             }, {
               where: {
-                ID_Phongban: data.ID_Phongban,
+                ID_Phongban: data.ID_Phieu1,
                 ID_Nam: data.ID_Nam,
                 ID_Quy: data.ID_Quy,
                 ID_Taisan: groupedItem.ID_Taisan
@@ -375,9 +378,10 @@ const updateTb_PhieuNCCCT = async (phieunxct, ID_PhieuNCC, data) => {
               ID_Nam: data.ID_Nam,
               ID_Quy: data.ID_Quy,
               ID_Thang: data.ID_Thang,
-              ID_Phongban: data.ID_Phongban,
+              ID_Phongban: data.ID_Phieu1,
               Nhapngoai: groupedItem.Soluong,
-              Tiennhapngoai: groupedItem.Dongia * groupedItem.Soluong
+              Tiennhapngoai: groupedItem.Dongia * groupedItem.Soluong,
+              TonSosach: groupedItem.Soluong
             }, { transaction });
           }
 
@@ -418,7 +422,7 @@ const updateTb_PhieuNCCCT = async (phieunxct, ID_PhieuNCC, data) => {
                 ID_Quy: data.ID_Quy,
                 ID_Taisan: groupedItem.ID_Taisan,
                 ID_PhieuNCCCT: newPhieuCCCCT.ID_PhieuNCCCT,
-                ID_Phongban: data.ID_Phongban,
+                ID_Phongban: data.ID_Phieu1,
                 Giatri: groupedItem.Dongia,
                 Ngaykhoitao: data.NgayNX,
                 MaQrCode,
