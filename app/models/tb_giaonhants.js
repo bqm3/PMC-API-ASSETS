@@ -16,6 +16,14 @@ const Tb_GiaonhanTS = sequelize.define(
       type: DataTypes.INTEGER,
       allowNull: false,
     },
+    ID_Nam: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+    ID_Quy: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
     iGiaonhan: {
       type: DataTypes.INTEGER,
       allowNull: false,

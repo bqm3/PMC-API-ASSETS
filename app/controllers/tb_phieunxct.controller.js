@@ -3,7 +3,7 @@ const tbPhieuNXCT = require("../services/tb_phieunxct.service");
 const scanQrCodeTb_PhieuNXCT = async (req, res) => {
   try {
     const {
-      ID_TaisanQrCode,
+      ID_TaisanQrcode,
       ID_PhieuNX,
       ID_Taisan,
       Dongia,
@@ -18,7 +18,7 @@ const scanQrCodeTb_PhieuNXCT = async (req, res) => {
       images,
       user,
       Namsx,
-      ID_TaisanQrCode,
+      ID_TaisanQrcode,
       ID_PhieuNX,
       ID_Taisan,
       Dongia,

@@ -314,6 +314,22 @@ Tb_GiaonhanTS.belongsTo(Ent_Phongbanda, {
   foreignKey: "ID_Phongban",
 });
 
+Ent_Nam.hasMany(Tb_GiaonhanTS, {
+  as: "tb_giaonhants",
+  foreignKey: "ID_Nam",
+});
+Tb_GiaonhanTS.belongsTo(Ent_Nam, {
+  foreignKey: "ID_Nam",
+});
+
+Ent_Quy.hasMany(Tb_GiaonhanTS, {
+  as: "tb_giaonhants",
+  foreignKey: "ID_Quy",
+});
+Tb_GiaonhanTS.belongsTo(Ent_Quy, {
+  foreignKey: "ID_Quy",
+});
+
 Tb_GiaonhanTS.hasMany(Tb_GiaonhanTSCT, {
   as: "tb_giaonhantsct",
   foreignKey: "ID_Giaonhan",

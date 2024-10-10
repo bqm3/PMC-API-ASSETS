@@ -77,6 +77,7 @@ const createTb_PhieuNX = async (req, res) => {
     // Create Tb_PhieuNX
     data = await tbPhieuNXService.createTb_PhieuNX(reqData);
 
+    console.log('ID_Nghiepvu', ID_Nghiepvu)
     switch (ID_Nghiepvu) {
       case "1":
         if (

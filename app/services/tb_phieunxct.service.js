@@ -473,7 +473,7 @@ const scanTb_PhieuNXCT = async (data) => {
   const res = await Tb_PhieuNXCT.create(
     {
       Anhts: file ? file.id : "",
-      ID_TaisanQrCode: data.ID_TaisanQrCode,
+      ID_TaisanQrcode: data.ID_TaisanQrcode,
       ID_PhieuNX: data.ID_PhieuNX,
       ID_Taisan: data.ID_Taisan,
       Dongia: data.Dongia,

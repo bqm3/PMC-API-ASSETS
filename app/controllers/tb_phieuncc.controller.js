@@ -263,6 +263,7 @@ const getPhieuNCCFilter = async (req, res) => {
       "Soluong",
       "Dongia",
       "Namsx",
+      "isDelete",
     ],
   });
 
