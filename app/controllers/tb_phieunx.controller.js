@@ -45,39 +45,38 @@ const createTb_PhieuNX = async (req, res) => {
       isDelete: 0,
     };
 
-    // const checkPhieuNX = await Tb_PhieuNX.findOne({
-    //   attributes: ["ID_Nghiepvu", "Sophieu", "ID_NoiNhap", "ID_NoiXuat", "iTinhtrang", "isDelete", "ID_Nam", "ID_Quy", "isDelete"],
-    //   where: {
-    //     [Op.or]: [
-    //       {
-    //         ID_Nam: Nam.ID_Nam,
-    //         ID_Quy: ID_Quy,
-    //         ID_Nghiepvu: ID_Nghiepvu,
-    //         ID_NoiNhap: ID_NoiNhap,
-    //         ID_NoiXuat: ID_NoiXuat,
-    //         isDelete: 0,
-    //       },
-    //       {
-    //         Sophieu: {
-    //           [Op.like]: `%${Sophieu}%`
-    //         }
-    //       }
-    //     ]
-    //   }
-    // })
+    const checkPhieuNX = await Tb_PhieuNX.findOne({
+      attributes: ["ID_Nghiepvu", "Sophieu", "ID_NoiNhap", "ID_NoiXuat", "iTinhtrang", "isDelete", "ID_Nam", "ID_Quy", "isDelete"],
+      where: {
+        [Op.or]: [
+          {
+            ID_Nam: Nam.ID_Nam,
+            ID_Quy: ID_Quy,
+            ID_Nghiepvu: ID_Nghiepvu,
+            ID_NoiNhap: ID_NoiNhap,
+            ID_NoiXuat: ID_NoiXuat,
+            isDelete: 0,
+          },
+          {
+            Sophieu: {
+              [Op.like]: `%${Sophieu}%`
+            }
+          }
+        ]
+      }
+    })
 
-    // if(checkPhieuNX) {
-    //   return  res.status(400).json({
-    //     message: "Đã có phiếu tồn tại",
-    //   });
-    // }
+    if(checkPhieuNX) {
+      return  res.status(400).json({
+        message: "Đã có phiếu tồn tại",
+      });
+    }
 
     let data;
 
     // Create Tb_PhieuNX
     data = await tbPhieuNXService.createTb_PhieuNX(reqData);
 
-    console.log('ID_Nghiepvu', ID_Nghiepvu)
     switch (ID_Nghiepvu) {
       case "1":
         if (
@@ -92,16 +91,6 @@ const createTb_PhieuNX = async (req, res) => {
       case "3":
         await tbPhieuNXNBCTService.createTb_PhieuNXNBCT(phieunxct, data);
         break;
-    }
-
-    // Create Tb_PhieuNXCT
-    if (
-      phieunxct &&
-      Array.isArray(phieunxct) &&
-      phieunxct.length > 0 &&
-      phieunxct[0]?.ID_Taisan !== null
-    ) {
-      await tbPhieuNXCTService.createTb_PhieuNXCT(phieunxct, data);
     }
 
     // Send success response

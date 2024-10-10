@@ -18,208 +18,21 @@ const {
 const sequelize = require("../config/db.config");
 const { Op, where, Sequelize } = require("sequelize");
 
-// const createTb_PhieuNXNBCT = async (phieunxct, data) => {
-//   const ID_PhieuNXCTs = [];
-//   const transaction = await sequelize.transaction();
-//   try {
-//     await Promise.all(
-//       phieunxct.map(async (item) => {
-//         if (item.Tb_TaisanQrCode != null) {
-//           const checkNXCT = await Tb_PhieuNXCT.findOne({
-//             where: {
-//               ID_TaisanQrcode: item.ID_TaisanQrcode,
-//               isDelete: 0,
-//             },
-//             transaction,
-//           });
-
-//           if (checkNXCT) {
-//             throw new Error(`Đã có: ${item.ID_Taisan}`);
-//           } else {
-//             const creatNXCT = await Tb_PhieuNXCT.create(
-//               {
-//                 ID_Taisan: item.ID_Taisan,
-//                 ID_TaisanQrcode: item.ID_TaisanQrcode,
-//                 Soluong: item.Soluong,
-//                 ID_PhieuNX: data.ID_PhieuNX,
-//                 isDelete: 0,
-//               },
-//               { transaction }
-//             );
-//             ID_PhieuNXCTs.push({
-//               ID_Taisan: item.ID_Taisan,
-//               ID_PhieuNXCT: creatNXCT.ID_PhieuNXCT
-//             });
-//           }
-//         } else {
-//           const creatNXCT = await Tb_PhieuNXCT.create(
-//             {
-//               ID_Taisan: item.ID_Taisan,
-//               ID_TaisanQrcode: null,
-//               Soluong: item.Soluong,
-//               ID_PhieuNX: data.ID_PhieuNX,
-//               isDelete: 0,
-//             },
-//             { transaction }
-//           );
-//         }
-//       })
-//     );
-
-//     const groupedItems = {};
-//     phieunxct.forEach((item) => {
-//       const { ID_Taisan, Dongia, Soluong, ID_PhieuNXCT, Namsx, isDelete } = item;
-
-//       // Kiểm tra nếu ID_Taisan chưa có trong groupedItems
-//       if (!groupedItems[ID_Taisan]) {
-//         groupedItems[ID_Taisan] = {
-//           ID_Taisan,
-//           Namsx,
-//           Dongia,
-//           Soluong,
-//         };
-//       } else {
-//         // Nếu ID_Taisan đã tồn tại thì cộng thêm Soluong vào mục hiện tại
-//         groupedItems[ID_Taisan].Soluong += Soluong;
-//       }
-//     });
-
-//     Object.values(groupedItems).map(async (item) => {
-//       const tonKho = await Tb_Tonkho.findOne({
-//         where: {
-//           ID_Taisan: item.ID_Taisan,
-//           ID_Nam: data.ID_Nam,
-//           ID_Quy: data.ID_Quy,
-//           ID_Phongban: data.ID_NoiXuat,
-//           TonSosach: { [Op.gt]: item.Soluong },
-//           isDelete: 0,
-//         },
-//         attributes: [
-//           "ID_Tonkho",
-//           "ID_Taisan",
-//           "ID_Nam",
-//           "ID_Quy",
-//           "ID_Phongban",
-//           "TonSosach",
-//         ],
-//         transaction,
-//       });
-
-//       if (tonKho) {
-//         await Tb_Tonkho.update({
-//             XuatNB: Sequelize.literal(`XuatNB + ${item.Soluong}`),
-//           },{
-//             where: {
-//               ID_Taisan: item.ID_Taisan,
-//               ID_Nam: data.ID_Nam,
-//               ID_Quy: data.ID_Quy,
-//               ID_Phongban: data.ID_NoiXuat,
-//             },
-//             transaction,
-//           });
-//         await Tb_Tonkho.update({
-//             NhapNB: Sequelize.literal(`NhapNB + ${item.Soluong}`),
-//           },{
-//             where: {
-//               ID_Taisan: item.ID_Taisan,
-//               ID_Nam: data.ID_Nam,
-//               ID_Quy: data.ID_Quy,
-//               ID_Phongban: data.ID_NoiNhap,
-//             },
-//             transaction,
-//           });
-//       } else {
-//         throw new Error(
-//           `Số lượng không hợp lệ cho ID_Taisan: ${item.ID_Taisan}`
-//         );
-//       }
-//     });
-
-//     phieunxct.map(async (item) => {
-//       if(item.ID_TaisanQrcode != null){
-//         await Tb_TaisanQrCode.update({
-//           iTinhtrang: 1,
-//           isDelete: 1,
-//         },{
-//           where: {
-//             ID_TaisanQrcode: item.ID_TaisanQrcode
-//           }, transaction,
-//         });
-//       }
-//     });
-
-//     groupedItems.map(async (item) => {
-//       // Lấy thông tin về dự án và tài sản
-//       const [duan, taisanDetails] = await getDuanVsTaisanDetails(data.ID_Phongban, item.ID_Taisan);
-//       const matchedItem = ID_PhieuNXCTs.find(
-//         item => item.ID_Taisan === ID_Taisan
-//       );
-
-//       // Tạo thông tin cần thiết để tạo QR code
-//       const Thuoc = duan?.Thuoc;
-//       const ManhomTs = taisanDetails.ent_nhomts.Manhom;
-//       const MaID = taisanDetails.ID_Taisan;
-//       const MaTaisan = taisanDetails.Mats;
-//       const Ngay = formatDateTime(data.NgayNX); // Định dạng ngày tháng từ dữ liệu phiếu
-
-//       // Hàm tạo một dòng QR code trong bảng Tb_TaisanQrCode
-//       const createQrCodeEntry = async (index) => {
-//         // Tạo mã QR code, nếu index > 1 thì thêm chỉ số index vào cuối mã
-//         const MaQrCode = index >= 1
-//           ? `${Thuoc}|${ManhomTs}|${MaID}|${MaTaisan}|${Ngay}|${index}`
-//           : `${Thuoc}|${ManhomTs}|${MaID}|${MaTaisan}|${Ngay}`;
-
-//         // Chèn vào bảng Tb_TaisanQrCode
-//         await Tb_TaisanQrCode.create({
-//           ID_Nam: data.ID_Nam,
-//           ID_Quy: data.ID_Quy,
-//           ID_Taisan: item.ID_Taisan,
-//           ID_PhieuNXCT: matchedItem.ID_PhieuNXCT,
-//           ID_Phongban: data.ID_Phongban,
-//           Giatri: null,
-//           Ngaykhoitao: data.NgayNX,
-//           MaQrCode: MaQrCode,
-//           Namsx: null,
-//           Nambdsd: null,
-//           Ghichu: "",
-//           iTinhtrang: 0,
-//         },{transaction});
-//       };
-
-//       if (item.Soluong > 1) {
-//         for (let i = 1; i <= item.Soluong; i++) {
-//           await createQrCodeEntry(i);
-//         }
-//       } else {
-//         await createQrCodeEntry(1);
-//       }
-//     });
-
-//     await transaction.commit();
-//   } catch (Error) {
-//     await transaction.rollback();
-//     throw Error;
-//   }
-// };
-
 const createTb_PhieuNXNBCT = async (phieunxct, data) => {
   const groupedItems = {};
   const ID_PhieuNXCTs = [];
   const transaction = await sequelize.transaction();
 
-  phieunxct.forEach((item) => {
-    const { ID_Taisan, ID_TaisanQrcode, Soluong } = item;
-    if (!groupedItems[ID_Taisan]) {
-      groupedItems[ID_Taisan] = { ID_Taisan, ID_TaisanQrcode, Soluong };
-    } else {
-      groupedItems[ID_Taisan].Soluong += Soluong;
-    }
-  });
-  console.log('phieunxct', phieunxct)
-
   try {
     await Promise.all(
       phieunxct.map(async (item) => {
+        const { ID_Taisan, ID_TaisanQrcode, Soluong } = item;
+        if (!groupedItems[ID_Taisan]) {
+          groupedItems[ID_Taisan] = { ID_Taisan, ID_TaisanQrcode, Soluong };
+        } else {
+          groupedItems[ID_Taisan].Soluong += Soluong;
+        }
+
         if (item.ID_TaisanQrcode !== null) {
           const checkNXCT = await Tb_PhieuNXCT.findOne({
             where: {
@@ -230,17 +43,31 @@ const createTb_PhieuNXNBCT = async (phieunxct, data) => {
           });
           // console.log("checkNXCT", checkNXCT);
 
+          await Tb_TaisanQrCode.update(
+            {
+              iTinhtrang: 1,
+              isDelete: 1,
+            },
+            {
+              where: {
+                ID_TaisanQrcode: item.ID_TaisanQrcode,
+                isDelete: 0,
+              },
+              transaction,
+            }
+          );
+
           if (checkNXCT) {
-            console.log("vao day 1");
             throw new Error(`Đã có: ${item.ID_Taisan}`);
           } else {
-            console.log("vao day 2");
             const creatNXCT = await Tb_PhieuNXCT.create(
               {
                 ID_Taisan: item.ID_Taisan,
                 ID_TaisanQrcode: item.ID_TaisanQrcode,
                 Soluong: item.Soluong,
                 ID_PhieuNX: data.ID_PhieuNX,
+                Dongia: item.Dongia || 0,
+                Namsx: item.Namsx || null,
                 isDelete: 0,
               },
               { transaction } // Đảm bảo transaction được truyền vào đây
@@ -252,14 +79,14 @@ const createTb_PhieuNXNBCT = async (phieunxct, data) => {
             });
           }
         } else {
-          console.log("vao day 3");
-
           await Tb_PhieuNXCT.create(
             {
               ID_Taisan: item.ID_Taisan,
               ID_TaisanQrcode: null,
               Soluong: item.Soluong,
               ID_PhieuNX: data.ID_PhieuNX,
+              Dongia: item.Dongia || 0,
+              Namsx: item.Namsx || null,
               isDelete: 0,
             },
             { transaction } // Đảm bảo transaction được truyền vào đây
@@ -268,94 +95,70 @@ const createTb_PhieuNXNBCT = async (phieunxct, data) => {
       })
     );
 
-    // ktra
     for (const item of Object.values(groupedItems)) {
-      const tonKho = await Tb_Tonkho.findOne({
-        where: {
-          ID_Taisan: item.ID_Taisan,
-          ID_Nam: data.ID_Nam,
-          ID_Quy: data.ID_Quy,
-          ID_Phongban: data.ID_NoiXuat,
-          TonSosach: { [Op.gt]: item.Soluong },
-          isDelete: 0,
+      const [updatedRowCount] = await Tb_Tonkho.update(
+        {
+          XuatNB: Sequelize.literal(`XuatNB + ${item.Soluong}`),
+          TonSosach: Sequelize.literal(
+            `Tondau + Nhapngoai + Nhapkhac + NhapNB - XuatNB - XuattraNCC - XuatThanhly - XuatHuy`
+          ),
         },
-        transaction,
-      });
-
-      if (tonKho) {
-        await Tb_Tonkho.update(
-          // tss
-          { XuatNB: Sequelize.literal(`XuatNB + ${item.Soluong}`) },
-          {
-            where: {
-              ID_Taisan: item.ID_Taisan,
-              ID_Nam: data.ID_Nam,
-              ID_Quy: data.ID_Quy,
-              ID_Phongban: data.ID_NoiXuat,
-            },
-            transaction,
-          }
-        );
-        const check = await Tb_Tonkho.findOne({
+        {
           where: {
             ID_Taisan: item.ID_Taisan,
-            ID_Phongban: data.ID_NoiNhap,
+            ID_Phongban: data.ID_NoiXuat,
+            TonSosach: { [Op.gte]: item.Soluong },
+            ID_Nam: data.ID_Nam,
+            ID_Quy: data.ID_Quy,
+            isDelete: 0,
           },
           transaction,
-        });
-        if (check) {
-          // ktra
-          await Tb_Tonkho.update(
-            { NhapNB: Sequelize.literal(`NhapNB + ${item.Soluong}`) },
-            {
-              where: {
-                ID_Taisan: item.ID_Taisan,
-                ID_Nam: data.ID_Nam,
-                ID_Quy: data.ID_Quy,
-                ID_Phongban: data.ID_NoiNhap,
-              },
-              transaction,
-            }
-          );
-        } else {
-          await Tb_Tonkho.create(
-            {
-              ID_Taisan: item.ID_Taisan,
-              ID_Nam: data.ID_Nam,
-              ID_Quy: data.ID_Quy,
-              ID_Thang: data.ID_Thang,
-              ID_Phongban: data.ID_NoiNhap,
-              NhapNB: item.Soluong,
-            },
-            { transaction }
-          );
         }
-      } else {
+      );
+
+      if (updatedRowCount === 0) {
         throw new Error(
           `Số lượng không hợp lệ cho ID_Taisan: ${item.ID_Taisan}`
         );
       }
-    }
 
-    // ktra
-    for (const item of phieunxct) {
-      if (item.ID_TaisanQrcode != null) {
-        await Tb_TaisanQrCode.update(
-          {
-            iTinhtrang: 1,
-            isDelete: 1,
+      // Kiểm tra và cập nhật kho nhận
+      const [checkUpdated] = await Tb_Tonkho.update(
+        {
+          NhapNB: Sequelize.literal(`NhapNB + ${item.Soluong}`),
+          TonSosach: Sequelize.literal(
+            `Tondau + Nhapngoai + Nhapkhac + NhapNB - XuatNB - XuattraNCC - XuatThanhly - XuatHuy`
+          ),
+        },
+        {
+          where: {
+            ID_Taisan: item.ID_Taisan,
+            ID_Phongban: data.ID_NoiNhap,
+            ID_Nam: data.ID_Nam,
+            ID_Quy: data.ID_Quy,
           },
+          transaction,
+        }
+      );
+
+      // Nếu không tồn tại bản ghi thì tạo mới
+      if (checkUpdated === 0) {
+        await Tb_Tonkho.create(
           {
-            where: {
-              ID_TaisanQrcode: item.ID_TaisanQrcode,
-            },
-            transaction,
-          }
+            ID_Taisan: item.ID_Taisan,
+            ID_Nam: data.ID_Nam,
+            ID_Quy: data.ID_Quy,
+            ID_Thang: data.ID_Thang,
+            ID_Phongban: data.ID_NoiNhap,
+            NhapNB: item.Soluong,
+            TonSosach: Sequelize.literal(
+              `Tondau + Nhapngoai + Nhapkhac + NhapNB - XuatNB - XuattraNCC - XuatThanhly - XuatHuy`
+            ),
+          },
+          { transaction }
         );
       }
-    }
 
-    for (const item of Object.values(groupedItems)) {
       const [duan, taisanDetails] = await getDuanVsTaisanDetails(
         data.ID_NoiNhap,
         item.ID_Taisan
@@ -373,7 +176,7 @@ const createTb_PhieuNXNBCT = async (phieunxct, data) => {
 
       const createQrCodeEntry = async (index) => {
         const MaQrCode =
-          index > 1
+          index >= 1
             ? `${Thuoc}|${ManhomTs}|${MaID}|${MaTaisan}|${Ngay}|${index}`
             : `${Thuoc}|${ManhomTs}|${MaID}|${MaTaisan}|${Ngay}`;
 
