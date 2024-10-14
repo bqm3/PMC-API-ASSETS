@@ -114,7 +114,7 @@ const createTb_PhieuNXTNCC = async (phieunxct, data) => {
           updateTonkho = {
             XuattraNCC: Sequelize.literal(`XuattraNCC + ${item.Soluong}`),
             TonSosach: Sequelize.literal(
-              `Tondau + Nhapngoai + Nhapkhac + NhapNB - XuatNB - XuattraNCC - XuatThanhly - XuatHuy`
+              `Tondau + Nhapngoai + Nhapkhac + NhapNB - XuatNB - XuattraNCC - XuatThanhly - XuatHuy - XuatgiaoNV`
             ),
           };
           break;
@@ -122,14 +122,14 @@ const createTb_PhieuNXTNCC = async (phieunxct, data) => {
           updateTonkho = {
             XuatThanhly: Sequelize.literal(`XuatThanhly + ${item.Soluong}`),
             TonSosach: Sequelize.literal(
-              `Tondau + Nhapngoai + Nhapkhac + NhapNB - XuatNB - XuattraNCC - XuatThanhly - XuatHuy`
+              `Tondau + Nhapngoai + Nhapkhac + NhapNB - XuatNB - XuattraNCC - XuatThanhly - XuatHuy - XuatgiaoNV`
             ),
           };
         case "7":
           updateTonkho = {
             XuatHuy: Sequelize.literal(`XuatHuy + ${item.Soluong}`),
             TonSosach: Sequelize.literal(
-              `Tondau + Nhapngoai + Nhapkhac + NhapNB - XuatNB - XuattraNCC - XuatThanhly - XuatHuy`
+              `Tondau + Nhapngoai + Nhapkhac + NhapNB - XuatNB - XuattraNCC - XuatThanhly - XuatHuy - XuatgiaoNV`
             ),
           };
           break;

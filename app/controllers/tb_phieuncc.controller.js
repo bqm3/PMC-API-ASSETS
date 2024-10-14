@@ -34,13 +34,18 @@ const createTb_PhieuNCC = async (req, res) => {
     const Thang = await eThangService.getDetail(NgayNX);
     const Nam = await eNamService.getDetail(NgayNX);
 
-
     // Prepare data for Tb_PhieuNCC creation
     const reqData = {
       ID_Nghiepvu: ID_Nghiepvu,
       Sophieu: Sophieu,
-      ID_Phieu1: ID_Nghiepvu == 5 || 6 || 7 ? ID_NoiXuat : ID_NoiNhap,
-      ID_Phieu2: ID_Nghiepvu == 5 || 6 || 7 ? ID_NoiNhap : ID_NoiXuat,
+      ID_Phieu1:
+        ID_Nghiepvu == 5 || ID_Nghiepvu == 6 || ID_Nghiepvu == 7
+          ? ID_NoiXuat
+          : ID_NoiNhap,
+      ID_Phieu2:
+        ID_Nghiepvu == 5 || ID_Nghiepvu == 6 || ID_Nghiepvu == 7
+          ? ID_NoiNhap
+          : ID_NoiXuat,
       ID_Loainhom: ID_Loainhom,
       ID_Nam: Nam.ID_Nam,
       ID_Thang: Thang.ID_Thang,
@@ -95,7 +100,7 @@ const createTb_PhieuNCC = async (req, res) => {
     data = await tbPhieuNCCService.createTb_PhieuNCC(reqData);
 
     switch (ID_Nghiepvu) {
-       // 2 Phieu xuat noi bo
+      // 2 Phieu xuat noi bo
       case "2":
         if (
           phieunccct &&
@@ -106,9 +111,9 @@ const createTb_PhieuNCC = async (req, res) => {
           await tbPhieuNCCCTService.createTb_PhieuNCCCT(phieunccct, data);
         }
         break;
-        // 5 Phieu xuat tra ncc 
-        // 6 Phieu xuat thanh ly
-        // 7 Phieu xuat huy
+      // 5 Phieu xuat tra ncc
+      // 6 Phieu xuat thanh ly
+      // 7 Phieu xuat huy
       case "5":
       case "6":
       case "7":

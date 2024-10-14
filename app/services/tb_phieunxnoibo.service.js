@@ -100,7 +100,7 @@ const createTb_PhieuNXNBCT = async (phieunxct, data) => {
         {
           XuatNB: Sequelize.literal(`XuatNB + ${item.Soluong}`),
           TonSosach: Sequelize.literal(
-            `Tondau + Nhapngoai + Nhapkhac + NhapNB - XuatNB - XuattraNCC - XuatThanhly - XuatHuy`
+            `Tondau + Nhapngoai + Nhapkhac + NhapNB - XuatNB - XuattraNCC - XuatThanhly - XuatHuy - XuatgiaoNV`
           ),
         },
         {
@@ -127,7 +127,7 @@ const createTb_PhieuNXNBCT = async (phieunxct, data) => {
         {
           NhapNB: Sequelize.literal(`NhapNB + ${item.Soluong}`),
           TonSosach: Sequelize.literal(
-            `Tondau + Nhapngoai + Nhapkhac + NhapNB - XuatNB - XuattraNCC - XuatThanhly - XuatHuy`
+            `Tondau + Nhapngoai + Nhapkhac + NhapNB - XuatNB - XuattraNCC - XuatThanhly - XuatHuy - XuatgiaoNV`
           ),
         },
         {
@@ -152,7 +152,7 @@ const createTb_PhieuNXNBCT = async (phieunxct, data) => {
             ID_Phongban: data.ID_NoiNhap,
             NhapNB: item.Soluong,
             TonSosach: Sequelize.literal(
-              `Tondau + Nhapngoai + Nhapkhac + NhapNB - XuatNB - XuattraNCC - XuatThanhly - XuatHuy`
+              `Tondau + Nhapngoai + Nhapkhac + NhapNB - XuatNB - XuattraNCC - XuatThanhly - XuatHuy - XuatgiaoNV`
             ),
           },
           { transaction }
