@@ -271,10 +271,13 @@ Tb_TaisanQrCode.belongsTo(Ent_Phongbanda, {
   foreignKey: "ID_Phongban",
 });
 
-Ent_User.hasMany(Tb_TaisanQrCode, { as: "tb_taisanqr", foreignKey: "ID_User" });
-Tb_TaisanQrCode.belongsTo(Ent_User, {
-  foreignKey: "ID_User",
-});
+// Ent_NhansuPBDA.hasMany(Tb_TaisanQrCode, {
+//   as: "tb_taisanqr",
+//   foreignKey: "ID_NSBP",
+// });
+// Tb_TaisanQrCode.belongsTo(Ent_NhansuPBDA, {
+//   foreignKey: "ID_User",
+// });
 
 // Ton kho
 Ent_Nam.hasMany(Tb_Tonkho, { as: "tb_tonkho", foreignKey: "ID_Nam" });
@@ -306,6 +309,9 @@ Tb_Tonkho.belongsTo(Ent_Taisan, {
 });
 
 // Phieu Giao nhan ts ccdc cho nhan vien
+Tb_GiaonhanTS.belongsTo(Ent_NhansuPBDA, { as: "NguoinhanInfo", foreignKey: "Nguoinhan" });
+Tb_GiaonhanTS.belongsTo(Ent_NhansuPBDA, { as: "NguoigiaoInfo", foreignKey: "Nguoigiao" });
+
 Ent_Phongbanda.hasMany(Tb_GiaonhanTS, {
   as: "tb_giaonhants",
   foreignKey: "ID_Phongban",
@@ -338,13 +344,16 @@ Tb_GiaonhanTS.belongsTo(Tb_GiaonhanTSCT, {
   foreignKey: "ID_Giaonhan",
 });
 
-Ent_Taisan.hasMany(Tb_GiaonhanTSCT, {
-  as: "tb_giaonhantsct",
-  foreignKey: "ID_Taisan",
-});
-Ent_Taisan.belongsTo(Tb_GiaonhanTSCT, {
-  foreignKey: "ID_Taisan",
-});
+// Ent_Taisan.hasMany(Tb_GiaonhanTSCT, {
+//   as: "tb_giaonhantsct",
+//   foreignKey: "ID_Taisan",
+// });
+// Ent_Taisan.belongsTo(Tb_GiaonhanTSCT, {
+//   foreignKey: "ID_Taisan",
+// });
+
+Tb_GiaonhanTSCT.belongsTo(Ent_Taisan, { foreignKey: 'ID_Taisan', as: 'TaisanInfo' });
+Ent_Taisan.hasMany(Tb_GiaonhanTSCT, { foreignKey: 'ID_Taisan' });
 
 Tb_TaisanQrCode.hasMany(Tb_GiaonhanTSCT, {
   as: "tb_giaonhantsct",
@@ -468,4 +477,6 @@ module.exports = {
   Tb_Tonkho,
   Tb_PhieuNCC,
   Tb_PhieuNCCCT,
+  Tb_GiaonhanTS,
+  Tb_GiaonhanTSCT,
 };

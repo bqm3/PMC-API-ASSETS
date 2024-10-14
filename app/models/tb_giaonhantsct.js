@@ -20,13 +20,15 @@ const Tb_GiaonhanTSCT = sequelize.define(
     },
     ID_TaisanQrcode: {
       type: DataTypes.INTEGER,
-      allowNull: false,
+    },
+    Soluong: {
+      type: DataTypes.INTEGER,
     },
     Tinhtrangmay: {
       type: DataTypes.TEXT,
       allowNull: true,
     },
-    Cactllienquan: {
+    Cacttlienquan: {
       type: DataTypes.TEXT,
       allowNull: false,
     },

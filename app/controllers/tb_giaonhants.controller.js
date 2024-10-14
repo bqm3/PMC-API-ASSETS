@@ -1,110 +1,135 @@
-const eThangService = require("../services/ent_thang.service");
-const eNamService = require("../services/ent_nam.service");
+const sequelize = require("../config/db.config");
+const tbGiaonhanTSCT = require("../services/tb_giaonhantsct.service");
 
+const createGiaoNhanTS = async (req, res) => {
+  try {
+    const user = req.user.data;
+    const {
+      iGiaonhan,
+      Nguoinhan,
+      Ngay,
+      Ghichu,
+      Nguoigiao,
+      giaonhantsct,
+      ID_Quy,
+      ID_Nam,
+    } = req.body;
 
-
-exports.createGiaoNhanTS = async (req, res) => {
-    try {
-      const user = req.user.data;
-      const {
-        ID_Phongban,
-        iGiaonhan,
-        Nguoinhan,
-        Ngay,
-        ID_Quy,
-        Ghichu,
-        Nguoigiao,
-        giaonhants
-      } = req.body;
-  
-      const Nam = await eNamService.getDetail(Ngay);
-  
-      const reqData = {
-        ID_Phongban: ID_Phongban,
-        Nguoinhan: Nguoinhan,
-        Ghichu: Ghichu,
-        ID_Nam: Nam.ID_Nam,
-        ID_Quy: ID_Quy,
-        Nguoigiao: Nguoigiao,
-        iGiaonhan: iGiaonhan,
-        giaonhants: giaonhants,
-        isDelete: 0,
-      };
-
-      // Từ ID_Quy, ID_Nam, ID_Phongban, ID_Taisan, So luong từ giaonhants[ID_Taisan]
-      // =>  so sánh với bảng Tb_Tonkho
-      // ====================================
-
-  
-      const checkPhieuNX = await Tb_PhieuNX.findOne({
-        attributes: ["ID_Nghiepvu", "Sophieu", "ID_NoiNhap", "ID_NoiXuat", "iTinhtrang", "isDelete", "ID_Nam", "ID_Quy", "isDelete"],
-        where: {
-          [Op.or]: [
-            {
-              ID_Nam: Nam.ID_Nam,
-              ID_Quy: ID_Quy,
-              ID_Nghiepvu: ID_Nghiepvu,
-              ID_NoiNhap: ID_NoiNhap,
-              ID_NoiXuat: ID_NoiXuat,
-              isDelete: 0,
-            },
-            {
-              Sophieu: {
-                [Op.like]: `%${Sophieu}%`
-              }
-            }
-          ]
-        }
-      })
-    
-      if(checkPhieuNX) {
-        return  res.status(400).json({
-          message: "Đã có phiếu tồn tại",
-        });
-      }
-  
-      let data;
-  
-      // Create Tb_PhieuNX
-      data = await tbPhieuNXService.createTb_PhieuNX(reqData);
-  
-      // Create Tb_PhieuNXCT
-      if (
-        phieunxct &&
-        Array.isArray(phieunxct) &&
-        phieunxct.length > 0 &&
-        phieunxct[0]?.ID_Taisan !== null
-      ) {
-        await tbPhieuNXCTService.createTb_PhieuNXCT(phieunxct, data);
-      }
-  
-      // Send success response
-      res.status(200).json({
-        message: "Tạo thành công",
-        data: data,
+    if (!iGiaonhan || !Nguoinhan || !Ngay || !Nguoigiao) {
+      return res.status(400).json({
+        message: "Vui lòng nhập đầy đủ thông tin phiếu",
       });
-    } catch (error) {
-      // Handle errors
-      console.error("Error in creating Tb_PhieuNX:", error);
-      res.status(500).json({ message: "Đã xảy ra lỗi khi tạo phiếu nhập xuất" });
     }
-  };
 
+    const reqData = {
+      ID_Phongban: user.ID_Phongban,
+      iGiaonhan: iGiaonhan,
+      Nguoinhan: Nguoinhan,
+      Ngay: Ngay,
+      Ghichu: Ghichu || "",
+      Nguoigiao: Nguoigiao,
+      ID_Quy: ID_Quy,
+      ID_Nam: ID_Nam,
+      isDelete: 0,
+    };
 
+    await tbGiaonhanTSCT.create_Tb_GiaoNhanTS(giaonhantsct, reqData);
 
-  ///
-  // Đầu vào sẽ có ID_Phongbanduan => Kiểm tra xem Phòng ban xuất tài sản 
-  // B1: Có ID_Phongban xuất, danh sách ID_Taisan (Bỏ qua năm, đơn giá)
-  // B2: Quét qr code lấy dc ID_Taisan lấy từ bảng tb_taisanqrcode
-  // B3: trả về thông tin tài sản + thông tin tb_táianqrcode
-  // B4: Từ ID_TaisanQrcode 
+    res.status(200).json({
+      message: "Tạo phiếu giao nhận tài sản thành công",
+      // data: data,
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: error.message || "Đã xảy ra lỗi khi tạo phiếu giao nhận tài sản",
+    });
+  }
+};
 
-  // B2: Nhập tài sản điều chuyển. Với ts có mã qr code thì phải quét.
-  // Nhập tay phần mã qrcode ( 1 bản ghi tài sản)
+const updateGiaoNhanTS = async (req, res) => {
+  try {
+    const ID_Giaonhan = req.params.id;
+    const { giaonhantsct } = req.body;
+    await tbGiaonhanTSCT.update_Tb_GiaoNhanTS(ID_Giaonhan, giaonhantsct);
+    res.status(200).json({
+      message: "Cập nhật thành công",
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: error.message || "Đã xảy ra lỗi khi cập nhật",
+    });
+  }
+};
 
-  // Chọn tài sản nếu k có qr code( 1-> n)
+const getDetailGiaoNhanTS = async (req, res) => {
+  try {
+    const ID_Giaonhan = req.params.id;
+    const data = await tbGiaonhanTSCT.getDetail_Tb_GiaoNhanTS(ID_Giaonhan);
+    return res.status(200).json({
+      message: "Lấy thông tin giao nhận tài sản thành công",
+      data: data,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: "Có lỗi xảy ra khi lấy thông tin giao nhận tài sản",
+      error: error.message,
+    });
+  }
+};
 
-  // B3: Tb_NXCT tìm kiếm trong tb_tonkho số lượng tồn sổ sách của tài sản theo
-  // dự án ( nơi xuaast, năm, quý, ID_Taisan)
+const deleteGiaoNhanTS = async (req, res) => {
+  try {
+    const ID_Giaonhan = req.params.id;
+    const result = await tbGiaonhanTSCT.delete_Tb_GiaonhanTS(ID_Giaonhan);
 
-  // B4: Cập nhât vào bảng TB-Tonkho trường ID_NOIXUAT , XUATNOI = XUATNOIBO + SL
+    return res.status(200).json({
+      message: "Xóa thông tin giao nhận tài sản thành công",
+      result: result,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: "Có lỗi xảy ra khi xóa giao nhận tài sản",
+      error: error.message,
+    });
+  }
+};
+
+const getAllGiaoNhanTS = async (req, res) => {
+  try {
+    const data = await tbGiaonhanTSCT.getAll_Tb_GiaonhanTS(); // Gọi hàm lấy dữ liệu
+    return res.status(200).json({
+      message: "Lấy danh sách giao nhận tài sản thành công",
+      data: data,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: "Có lỗi xảy ra khi lấy danh sách giao nhận tài sản",
+      error: error.message,
+    });
+  }
+};
+
+const getByIDPBanGiaoNhanTS = async (req, res) => {
+  try {
+    const ID_Phongban = req.params.id;
+    const data = await tbGiaonhanTSCT.getBy_IDPhongban_GiaonhanTS(ID_Phongban);
+    return res.status(200).json({
+      message: "Lấy danh sách giao nhận tài sản thành công",
+      data: data,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: "Có lỗi xảy ra khi lấy danh sách giao nhận tài sản",
+      error: error.message,
+    });
+  }
+};
+
+module.exports = {
+  createGiaoNhanTS,
+  updateGiaoNhanTS,
+  getDetailGiaoNhanTS,
+  deleteGiaoNhanTS,
+  getAllGiaoNhanTS,
+  getByIDPBanGiaoNhanTS,
+};
