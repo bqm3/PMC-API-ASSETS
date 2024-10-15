@@ -64,6 +64,17 @@ const create_Tb_GiaoNhanTS = async (giaonhantsct, reqData) => {
 
 const create_Detail_GiaoNhanTSCT = async (item, data, transaction) => {
   if (item?.ID_TaisanQrcode != null) {
+    const checkItem = await Tb_GiaonhanTSCT.findOne({
+      where: {
+        ID_TaisanQrcode: item.ID_TaisanQrcode,
+        isDelete: 0,
+      },
+    });
+
+    if (checkItem) {
+      throw new Error(`Đã nhập tài sản ${item.ID_Taisan}`);
+    }
+
     let updateUser = {
       ID_User: Number(data.iGiaonhan) === 1 ? data.Nguoinhan : 0,
     };
