@@ -215,8 +215,6 @@ const update_Tb_GiaoNhanTS = async (ID_Giaonhan, giaonhantsct) => {
             ? Sequelize.literal(`XuatgiaoNV - ${record.Soluong}`)
             : Sequelize.literal(`XuatgiaoNV + ${record.Soluong}`);
 
-        console.log("xuatGiaoNVLiteral", xuatGiaoNVLiteral);
-
         await Tb_Tonkho.update(
           {
             XuatgiaoNV: xuatGiaoNVLiteral,

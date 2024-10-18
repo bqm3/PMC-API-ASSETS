@@ -46,7 +46,17 @@ const createTb_PhieuNX = async (req, res) => {
     };
 
     const checkPhieuNX = await Tb_PhieuNX.findOne({
-      attributes: ["ID_Nghiepvu", "Sophieu", "ID_NoiNhap", "ID_NoiXuat", "iTinhtrang", "isDelete", "ID_Nam", "ID_Quy", "isDelete"],
+      attributes: [
+        "ID_Nghiepvu",
+        "Sophieu",
+        "ID_NoiNhap",
+        "ID_NoiXuat",
+        "iTinhtrang",
+        "isDelete",
+        "ID_Nam",
+        "ID_Quy",
+        "isDelete",
+      ],
       where: {
         [Op.or]: [
           {
@@ -59,15 +69,15 @@ const createTb_PhieuNX = async (req, res) => {
           },
           {
             Sophieu: {
-              [Op.like]: `%${Sophieu}%`
-            }
-          }
-        ]
-      }
-    })
+              [Op.like]: `%${Sophieu}%`,
+            },
+          },
+        ],
+      },
+    });
 
-    if(checkPhieuNX) {
-      return  res.status(400).json({
+    if (checkPhieuNX) {
+      return res.status(400).json({
         message: "Đã có phiếu tồn tại",
       });
     }
@@ -101,7 +111,11 @@ const createTb_PhieuNX = async (req, res) => {
   } catch (error) {
     // Handle errors
     console.error("Error in creating Tb_PhieuNX:", error);
-    res.status(400).json({ message: error.message || "Đã xảy ra lỗi khi tạo phiếu nhập xuất" });
+    res
+      .status(400)
+      .json({
+        message: error.message || "Đã xảy ra lỗi khi tạo phiếu nhập xuất",
+      });
   }
 };
 
@@ -111,7 +125,7 @@ const getDetailTb_PhieuNX = async (req, res) => {
 
     const data = await tbPhieuNXService.getDetailTb_PhieuNX(ID_PhieuNX);
     res.status(200).json({
-      message: "Dữ liệu",
+      message: "Dữ liệu 2",
       data: data,
     });
   } catch (error) {
