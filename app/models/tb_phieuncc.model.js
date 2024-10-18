@@ -21,7 +21,6 @@ const Tb_PhieuNCC = sequelize.define(
     },
     ID_Loainhom: {
       type: DataTypes.INTEGER,
-      allowNull: false,
     },
     Sophieu: {
       type: DataTypes.CHAR,

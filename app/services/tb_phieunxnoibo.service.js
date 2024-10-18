@@ -43,6 +43,20 @@ const createTb_PhieuNXNBCT = async (phieunxct, data) => {
           });
           // console.log("checkNXCT", checkNXCT);
 
+          const checkUserTaisan = await Tb_TaisanQrCode.findByPk(
+            item.ID_TaisanQrcode,
+            {
+              attributes: ["ID_TaisanQrcode", "ID_User"],
+            },
+            transaction
+          );
+
+          if (checkUserTaisan.ID_User != null && checkUserTaisan.ID_User != 0) {
+            throw new Error(
+              `Tài sản này đã giao cho user có ID là : ${checkUserTaisan.ID_User}`
+            );
+          }
+
           await Tb_TaisanQrCode.update(
             {
               iTinhtrang: 1,

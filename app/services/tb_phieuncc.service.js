@@ -16,11 +16,33 @@ const {
   Ent_Loainhom,
   Ent_Nhacc,
 } = require("../models/setup.model");
-const { Op } = require("sequelize");
+const sequelize = require("../config/db.config");
+const tbPhieuNCCCTService = require("../services/tb_phieunccct.service");
 
-const createTb_PhieuNCC = async (data) => {
-  const res = await Tb_PhieuNCC.create(data);
-  return res;
+// nghiep vu 2 : nhap tu nha cung cap
+const createTb_PhieuNCC = async (phieunccct, data) => {
+  const transaction = await sequelize.transaction();
+  try {
+    const res = await Tb_PhieuNCC.create(data, { transaction });
+    if (phieunccct.length > 0 && phieunccct[0].ID_Taisan != null) {
+      if (data.ID_Nghiepvu == 2) {
+        await tbPhieuNCCCTService.create_PhieuNhapNCC(
+          phieunccct,
+          res,
+          transaction
+        );
+      } else {
+        for (const item of phieunccct) {
+          await tbPhieuNCCCTService.create_PhieuXuatNCC(item, res, transaction);
+        }
+      }
+    }
+    await transaction.commit();
+    return res;
+  } catch (error) {
+    await transaction.rollback();
+    throw new Error(error.message || `Có lỗi xảy ra !`);
+  }
 };
 
 const getDetailTb_PhieuNCC = async (ID_PhieuNCC) => {

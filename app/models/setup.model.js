@@ -301,6 +301,9 @@ Tb_Tonkho.belongsTo(Ent_Taisan, {
   foreignKey: "ID_Taisan",
 });
 
+Tb_Tonkho.belongsTo(Tb_TaisanQrCode, { foreignKey: 'ID_Taisan', as: 'tb_taisanqrcode' });
+//Tb_TaisanQrCode.hasMany(Tb_Tonkho, { foreignKey: 'ID_Taisan', as: 'tb_tonkho' });
+
 // Phieu Giao nhan ts ccdc cho nhan vien
 Tb_GiaonhanTS.belongsTo(Ent_NhansuPBDA, { as: "NguoinhanInfo", foreignKey: "Nguoinhan" });
 Tb_GiaonhanTS.belongsTo(Ent_NhansuPBDA, { as: "NguoigiaoInfo", foreignKey: "Nguoigiao" });

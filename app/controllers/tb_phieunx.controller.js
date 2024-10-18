@@ -169,7 +169,7 @@ const getDetailTb_PhieuNX = async (req, res) => {
 
     const data = await tbPhieuNXService.getDetailTb_PhieuNX(ID_PhieuNX);
     res.status(200).json({
-      message: "Dữ liệu",
+      message: "Dữ liệu 2",
       data: data,
     });
   } catch (error) {
