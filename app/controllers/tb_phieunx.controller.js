@@ -7,8 +7,10 @@ const eNamService = require("../services/ent_nam.service");
 const Tb_PhieuNX = require("../models/tb_phieunx.model");
 const { Op } = require("sequelize");
 const sequelize = require("../config/db.config");
+const Tb_Tonkho = require("../models/tb_tonkho.model");
 
 const createTb_PhieuNX = async (req, res) => {
+  const t = await sequelize.transaction(); // Bắt đầu transaction
   try {
     const user = req.user.data;
     const {
@@ -45,53 +47,104 @@ const createTb_PhieuNX = async (req, res) => {
       isDelete: 0,
     };
 
+    // Check if the combination of ID_Nghiepvu and Sophieu already exists
     const checkPhieuNX = await Tb_PhieuNX.findOne({
-      attributes: ["ID_Nghiepvu", "Sophieu", "ID_NoiNhap", "ID_NoiXuat", "iTinhtrang", "isDelete", "ID_Nam", "ID_Quy", "isDelete"],
+      attributes: [
+        "ID_Nghiepvu",
+        "Sophieu",
+        "ID_NoiNhap",
+        "ID_NoiXuat",
+        "iTinhtrang",
+        "isDelete",
+        "ID_Nam",
+        "ID_Quy",
+        "isDelete",
+      ],
       where: {
-        [Op.or]: [
-          {
-            ID_Nam: Nam.ID_Nam,
-            ID_Quy: ID_Quy,
-            ID_Nghiepvu: ID_Nghiepvu,
-            ID_NoiNhap: ID_NoiNhap,
-            ID_NoiXuat: ID_NoiXuat,
-            isDelete: 0,
-          },
-          {
-            Sophieu: {
-              [Op.like]: `%${Sophieu}%`
-            }
-          }
-        ]
-      }
-    })
+        isDelete: 0,
+        ID_Nghiepvu: ID_Nghiepvu,
+        Sophieu: {
+          [Op.like]: `%${Sophieu}%`,
+        },
+      },
+      transaction: t, // Transaction scope
+    });
 
-    if(checkPhieuNX) {
-      return  res.status(400).json({
+    if (checkPhieuNX) {
+      await t.rollback(); // Rollback if the record already exists
+      return res.status(400).json({
         message: "Đã có phiếu tồn tại",
       });
     }
 
-    let data;
+    // Skip Tb_Tonkho.findOne check for ID_Nghiepvu == 9
+    if (ID_Nghiepvu !== "9") {
+      if (phieunxct.length > 0 && phieunxct[0]?.ID_Taisan !== null) {
+        for (const item of phieunxct) {
+          const dataTonkho = await Tb_Tonkho.findOne({
+            attributes: [
+              "ID_Tonkho",
+              "ID_Quy",
+              "ID_Nam",
+              "ID_Phongban",
+              "ID_Taisan",
+              "isDelete",
+            ],
+            where: {
+              ID_Phongban: ID_NoiXuat || ID_NoiNhap,
+              ID_Taisan: item.ID_Taisan,
+              isDelete: 0,
+              ID_Quy: ID_Quy,
+              ID_Nam: Nam.ID_Nam,
+            },
+            transaction: t, // Transaction scope
+          });
+
+          if (dataTonkho) {
+            await t.rollback(); // Rollback if asset already exists
+            return res.status(400).json({
+              message: "Tài sản đã tồn tại trước đó",
+            });
+          }
+        }
+      }
+    }
 
     // Create Tb_PhieuNX
-    data = await tbPhieuNXService.createTb_PhieuNX(reqData);
+    let data = await tbPhieuNXService.createTb_PhieuNX(reqData, {
+      transaction: t,
+    });
 
-    switch (ID_Nghiepvu) {
-      case "1":
-        if (
-          phieunxct &&
-          Array.isArray(phieunxct) &&
-          phieunxct.length > 0 &&
-          phieunxct[0]?.ID_Taisan !== null
-        ) {
-          await tbPhieuNXCTService.createTb_PhieuNXCT(phieunxct, data);
-        }
-        break;
-      case "3":
-        await tbPhieuNXNBCTService.createTb_PhieuNXNBCT(phieunxct, data);
-        break;
+    // Switch statement for ID_Nghiepvu cases with phieunxct validation
+    if (
+      phieunxct &&
+      Array.isArray(phieunxct) &&
+      phieunxct.length > 0 &&
+      phieunxct[0]?.ID_Taisan !== null
+    ) {
+      switch (ID_Nghiepvu) {
+        case "1":
+          await tbPhieuNXCTService.createTb_PhieuNXCT(phieunxct, data, {
+            transaction: t,
+          });
+          break;
+        case "3":
+          await tbPhieuNXNBCTService.createTb_PhieuNXNBCT(phieunxct, data, {
+            transaction: t,
+          });
+          break;
+        case "9":
+          await tbPhieuNXCTService.createTb_PhieuNXCT(phieunxct, data, {
+            transaction: t,
+          });
+          break;
+        default:
+          break;
+      }
     }
+
+    // Commit transaction if no errors
+    await t.commit();
 
     // Send success response
     res.status(200).json({
@@ -99,9 +152,14 @@ const createTb_PhieuNX = async (req, res) => {
       data: data,
     });
   } catch (error) {
-    // Handle errors
+    // Rollback in case of error
+    if (t) await t.rollback();
     console.error("Error in creating Tb_PhieuNX:", error);
-    res.status(400).json({ message: error.message || "Đã xảy ra lỗi khi tạo phiếu nhập xuất" });
+    res
+      .status(400)
+      .json({
+        message: error.message || "Đã xảy ra lỗi khi tạo phiếu nhập xuất",
+      });
   }
 };
 

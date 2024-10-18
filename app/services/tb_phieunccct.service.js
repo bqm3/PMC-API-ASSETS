@@ -60,7 +60,8 @@ const createTb_PhieuNCCCT = async (phieunxct,data) => {
           ID_Phongban: data.ID_Phongban,
           ID_Nam: data.ID_Nam,
           ID_Quy: data.ID_Quy,
-          ID_Taisan: groupedItem.ID_Taisan
+          ID_Taisan: groupedItem.ID_Taisan,
+          isDelete: 0
         }
       });
     
@@ -75,7 +76,8 @@ const createTb_PhieuNCCCT = async (phieunxct,data) => {
             ID_Phongban: data.ID_Phieu1,
             ID_Nam: data.ID_Nam,
             ID_Quy: data.ID_Quy,
-            ID_Taisan: groupedItem.ID_Taisan
+            ID_Taisan: groupedItem.ID_Taisan,
+            isDelete: 0
           }
         });
       } else {
@@ -88,7 +90,8 @@ const createTb_PhieuNCCCT = async (phieunxct,data) => {
           ID_Phongban: data.ID_Phieu1,
           Nhapngoai: groupedItem.Soluong,
           Tiennhapngoai: groupedItem.Dongia * groupedItem.Soluong,
-          TonSosach: groupedItem.Soluong
+          TonSosach: groupedItem.Soluong,
+          isDelete: 0
         });
       }
     }));    

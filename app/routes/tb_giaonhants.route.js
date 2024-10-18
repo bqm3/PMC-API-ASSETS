@@ -21,7 +21,7 @@ module.exports = (app) => {
 
     //get chi tiet id phieu
     router.get(
-      "/get_detail/:id",
+      "/detail/:id",
       [isAuthenticated, isRole],
       tb_giaonhants.getDetailGiaoNhanTS
     );
@@ -35,14 +35,21 @@ module.exports = (app) => {
 
     //get all
     router.get(
-      "/getall",
+      "/all",
       [isAuthenticated, isRole],
       tb_giaonhants.getAllGiaoNhanTS
     );
 
+     //filter by data
+     router.post(
+      "/filter",
+      [isAuthenticated, isRole],
+      tb_giaonhants.filterGiaoNhanTS
+    );
+
     //get id phong ban
     router.get(
-      "/get/:id",
+      "/phongban/:id",
       [isAuthenticated, isRole],
       tb_giaonhants.getByIDPBanGiaoNhanTS
     );
