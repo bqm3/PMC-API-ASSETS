@@ -59,10 +59,10 @@ Ent_User.belongsTo(Ent_Chinhanh, {
 });
 
 // Con nguoi
-Ent_Nhompb.hasMany(Ent_Connguoi);
-Ent_Connguoi.belongsTo(Ent_Nhompb, {
-  foreignKey: "ID_Nhompb",
-});
+// Ent_Nhompb.hasMany(Ent_Connguoi);
+// Ent_Connguoi.belongsTo(Ent_Nhompb, {
+//   foreignKey: "ID_Nhompb",
+// });
 
 // Nhom ban Da
 Ent_Nhompb.hasMany(Ent_Phongbanda, {
@@ -255,13 +255,6 @@ Tb_TaisanQrCode.belongsTo(Ent_Nam, {
   foreignKey: "ID_Nam",
 });
 
-Ent_Thang.hasMany(Tb_TaisanQrCode, {
-  as: "tb_taisanqr",
-  foreignKey: "ID_Thang",
-});
-Tb_TaisanQrCode.belongsTo(Ent_Thang, {
-  foreignKey: "ID_Thang",
-});
 
 Ent_Phongbanda.hasMany(Tb_TaisanQrCode, {
   as: "tb_taisanqr",
@@ -343,7 +336,7 @@ Tb_GiaonhanTS.hasMany(Tb_GiaonhanTSCT, {
   as: "tb_giaonhantsct",
   foreignKey: "ID_Giaonhan",
 });
-Tb_GiaonhanTS.belongsTo(Tb_GiaonhanTSCT, {
+Tb_GiaonhanTSCT.belongsTo(Tb_GiaonhanTS, {
   foreignKey: "ID_Giaonhan",
 });
 
@@ -359,11 +352,10 @@ Tb_GiaonhanTSCT.belongsTo(Ent_Taisan, { foreignKey: 'ID_Taisan', as: 'TaisanInfo
 Ent_Taisan.hasMany(Tb_GiaonhanTSCT, { foreignKey: 'ID_Taisan' });
 
 Tb_TaisanQrCode.hasMany(Tb_GiaonhanTSCT, {
-  as: "tb_giaonhantsct",
   foreignKey: "ID_TaisanQrcode",
 });
-Tb_TaisanQrCode.belongsTo(Tb_GiaonhanTSCT, {
-  foreignKey: "ID_TaisanQrcode",
+Tb_GiaonhanTSCT.belongsTo(Tb_TaisanQrCode, {
+  foreignKey: "ID_TaisanQrcode"
 });
 
 // Phieu nx ncc

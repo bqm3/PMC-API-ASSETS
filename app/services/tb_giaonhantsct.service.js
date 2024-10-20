@@ -303,9 +303,8 @@ const update_Tb_GiaoNhanTS = async (ID_Giaonhan, giaonhantsct) => {
 
 const getDetail_Tb_GiaoNhanTS = async (ID_Giaonhan) => {
   try {
-    const giaoNhan = await Tb_GiaonhanTS.findOne({
+    const giaoNhan = await Tb_GiaonhanTS.findByPk(ID_Giaonhan, {
       where: {
-        ID_Giaonhan: ID_Giaonhan,
         isDelete: 0,
       },
       attributes: [
@@ -318,32 +317,78 @@ const getDetail_Tb_GiaoNhanTS = async (ID_Giaonhan) => {
         "Ghichu",
         "ID_Quy",
         "ID_Nam",
+        "isDelete",
       ],
       include: [
+        {
+          model: Tb_GiaonhanTSCT,
+          as: "tb_giaonhantsct",
+          attributes: [
+            "ID_Taisan",
+            "ID_Giaonhan",
+            "ID_TaisanQrcode",
+            "Tinhtrangmay",
+            "Cacttlienquan",
+            "Soluong",
+            "isDelete",
+          ],
+          include: [
+            {
+              model: Ent_Taisan,
+              as: "TaisanInfo",
+            },
+            {
+              model: Tb_TaisanQrCode,
+            },
+          ],
+          where: {
+            isDelete: 0,
+          },
+        },
         {
           model: Ent_Phongbanda,
         },
         {
           model: Ent_NhansuPBDA,
           as: "NguoinhanInfo",
-          attributes: ["ID_Connguoi"],
+          attributes: [
+            "ID_Connguoi",
+            "ID_NSPB",
+            "ID_Phongban",
+            "Ngayvao",
+            "iTinhtrang",
+            "isDelete",
+          ],
           include: [
             {
               model: Ent_Connguoi,
               attributes: ["Hoten"],
             },
           ],
+          where: {
+            isDelete: 0,
+          },
         },
         {
           model: Ent_NhansuPBDA,
           as: "NguoigiaoInfo",
-          attributes: ["ID_Connguoi"],
+          attributes: [
+            "ID_Connguoi",
+            "ID_NSPB",
+            "ID_Phongban",
+            "Ngayvao",
+            "iTinhtrang",
+            "isDelete",
+          ],
           include: [
             {
               model: Ent_Connguoi,
               attributes: ["Hoten"],
             },
           ],
+          where: {
+            isDelete: 0,
+          },
         },
         {
           model: Ent_Nam,
@@ -358,32 +403,7 @@ const getDetail_Tb_GiaoNhanTS = async (ID_Giaonhan) => {
       throw new Error("Không tìm thấy thông tin giao nhận tài sản");
     }
 
-    const giaoNhanCT = await Tb_GiaonhanTSCT.findAll({
-      where: {
-        ID_Giaonhan: ID_Giaonhan,
-        isDelete: 0,
-      },
-      attributes: [
-        "ID_Taisan",
-        "ID_TaisanQrcode",
-        "Tinhtrangmay",
-        "Cacttlienquan",
-        "Soluong",
-      ],
-      include: [
-        {
-          model: Ent_Taisan,
-          as: "TaisanInfo",
-        },
-      ],
-    });
-
-    const response = {
-      giaoNhan,
-      giaoNhanCT,
-    };
-
-    return response;
+    return giaoNhan;
   } catch (error) {
     throw new Error(
       error.message || "Có lỗi xảy ra khi lấy chi tiết giao nhận tài sản"
@@ -488,6 +508,138 @@ const getAll_Tb_GiaonhanTS = async () => {
   }
 };
 
+const filter_Tb_GiaonhanTS = async (data) => {
+  const resTonkho = await Tb_Tonkho.findAll({
+    where: {
+      ID_Phongban: data.ID_Phongban,
+      ID_Nam: data.ID_Nam,
+      ID_Quy: data.ID_Quy,
+      isDelete: 0,
+    },
+    attributes: [
+      "ID_Nam",
+      "ID_Quy",
+      "ID_Phongban",
+      "ID_Taisan",
+      "Tondau",
+      "Tientondau",
+      "Nhapngoai",
+      "Tonsosach",
+      "Kiemke",
+      "Giatb",
+      "isDelete",
+    ],
+    include: [
+      {
+        model: Ent_Taisan,
+      },
+    ],
+  });
+
+  const resTaisanQrcode = await Tb_TaisanQrCode.findAll({
+    where: {
+      ID_Phongban: data.ID_Phongban,
+      ID_Nam: data.ID_Nam,
+      ID_Quy: data.ID_Quy,
+      ID_User: null,
+      isDelete: 0,
+    },
+    attributes: [
+      "ID_TaisanQrcode",
+      "ID_Taisan",
+      "ID_PhieuNXCT",
+      "ID_PhieuNCCCT",
+      "Ngaykhoitao",
+      "MaQrCode",
+      "Giatri",
+      "iTinhtrang",
+      "ID_Nam",
+      "ID_Quy",
+      "ID_User",
+      "isDelete",
+    ],
+    include: [
+      {
+        model: Ent_Taisan,
+      },
+    ],
+  });
+  const resultTS = mergeData(resTonkho, resTaisanQrcode);
+  const resNSPB = await Ent_NhansuPBDA.findAll({
+    where: {
+      ID_Phongban: data.ID_Phongban,
+      isDelete: 0,
+    },
+    attributes: [
+      "ID_NSPB",
+      "ID_Phongban",
+      "ID_Connguoi",
+      "Ngayvao",
+      "iTinhtrang",
+      "isDelete",
+    ],
+    include: [
+      {
+        model: Ent_Connguoi,
+      },
+    ],
+  });
+  const resData = {
+    resultTS,
+    resNSPB,
+  };
+
+  return resData;
+};
+
+const mergeData = (resTonkho, resTaisanQrcode) => {
+  const mergedData = [];
+
+  // Step 1: Loop through resTonkho and try to find matching Taisan in resTaisanQrcode
+  resTonkho?.forEach((tonKhoItem) => {
+    const matchingQrCodeItems = resTaisanQrcode.filter(
+      (qrCodeItem) => qrCodeItem.ID_Taisan === tonKhoItem.ID_Taisan
+    );
+
+    if (matchingQrCodeItems.length > 0) {
+      // Step 2: Merge each matching item with tonKhoItem if there are QR codes
+      matchingQrCodeItems.forEach((qrCodeItem) => {
+        const mergedItem = {
+          ...tonKhoItem.get({ plain: true }), // Flatten tonKhoItem
+          ...qrCodeItem.get({ plain: true }), // Flatten qrCodeItem
+          ent_taisan: {
+            ...(tonKhoItem.ent_taisan
+              ? tonKhoItem.ent_taisan.get({ plain: true })
+              : {}), // Include ent_taisan from tonKhoItem if it exists
+            ...(qrCodeItem.ent_taisan
+              ? qrCodeItem.ent_taisan.get({ plain: true })
+              : {}), // Overwrite or add properties from qrCodeItem's ent_taisan if it exists
+          },
+        };
+
+        mergedData.push(mergedItem);
+      });
+    } else {
+      // Step 3: Include tonKhoItem even if there are no matching QR code items
+      const mergedItemWithoutQrCode = {
+        ...tonKhoItem.get({ plain: true }), // Flatten tonKhoItem
+        ent_taisan: {
+          ...(tonKhoItem.ent_taisan
+            ? tonKhoItem.ent_taisan.get({ plain: true })
+            : {}), // Include ent_taisan from tonKhoItem if it exists
+        },
+        MaQrCode: null, // Indicate that no QR code was found
+        Giatri: null, // Set other related QR code properties to null if needed
+        iTinhtrang: null, // Same for condition if needed
+      };
+
+      mergedData.push(mergedItemWithoutQrCode);
+    }
+  });
+
+  return mergedData;
+};
+
 const getBy_IDPhongban_GiaonhanTS = async (ID_Phongban) => {
   try {
     const giaoNhanList = await Tb_GiaonhanTS.findAll({
@@ -565,4 +717,5 @@ module.exports = {
   delete_Tb_GiaonhanTS,
   getAll_Tb_GiaonhanTS,
   getBy_IDPhongban_GiaonhanTS,
+  filter_Tb_GiaonhanTS,
 };

@@ -109,6 +109,26 @@ const getAllGiaoNhanTS = async (req, res) => {
   }
 };
 
+const filterGiaoNhanTS = async (req, res) => {
+  try {
+    const {ID_Phongban, ID_Quy, ID_Nam} = req.body;
+    const resData = {
+      ID_Phongban, ID_Nam, ID_Quy
+    }
+
+    const data = await tbGiaonhanTSCT.filter_Tb_GiaonhanTS(resData); // Gọi hàm lấy dữ liệu
+    return res.status(200).json({
+      message: "Lấy danh sách giao nhận tài sản thành công",
+      data: data,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: "Có lỗi xảy ra khi lấy danh sách giao nhận tài sản",
+      error: error.message,
+    });
+  }
+}
+
 const getByIDPBanGiaoNhanTS = async (req, res) => {
   try {
     const ID_Phongban = req.params.id;
@@ -132,4 +152,5 @@ module.exports = {
   deleteGiaoNhanTS,
   getAllGiaoNhanTS,
   getByIDPBanGiaoNhanTS,
+  filterGiaoNhanTS
 };

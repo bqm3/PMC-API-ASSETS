@@ -17,24 +17,37 @@ const { getDuanVsTaisanDetails } = require("./create_qr_code.service");
 
 const create_PhieuNhapNCC = async (phieunxct, data, transaction) => {
   const groupedItems = {};
-  let ID_PhieuNXCT_Items = [];
-  try {
-    // Nhóm và tính tổng theo ID_Taisan
-    phieunxct.forEach((item) => {
-      const { ID_Taisan, Dongia, Soluong, Namsx } = item;
-      if (!groupedItems[ID_Taisan]) {
-        groupedItems[ID_Taisan] = {
-          ID_Taisan,
-          Namsx,
-          Dongia: 0,
-          Soluong: 0,
-        };
-      }
-      // Cộng dồn tổng Dongia và Soluong
-      groupedItems[ID_Taisan].Dongia = Number(Dongia);
-      groupedItems[ID_Taisan].Soluong += Number(Soluong);
-    });
+    let ID_PhieuNXCT_Items = [];
 
+  // Nhóm và tính tổng theo ID_Taisan
+  phieunxct.forEach(item => {
+    const { ID_Taisan, Dongia, Soluong, Namsx } = item;
+    if (!groupedItems[ID_Taisan]) {
+      groupedItems[ID_Taisan] = {
+        ID_Taisan,
+        Namsx,
+        Dongia: 0,
+        Soluong: 0
+      };
+    }
+    // Cộng dồn tổng Dongia và Soluong
+    groupedItems[ID_Taisan].Dongia = Number(Dongia);
+    groupedItems[ID_Taisan].Soluong += Number(Soluong);
+  });
+  await Promise.all(Object.values(groupedItems).map(async (groupedItem) => {
+    const newPhieuCCCCT =  await Tb_PhieuNCCCT.create({
+      ID_PhieuNCC: data.ID_PhieuNCC,
+      ID_Taisan: groupedItem.ID_Taisan,
+      Dongia: groupedItem.Dongia,
+      Namsx: groupedItem.Namsx,
+      Soluong: groupedItem.Soluong,
+      isDelete: 0
+    });
+    ID_PhieuNXCT_Items.push({
+      ID_Taisan: groupedItem.ID_Taisan,
+      ID_PhieuNCCCT: newPhieuCCCCT.ID_PhieuNCCCT
+    });
+  }));
     await Promise.all(
       Object.values(groupedItems).map(async (groupedItem) => {
         const newPhieuCCCCT = await Tb_PhieuNCCCT.create(
@@ -170,10 +183,7 @@ const create_PhieuNhapNCC = async (phieunxct, data, transaction) => {
         }
       })
     );
-  } catch (error) {
-    throw new Error(`Có lỗi xảy ra khi tạo phiếu nhập NCC: ${error.message}`);
-  }
-};
+}
 
 // 5 Xuat tra ncc
 // 6 xuat thanh ly
