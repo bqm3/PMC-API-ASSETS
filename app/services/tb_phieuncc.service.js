@@ -526,16 +526,27 @@ const closeTb_PhieuNCC = async (ID) => {
 };
 
 const deleteTb_PhieuNCC = async (ID) => {
-  const res = await Tb_PhieuNCC.update(
-    { isDelete: 1 },
-    {
-      where: {
-        ID_PhieuNCC: ID,
-      },
-    }
-  );
-  return res;
+  const transaction = await sequelize.transaction();
+
+  try {
+    const res = await Tb_PhieuNCC.update(
+      { isDelete: 1 },
+      {
+        where: { ID_PhieuNCC: ID },
+        transaction,
+      }
+    );
+
+    await tbPhieuNCCCTService.deleteTb_PhieuNCCCT(ID, transaction);
+    await transaction.commit();
+
+    return res;
+  } catch (error) {
+    await transaction.rollback();
+    throw error;
+  }
 };
+
 
 const updatePhieuNCC = async (data) => {
   try {
