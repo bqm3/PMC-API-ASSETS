@@ -11,8 +11,8 @@ module.exports = (app) => {
     tb_phieuncc.createTb_PhieuNCC
   );
   router.get("/all", tb_phieuncc.getAllTb_PhieuNCC);
-  // router.get("/:id", tb_phieuncc.getDetailTb_PhieuNCC);
-  router.get("/taisan1", tb_phieuncc.getTaiSan);
+  router.get("/taisan", tb_phieuncc.getTaiSan);
+  router.get("/:id", tb_phieuncc.getDetailTb_PhieuNCC);
 
   router.get("/kiemke/:id", [isAuthenticated], tb_phieuncc.getPhieuNCCByUser);
   router.post("/filter/:id", [isAuthenticated], tb_phieuncc.getPhieuNCCFilter);
@@ -38,6 +38,12 @@ module.exports = (app) => {
     "/delete/:id",
     [isAuthenticated, isRole],
     tb_phieuncc.deleteTb_PhieuNCC
+  );
+
+    router.put(
+    "/update-xuat/:id/",
+    [isAuthenticated, isRole],
+    tb_phieuncc.updatePhieuNCC
   );
 
   app.use("/api/v1/tb_phieuncc", router);

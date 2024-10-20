@@ -238,7 +238,7 @@ const create_PhieuXuatNCC = async (item, data, transaction) => {
     },
     { transaction }
   );
-  
+
   let updateTonkho = {};
   switch (data.ID_Nghiepvu) {
     case "5":
@@ -524,14 +524,14 @@ const scanTb_PhieuNCCCT = async (data) => {
 
 const getTaiSanPB = async (
   ID_Phongban,
-  ID_Noixuat,
+  ID_NoiXuat,
   ID_Quy,
   ID_Loainhom,
   ID_Nghiepvu
 ) => {
   const whereCondition = {
     ID_Phieu1: ID_Phongban,
-    ID_Phieu2: ID_Noixuat,
+    ID_Phieu2: ID_NoiXuat,
     ID_Quy,
     ID_Loainhom,
     ID_Nghiepvu,
@@ -613,6 +613,131 @@ const getTaiSanPB = async (
   }
 };
 
+const updatePhieuNCCCT = async (reqData, phieunccct) => {
+  const transaction = await sequelize.transaction();
+  try {
+    const updatedAndCreated = phieunccct.filter(
+      (item) => item.isUpdate === 1 && item.isDelete === 0
+    );
+    const deleted = phieunccct.filter(
+      (item) => item.isUpdate === 1 && item.isDelete === 1
+    );
+
+
+    const existingPhieuNCCCts = await Tb_PhieuNCCCT.findAll({
+      where: {
+        ID_PhieuNCC: reqData.ID_PhieuNCC,
+        isDelete: 0,
+      },
+      transaction,
+    });
+
+    const existingMap = new Map(
+      existingPhieuNCCCts.map((existing) => [
+        `${existing.ID_Taisan}_${existing.ID_TaisanQrcode || "null"}`,
+        existing,
+      ])
+    );
+
+    const deletePromises = deleted.map(async (item) => {
+      const key = `${item.ID_Taisan}_${item.ID_TaisanQrcode || "null"}`;
+      const deleteItem = existingMap.get(key);
+
+      if (deleteItem) {
+        await Tb_PhieuNCCCT.update(
+          { isDelete: 1 },
+          {
+            where: { ID_PhieuNCCCT: deleteItem.ID_PhieuNCCCT },
+            transaction,
+          }
+        );
+        if (deleteItem.ID_TaisanQrcode) {
+          await Tb_TaisanQrCode.update(
+            { iTinhtrang: 0, isDelete: 0 },
+            {
+              where: { ID_TaisanQrcode: deleteItem.ID_TaisanQrcode },
+              transaction,
+            }
+          );
+        }
+        const delta = -item.Soluong;
+        await updateTonkho(item, reqData, delta, transaction);
+      }
+    });
+
+    const updatePromises = updatedAndCreated.map(async (item) => {
+      const key = `${item.ID_Taisan}_${item.ID_TaisanQrcode || "null"}`;
+      const existingItem = existingMap.get(key);
+
+      let delta = 0;
+      if (existingItem) {
+        delta = item.Soluong - existingItem.Soluong;
+        await Tb_PhieuNCCCT.update(
+          { Soluong: item.Soluong },
+          {
+            where: { ID_PhieuNCCCT: existingItem.ID_PhieuNCCCT },
+            transaction,
+          }
+        );
+        await updateTonkho(item, reqData, delta, transaction);
+      } else {
+        await create_PhieuXuatNCC(item, reqData, transaction);
+      }
+    });
+
+  
+    await Promise.all([...deletePromises, ...updatePromises]);
+    await transaction.commit();
+
+    return { message: "Cập nhật phiếu NCC thành công!" };
+  } catch (error) {
+    await transaction.rollback();
+    console.error("Lỗi khi cập nhật Tb_PhieuNCCCT:", error);
+    throw new Error(error.message || "Có lỗi xảy ra khi cập nhật phiếu NCCCT.");
+  }
+};
+
+const updateTonkho = async (item, reqData, Soluong, transaction) => {
+  let tonkho = {};
+  switch (reqData.ID_Nghiepvu) {
+    case 5:
+      tonkho = {
+        XuattraNCC: Sequelize.literal(`XuattraNCC + ${Soluong}`),
+        TonSosach: Sequelize.literal(
+          `Tondau + Nhapngoai + Nhapkhac + NhapNB - XuatNB - XuattraNCC - XuatThanhly - XuatHuy - XuatgiaoNV`
+        ),
+      };
+      break;
+    case 6:
+      tonkho = {
+        XuatThanhly: Sequelize.literal(`XuatThanhly + ${Soluong}`),
+        TonSosach: Sequelize.literal(
+          `Tondau + Nhapngoai + Nhapkhac + NhapNB - XuatNB - XuattraNCC - XuatThanhly - XuatHuy - XuatgiaoNV`
+        ),
+      };
+      break;
+    case 7:
+      tonkho = {
+        XuatHuy: Sequelize.literal(`XuatHuy + ${Soluong}`),
+        TonSosach: Sequelize.literal(
+          `Tondau + Nhapngoai + Nhapkhac + NhapNB - XuatNB - XuattraNCC - XuatThanhly - XuatHuy - XuatgiaoNV`
+        ),
+      };
+      break;
+  }
+  await Tb_Tonkho.update(tonkho, {
+    where: {
+      ID_Taisan: item.ID_Taisan,
+      ID_Phongban: reqData.ID_Phieu1,
+      TonSosach: { [Op.gte]: item.Soluong },
+      ID_Nam: reqData.ID_Nam,
+      ID_Quy: reqData.ID_Quy,
+      isDelete: 0,
+    },
+    transaction,
+  });
+};
+
 module.exports = {
   create_PhieuNhapNCC,
   create_PhieuXuatNCC,
@@ -620,4 +745,5 @@ module.exports = {
   updateTb_PhieuNCCCT,
   scanTb_PhieuNCCCT,
   getTaiSanPB,
+  updatePhieuNCCCT,
 };

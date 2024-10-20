@@ -537,6 +537,31 @@ const deleteTb_PhieuNCC = async (ID) => {
   return res;
 };
 
+const updatePhieuNCC = async (data) => {
+  try {
+    const rowsUpdated = await Tb_PhieuNCC.update(
+      {
+        Sophieu: data.Sophieu,
+        ID_User: data.ID_User,
+        Ghichu: data.Ghichu,
+      },
+      {
+        where: {
+          ID_PhieuNCC: data.ID_PhieuNCC,
+          isDelete: 0,
+        },
+      }
+    );
+
+    return rowsUpdated;
+  } catch (error) {
+    console.error("Lỗi khi cập nhật Tb_PhieuNCC:", error);
+    throw error instanceof Error
+      ? error
+      : new Error("Có lỗi xảy ra khi cập nhật phiếu NCC.");
+  }
+};
+
 module.exports = {
   createTb_PhieuNCC,
   getAllTb_PhieuNCC,
@@ -545,4 +570,5 @@ module.exports = {
   getDetailTb_PhieuNCC,
   closeTb_PhieuNCC,
   getPhieuNCCByUser,
+  updatePhieuNCC,
 };
