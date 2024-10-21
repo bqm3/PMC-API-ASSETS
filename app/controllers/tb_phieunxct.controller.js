@@ -1,3 +1,8 @@
+const Ent_Taisan = require("../models/ent_taisan.model");
+const Tb_PhieuNX = require("../models/tb_phieunx.model");
+const Tb_PhieuNXCT = require("../models/tb_phieunxct.model");
+const Tb_TaisanQrCode = require("../models/tb_taisanqrcode.model");
+const Tb_Tonkho = require("../models/tb_tonkho.model");
 const tbPhieuNXCT = require("../services/tb_phieunxct.service");
 
 const scanQrCodeTb_PhieuNXCT = async (req, res) => {
@@ -34,6 +39,8 @@ const scanQrCodeTb_PhieuNXCT = async (req, res) => {
   }
 };
 
+
+
 module.exports = {
-  scanQrCodeTb_PhieuNXCT,
+  scanQrCodeTb_PhieuNXCT
 };

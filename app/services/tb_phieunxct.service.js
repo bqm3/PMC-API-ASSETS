@@ -17,6 +17,7 @@ const {
 } = require("../models/setup.model");
 const sequelize = require("../config/db.config");
 const { Op, where, Sequelize } = require("sequelize");
+const { getDuanVsTaisanDetails } = require("./create_qr_code.service");
 
 const createTb_PhieuNXCT = async (phieunxct, data) => {
   const groupedItems = {};
@@ -216,153 +217,6 @@ const updateOrInsertTonKho = async (
   }
 };
 
-const getDuanVsTaisanDetails = async (ID_Phongban, ID_Taisan) => {
-  const [duan, taisanDetails] = await Promise.all([
-    Ent_Phongbanda.findOne({
-      attributes: [
-        "ID_Phongban",
-        "ID_Chinhanh",
-        "ID_Nhompb",
-        "Mapb",
-        "Thuoc",
-        "Tenphongban",
-        "Diachi",
-        "Ghichu",
-        "isDelete",
-      ],
-      where: {
-        isDelete: 0,
-        ID_Phongban: ID_Phongban,
-      },
-    }),
-    Ent_Taisan.findOne({
-      attributes: [
-        "ID_Taisan",
-        "ID_Nhomts",
-        "ID_Donvi",
-        "Mats",
-        "Tents",
-        "Thongso",
-        "Ghichu",
-        "isDelete",
-      ],
-      include: [
-        {
-          model: Ent_Nhomts,
-          as: "ent_nhomts",
-          attributes: ["ID_Nhomts", "Manhom", "Tennhom", "isDelete"],
-          where: { isDelete: 0 },
-        },
-      ],
-      where: {
-        ID_Taisan: ID_Taisan,
-        isDelete: 0,
-      },
-    }),
-  ]);
-
-  return [duan, taisanDetails];
-};
-
-// const updateTb_PhieuNXCT = async (phieunxct, ID_PhieuNX) => {
-//   const transaction = await sequelize.transaction();
-//   try {
-//     const groupedItems = {};
-
-//     // Group items by ID_Taisan
-//     phieunxct.forEach(item => {
-//       const { ID_Taisan, Dongia, Soluong, ID_PhieuNXCT, Namsx, isDelete } = item;
-//       if (!groupedItems[ID_Taisan]) {
-//         groupedItems[ID_Taisan] = {
-//           ID_Taisan,
-//           items: []
-//         };
-//       }
-//       groupedItems[ID_Taisan].items.push({ ID_PhieuNXCT, Dongia, Soluong, Namsx, isDelete });
-//     });
-
-//     // Get all current items in Tb_PhieuNXCT for the given ID_PhieuNX
-//     const currentItems = await Tb_PhieuNXCT.findAll({
-//       where: { ID_PhieuNX },
-//       transaction
-//     });
-
-//     // Determine which items need to be deleted
-//     const currentItemIds = currentItems.map(item => item.ID_PhieuNXCT);
-//     const newItemIds = phieunxct.filter(item => item.ID_PhieuNXCT).map(item => item.ID_PhieuNXCT);
-//     const itemsToDelete = currentItemIds.filter(id => !newItemIds.includes(id));
-
-//     // Delete the items that are no longer in the updated list
-//     if (itemsToDelete.length > 0) {
-//       await Tb_PhieuNXCT.destroy({
-//         where: {
-//           ID_PhieuNXCT: itemsToDelete
-//         },
-//         transaction
-//       });
-//     }
-
-//     // Arrays for bulk operations
-//     const updatePromises = [];
-//     const createItems = [];
-
-//     // Process grouped items
-//     Object.values(groupedItems).forEach(group => {
-//       const { ID_Taisan, items } = group;
-
-//       items.forEach(item => {
-//         const { ID_PhieuNXCT, Dongia, Soluong, Namsx, isDelete } = item;
-
-//         if (ID_PhieuNXCT) {
-//           // Prepare update for existing record
-//           updatePromises.push(
-//             Tb_PhieuNXCT.update(
-//               {
-//                 ID_PhieuNX,
-//                 ID_Taisan,
-//                 Dongia,
-//                 Soluong,
-//                 Namsx,
-//                 isDelete
-//               },
-//               {
-//                 where: { ID_PhieuNXCT },
-//                 transaction
-//               }
-//             )
-//           );
-//         } else {
-//           // Prepare new record for bulk insert
-//           createItems.push({
-//             ID_PhieuNX,
-//             ID_Taisan,
-//             Dongia,
-//             Soluong,
-//             Namsx,
-//             isDelete: 0
-//           });
-//         }
-//       });
-//     });
-
-//     // Execute bulk update
-//     await Promise.all(updatePromises);
-
-//     // Execute bulk create if there are items to insert
-//     if (createItems.length > 0) {
-//       await Tb_PhieuNXCT.bulkCreate(createItems, { transaction });
-//     }
-
-//     // Commit the transaction
-//     await transaction.commit();
-//     return true;
-//   } catch (error) {
-//     // Rollback the transaction in case of an error
-//     await transaction.rollback();
-//     return false; // Return a failure indicator
-//   }
-// };
-
 const updateTb_PhieuNXCT = async (phieunxct, ID_PhieuNX, reqData) => {
   const transaction = await sequelize.transaction();
   try {
@@ -388,10 +242,16 @@ const updateTb_PhieuNXCT = async (phieunxct, ID_PhieuNX, reqData) => {
     // Fetch necessary data in parallel
     const [currentItems, phieunx] = await Promise.all([
       Tb_PhieuNXCT.findAll({ where: { ID_PhieuNX, isDelete: 0 }, transaction }),
-      Tb_PhieuNX.findOne({
-        where: { ID_PhieuNX, isDelete: 0 },
-        attributes: ["ID_NoiNhap", "ID_Nam", "ID_Quy", "ID_Thang", "isDelete"],
-      }),
+      Tb_PhieuNX.findOne(
+        {
+          where: { ID_PhieuNX, isDelete: 0 },
+          attributes: [
+            "ID_PhieuNX",
+            "isDelete",
+          ],
+        },
+        transaction
+      ),
     ]);
 
     const { ID_NoiNhap, ID_Nam, ID_Quy, ID_Thang } = phieunx?.dataValues || {};
@@ -408,11 +268,20 @@ const updateTb_PhieuNXCT = async (phieunxct, ID_PhieuNX, reqData) => {
     // Delete removed items and related QR codes in bulk
     if (itemsToDelete.length > 0) {
       await Promise.all([
-        Tb_PhieuNXCT.destroy({
+        Tb_PhieuNXCT.update(
+          {
+            isDelete: 1
+          },
+          {
           where: { ID_PhieuNXCT: itemsToDelete },
+          
           transaction,
         }),
-        Tb_TaisanQrCode.destroy({
+        Tb_TaisanQrCode.update(
+          {
+            isDelete: 2
+          },
+          {
           where: { ID_PhieuNXCT: itemsToDelete },
           transaction,
         }),
@@ -420,7 +289,6 @@ const updateTb_PhieuNXCT = async (phieunxct, ID_PhieuNX, reqData) => {
     }
 
     const updatePromises = [];
-    const createItems = [];
 
     // Helper function to update/create QR codes
     const handleQrCodes = async (
@@ -442,10 +310,7 @@ const updateTb_PhieuNXCT = async (phieunxct, ID_PhieuNX, reqData) => {
       const Ngay = formatDateTime(reqData.NgayNX);
 
       const createQrCodeEntry = async (index) => {
-        const MaQrCode =
-          index > 1
-            ? `${Thuoc}|${ManhomTs}|${MaID}|${MaTaisan}|${Ngay}|${index}`
-            : `${Thuoc}|${ManhomTs}|${MaID}|${MaTaisan}|${Ngay}`;
+        const MaQrCode = `${Thuoc}|${ManhomTs}|${MaID}|${MaTaisan}|${Ngay}|${index}`;
 
         await Tb_TaisanQrCode.create(
           {
@@ -467,13 +332,9 @@ const updateTb_PhieuNXCT = async (phieunxct, ID_PhieuNX, reqData) => {
       };
 
       // Create QR codes based on quantity
-      if (Number(item.Soluong) > 1) {
         for (let i = 1; i <= Soluong; i++) {
           await createQrCodeEntry(i);
         }
-      } else {
-        await createQrCodeEntry(1);
-      }
     };
 
     // Process grouped items
@@ -641,11 +502,119 @@ const scanTb_PhieuNXCT = async (data) => {
   return res;
 };
 
+const getTaiSanPB = async (
+  ID_NoiNhap,
+  ID_NoiXuat,
+  ID_Quy,
+  ID_Loainhom,
+) => {
+  const whereCondition = {
+    ID_NoiNhap,
+    ID_NoiXuat,
+    ID_Quy,
+    ID_Loainhom,
+    isDelete: 0,
+  };
+
+  console.log('whereCondition', whereCondition)
+
+  try {
+    const [pccResults, tonkhos, taisanQrCodes] = await Promise.all([
+      Tb_PhieuNX.findAll({
+        where: whereCondition,
+        include: [
+          {
+            model: Tb_PhieuNXCT,
+            as: "tb_phieunxct",
+            where: { isDelete: 0 },
+            attributes: ["ID_Taisan", "Dongia", "Soluong", "isDelete"],
+            include: [
+              {
+                model: Ent_Taisan,
+                as: "ent_taisan",
+                attributes: ["ID_Taisan", "Tents", "ID_Nhomts", "isDelete"],
+              },
+            ],
+          },
+        ],
+      }),
+
+      Tb_Tonkho.findAll({
+        where: {
+          ID_Phongban: ID_NoiXuat,
+          ID_Quy,
+          isDelete: 0,
+        },
+        attributes: ["ID_Taisan", "TonSosach", "isDelete", "ID_Phongban", "ID_Quy"],
+      }),
+
+      Tb_TaisanQrCode.findAll({
+        where: {
+          ID_Phongban: ID_NoiXuat,
+          isDelete: 0,
+        },
+        attributes: ["ID_TaisanQrcode", "ID_Taisan", "MaQrCode", "isDelete" , "ID_Phongban"],
+      }),
+    ]);
+    // Tạo map tồn kho từ kết quả truy vấn tồn kho
+    const tonKhoMap = tonkhos.reduce((map, tk) => {
+      map[tk.ID_Taisan] = tk.TonSosach;
+      return map;
+    }, {});
+
+    // Tạo map mã QR từ kết quả truy vấn mã QR
+    const qrCodeMap = taisanQrCodes.reduce((map, qr) => {
+      if (!map[qr.ID_Taisan]) {
+        map[qr.ID_Taisan] = [];
+      }
+      map[qr.ID_Taisan].push({
+        ID_TaisanQrcode: qr.ID_TaisanQrcode,
+        MaQrCode: qr.MaQrCode,
+      });
+      return map;
+    }, {});
+
+    // Adjust logic to create a new asset entry for each QR code
+    const resultWithQrCode = pccResults.flatMap((pcc) =>
+      pcc.tb_phieunxct.flatMap((item) => {
+        const qrCodes = qrCodeMap[item.ID_Taisan] || [];
+        if (qrCodes.length > 0) {
+          // Return a new asset entry for each QR code
+          return qrCodes.map((qrCode) => ({
+            ID_Taisan: item.ID_Taisan,
+            Dongia: item.Dongia,
+            Soluongnhap: item.Soluong,
+            TonSosach: tonKhoMap[item.ID_Taisan] || 0,
+            Tents: item.ent_taisan.Tents,
+            ent_taisanqrcode: [qrCode],
+          }));
+        } else {
+          // If no QR codes, return a single asset entry
+          return {
+            ID_Taisan: item.ID_Taisan,
+            Dongia: item.Dongia,
+            Soluongnhap: item.Soluong,
+            TonSosach: tonKhoMap[item.ID_Taisan] || 0,
+            Tents: item.ent_taisan.Tents,
+            ent_taisanqrcode: [],
+          };
+        }
+      })
+    );
+
+    return resultWithQrCode;
+  } catch (error) {
+    console.error("Error fetching assets:", error);
+    throw error;
+  }
+};
+
 module.exports = {
   createTb_PhieuNXCT,
   getAllTb_PhieuNXCT,
   updateTb_PhieuNXCT,
   scanTb_PhieuNXCT,
+  getTaiSanPB
 };
 
 function formatDateTime(data) {

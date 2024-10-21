@@ -55,43 +55,33 @@ const createTb_PhieuNCC = async (req, res) => {
       isDelete: 0,
       ID_Phongban: user.ID_Phongban,
     };
+    // Check if the combination of ID_Nghiepvu and Sophieu already exists
+    const checkPhieuNCC = await Tb_PhieuNCC.findOne({
+      attributes: [
+        "ID_Nghiepvu",
+        "Sophieu",
+        "ID_Phieu1",
+        "ID_Phieu2",
+        "iTinhtrang",
+        "isDelete",
+        "ID_Nam",
+        "ID_Quy",
+        "isDelete",
+      ],
+      where: {
+        isDelete: 0,
+        ID_Nghiepvu: ID_Nghiepvu,
+        Sophieu: {
+          [Op.like]: `%${Sophieu}%`,
+        },
+      },
+    });
 
-    // const checkPhieuNX = await Tb_PhieuNCC.findOne({
-    //   attributes: [
-    //     "ID_Nghiepvu",
-    //     "Sophieu",
-    //     "ID_Phieu1",
-    //     "ID_Phieu2",
-    //     "iTinhtrang",
-    //     "isDelete",
-    //     "ID_Nam",
-    //     "ID_Quy",
-    //     "isDelete",
-    //   ],
-    //   where: {
-    //     [Op.or]: [
-    //       {
-    //         ID_Nam: Nam.ID_Nam,
-    //         ID_Quy: ID_Quy,
-    //         ID_Nghiepvu: ID_Nghiepvu,
-    //         ID_Phieu1: ID_Nghiepvu == 5 || ID_Nghiepvu == 6 || ID_Nghiepvu == 7 ? ID_NoiXuat : ID_NoiNhap,
-    //         ID_Phieu2: ID_Nghiepvu == 5 || ID_Nghiepvu == 6 || ID_Nghiepvu == 7 ? ID_NoiNhap : ID_NoiXuat,
-    //         isDelete: 0,
-    //       },
-    //       {
-    //         Sophieu: {
-    //           [Op.like]: `%${Sophieu}%`,
-    //         },
-    //       },
-    //     ],
-    //   },
-    // });
-
-    // if (checkPhieuNX) {
-    //   return res.status(400).json({
-    //     message: "Đã có phiếu tồn tại",
-    //   });
-    // }
+    if (checkPhieuNCC) {
+      return res.status(400).json({
+        message: "Đã có phiếu tồn tại",
+      });
+    }
 
     let data;
     data = await tbPhieuNCCService.createTb_PhieuNCC(phieunccct, reqData);
@@ -290,8 +280,8 @@ const updateTb_PhieuNCC = async (req, res) => {
       ID_PhieuNCC: ID_PhieuNCC,
       ID_Nghiepvu: ID_Nghiepvu,
       Sophieu: Sophieu,
-      ID_NoiNhap: ID_NoiNhap,
-      ID_NoiXuat: ID_NoiXuat,
+      ID_Phieu1: ID_NoiNhap,
+      ID_Phieu2: ID_NoiXuat,
       ID_Nam: Nam.ID_Nam,
       ID_Loainhom: ID_Loainhom,
       ID_Thang: Thang.ID_Thang,
@@ -430,17 +420,17 @@ const deleteTb_PhieuNCC = async (req, res) => {
 };
 
 const getTaiSan = async (req, res) => {
-  const { ID_Phongban, ID_Loainhom, ID_Quy, ID_Nghiepvu, ID_Noixuat } =
+  const { ID_Phongban, ID_Loainhom, ID_Quy, ID_Nghiepvu, ID_NoiXuat } =
     req.body;
   const data = await tbPhieuNCCCTService.getTaiSanPB(
     ID_Phongban,
-    ID_Noixuat,
+    ID_NoiXuat,
     ID_Quy,
     ID_Loainhom,
     ID_Nghiepvu
   );
   res.status(200).json({
-    Danhsachtaisan: data,
+    data: data,
   });
 };
 

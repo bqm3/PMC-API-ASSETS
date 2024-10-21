@@ -19,12 +19,13 @@ const {
 const sequelize = require("../config/db.config");
 const tbPhieuNCCCTService = require("../services/tb_phieunccct.service");
 
-// nghiep vu 2 : nhap tu nha cung cap
+// nghiep vụ nha cung cap
 const createTb_PhieuNCC = async (phieunccct, data) => {
   const transaction = await sequelize.transaction();
   try {
     const res = await Tb_PhieuNCC.create(data, { transaction });
     if (phieunccct.length > 0 && phieunccct[0].ID_Taisan != null) {
+      // nghiệp vụ 2: Nhập hàng từ nhà cung cấp
       if (data.ID_Nghiepvu == 2) {
         await tbPhieuNCCCTService.create_PhieuNhapNCC(
           phieunccct,
@@ -32,6 +33,7 @@ const createTb_PhieuNCC = async (phieunccct, data) => {
           transaction
         );
       } else {
+        // nghiệp vụ 5,6,7: Xuất trả nhà cung cấp
         for (const item of phieunccct) {
           await tbPhieuNCCCTService.create_PhieuXuatNCC(item, res, transaction);
         }

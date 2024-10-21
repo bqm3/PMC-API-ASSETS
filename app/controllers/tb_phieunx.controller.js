@@ -155,11 +155,9 @@ const createTb_PhieuNX = async (req, res) => {
     // Rollback in case of error
     if (t) await t.rollback();
     console.error("Error in creating Tb_PhieuNX:", error);
-    res
-      .status(400)
-      .json({
-        message: error.message || "Đã xảy ra lỗi khi tạo phiếu nhập xuất",
-      });
+    res.status(400).json({
+      message: error.message || "Đã xảy ra lỗi khi tạo phiếu nhập xuất",
+    });
   }
 };
 
@@ -189,6 +187,21 @@ const getAllTb_PhieuNX = async (req, res) => {
   }
 };
 
+const getTaiSan = async (req, res) => {
+  const { ID_NoiNhap, ID_Loainhom, ID_Quy, ID_Nghiepvu, ID_NoiXuat } =
+    req.body;
+  const data = await tbPhieuNXCTService.getTaiSanPB(
+    ID_NoiNhap,
+    ID_NoiXuat,
+    ID_Quy,
+    ID_Loainhom,
+    ID_Nghiepvu
+  );
+  res.status(200).json({
+    data: data,
+  });
+}
+
 const getPhieuNXByUser = async (req, res) => {
   try {
     const userData = req.user.data;
@@ -209,6 +222,8 @@ const getPhieuNXByUser = async (req, res) => {
 
 const updateTb_PhieuNX = async (req, res) => {
   try {
+    const t = await sequelize.transaction(); // Bắt đầu transaction
+
     const user = req.user.data;
     const ID_PhieuNX = req.params.id;
 
@@ -246,36 +261,56 @@ const updateTb_PhieuNX = async (req, res) => {
     };
 
     const updatePhieuNXResult = await tbPhieuNXService.updateTb_PhieuNX(
-      reqData
+      reqData,
+      {
+        transaction: t,
+      }
     );
+
     if (!updatePhieuNXResult) {
       return res.status(500).json({
         message: "Đã xảy ra lỗi khi cập nhật phiếu nhập xuất",
       });
     }
 
-    // Update Tb_PhieuNXCT if `phieunxct` contains valid items
     if (
       Array.isArray(phieunxct) &&
       phieunxct.length > 0 &&
       phieunxct[0].ID_Taisan !== null
     ) {
-      const updatePhieuNXCTResult = await tbPhieuNXCTService.updateTb_PhieuNXCT(
-        phieunxct,
-        ID_PhieuNX,
-        reqData
-      );
-      if (!updatePhieuNXCTResult) {
-        return res.status(500).json({
-          message: "Đã xảy ra lỗi khi cập nhật chi tiết phiếu nhập xuất",
-        });
+      switch (ID_Nghiepvu) {
+        case "1":
+          await tbPhieuNXCTService.updateTb_PhieuNXCT(
+            phieunxct,
+            ID_PhieuNX,
+            reqData,
+            {
+              transaction: t,
+            }
+          );
+          break;
+        case "3":
+          await tbPhieuNXNBCTService.createTb_PhieuNXNBCT(phieunxct, data, {
+            transaction: t,
+          });
+          break;
+        case "9":
+          await tbPhieuNXCTService.createTb_PhieuNXCT(phieunxct, data, {
+            transaction: t,
+          });
+          break;
+        default:
+          break;
       }
     }
 
+    // Commit transaction if no errors
+    await t.commit();
+
     // Send success response
     res.status(200).json({
-      message: "Cập nhật thành công",
-      data: updatePhieuNXResult,
+      message: "Tạo thành công",
+      data: data,
     });
   } catch (error) {
     // Handle errors
@@ -379,4 +414,5 @@ module.exports = {
   closeTb_PhieuNX,
   getPhieuNXByUser,
   closeFastTb_PhieuNX,
+  getTaiSan
 };
