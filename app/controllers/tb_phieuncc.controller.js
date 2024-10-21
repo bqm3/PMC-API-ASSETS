@@ -434,6 +434,65 @@ const getTaiSan = async (req, res) => {
   });
 };
 
+const updatePhieuNCC = async (req, res) => {
+  const transaction = await sequelize.transaction();
+  try {
+    const user = req.user.data;
+    const ID_PhieuNCC = req.params.id;
+
+    const {
+      ID_Nghiepvu,
+      Sophieu,
+      ID_Phongban,
+      ID_Phieu1,
+      ID_Phieu2,
+      ID_Loainhom,
+      NgayNX,
+      ID_Nam,
+      ID_Thang,
+      ID_Quy,
+      Ghichu,
+      iTinhtrang,
+      isDelete,
+      phieunccct,
+    } = req.body;
+
+    const reqData = {
+      ID_Nghiepvu,
+      ID_PhieuNCC,
+      Sophieu,
+      ID_Phongban,
+      ID_Phieu1,
+      ID_Phieu2,
+      ID_Loainhom,
+      NgayNX,
+      ID_Nam,
+      ID_Thang,
+      ID_Quy,
+      iTinhtrang,
+      isDelete,
+      ID_User: user.ID_User,
+      Ghichu: Ghichu || "",
+    };
+
+    const checkphieunccct = phieunccct.filter((item) => item.isUpdate === 1);
+    await tbPhieuNCCService.updatePhieuNCC(reqData, { transaction });
+    if (checkphieunccct.length > 0) {
+      await tbPhieuNCCCTService.updatePhieuNCCCT(reqData, checkphieunccct, {
+        transaction,
+      });
+    }
+
+    await transaction.commit();
+    return res.status(202).json({ message: "Cập nhật thành công" });
+  } catch (error) {
+    await transaction.rollback();
+    return res
+      .status(500)
+      .json({ message: `Có lỗi xả ra`, error: error.message });
+  }
+};
+
 module.exports = {
   createTb_PhieuNCC,
   getAllTb_PhieuNCC,
@@ -445,4 +504,5 @@ module.exports = {
   closeFastTb_PhieuNCC,
   getPhieuNCCFilter,
   getTaiSan,
+  updatePhieuNCC,
 };

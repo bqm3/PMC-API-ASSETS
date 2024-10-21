@@ -41,5 +41,11 @@ module.exports = (app) => {
     tb_phieuncc.deleteTb_PhieuNCC
   );
 
+    router.put(
+    "/update-xuat/:id/",
+    [isAuthenticated, isRole],
+    tb_phieuncc.updatePhieuNCC
+  );
+
   app.use("/api/v1/tb_phieuncc", router);
 };
