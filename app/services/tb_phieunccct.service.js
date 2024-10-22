@@ -12,9 +12,9 @@ const sequelize = require("../config/db.config");
 const { Op, where, Sequelize } = require("sequelize");
 const formatDateTime = require("../utils/formatDatetime");
 const { getDuanVsTaisanDetails } = require("./create_qr_code.service");
-
+// ================================ Tạo mới
 //phiếu 6.1.2 nhập hàng từ nhà cung cấp
-
+// 2 Nhập hàng từ nhà cung cấp
 const create_PhieuNhapNCC = async (phieunxct, data, transaction) => {
   const groupedItems = {};
   let ID_PhieuNXCT_Items = [];
@@ -30,26 +30,11 @@ const create_PhieuNhapNCC = async (phieunxct, data, transaction) => {
         Soluong: 0,
       };
     }
-    // Cộng dồn tổng Dongia và Soluong
     groupedItems[ID_Taisan].Dongia = Number(Dongia);
     groupedItems[ID_Taisan].Soluong += Number(Soluong);
   });
-  await Promise.all(
-    Object.values(groupedItems).map(async (groupedItem) => {
-      const newPhieuCCCCT = await Tb_PhieuNCCCT.create({
-        ID_PhieuNCC: data.ID_PhieuNCC,
-        ID_Taisan: groupedItem.ID_Taisan,
-        Dongia: groupedItem.Dongia,
-        Namsx: groupedItem.Namsx,
-        Soluong: groupedItem.Soluong,
-        isDelete: 0,
-      });
-      ID_PhieuNXCT_Items.push({
-        ID_Taisan: groupedItem.ID_Taisan,
-        ID_PhieuNCCCT: newPhieuCCCCT.ID_PhieuNCCCT,
-      });
-    })
-  );
+
+    // Tạo bản ghi trong Tb_PhieuNCCCT
   await Promise.all(
     Object.values(groupedItems).map(async (groupedItem) => {
       const newPhieuCCCCT = await Tb_PhieuNCCCT.create(
@@ -67,190 +52,164 @@ const create_PhieuNhapNCC = async (phieunxct, data, transaction) => {
         ID_Taisan: groupedItem.ID_Taisan,
         ID_PhieuNCCCT: newPhieuCCCCT.ID_PhieuNCCCT,
       });
-    })
-  );
+    }))
 
-  await Promise.all(
-    Object.values(groupedItems).map(async (groupedItem) => {
-      // Kiểm tra xem có bản ghi tồn tại trong Tb_Tonkho không
-      const tonkho = await Tb_Tonkho.findOne({
-        where: {
-          ID_Phongban: data.ID_Phongban,
-          ID_Nam: data.ID_Nam,
-          ID_Quy: data.ID_Quy,
-          ID_Taisan: groupedItem.ID_Taisan,
+  // Kiểm tra nếu ID_PhieuNXCT_Items có giá trị đúng
+  
+  // Tiếp tục các thao tác với Tonkho
+  const tonkhoItems = await Tb_Tonkho.findAll({
+    where: {
+      ID_Phongban: data.ID_Phongban,
+      ID_Nam: data.ID_Nam,
+      ID_Quy: data.ID_Quy,
+      ID_Taisan: Object.keys(groupedItems),
+    },
+    transaction,
+  });
+
+  const tonkhoMap = {};
+  tonkhoItems.forEach((item) => {
+    tonkhoMap[item.ID_Taisan] = item;
+  });
+  
+  // Cập nhật hoặc tạo mới bản ghi trong Tb_Tonkho
+  const tonkhoPromises = Object.values(groupedItems).map(async (groupedItem) => {
+    const existingTonkho = tonkhoMap[groupedItem.ID_Taisan];
+
+    if (existingTonkho) {
+      const TonSosach =
+        existingTonkho.Tondau +
+        existingTonkho.Nhapngoai +
+        groupedItem.Soluong +
+        existingTonkho.Nhapkhac +
+        existingTonkho.NhapNB -
+        existingTonkho.XuatNB -
+        existingTonkho.XuattraNCC -
+        existingTonkho.XuatThanhly -
+        existingTonkho.XuatHuy -
+        existingTonkho.XuatgiaoNV;
+
+      // Cập nhật nếu đã tồn tại
+      await Tb_Tonkho.update(
+        {
+          Nhapngoai: existingTonkho.Nhapngoai + groupedItem.Soluong,
+          Tiennhapngoai:
+            existingTonkho.Tiennhapngoai +
+            groupedItem.Dongia * groupedItem.Soluong,
+          TonSosach,
         },
-        transaction,
-      });
-
-      if (tonkho) {
-        // Nếu bản ghi đã tồn tại, cập nhật Nhapngoai và Tiennhapngoai
-        await Tb_Tonkho.update(
-          {
-            Nhapngoai: tonkho.Nhapngoai + groupedItem.Soluong,
-            Tiennhapngoai:
-              tonkho.Tiennhapngoai + groupedItem.Dongia * groupedItem.Soluong,
-              TonSosach: Sequelize.literal(
-                `Tondau + Nhapngoai + Nhapkhac + NhapNB - XuatNB - XuattraNCC - XuatThanhly - XuatHuy - XuatgiaoNV`
-              ),
-          },
-          {
-            where: {
-              ID_Phongban: data.ID_Phieu1,
-              ID_Nam: data.ID_Nam,
-              ID_Quy: data.ID_Quy,
-              ID_Taisan: groupedItem.ID_Taisan,
-            },
-            transaction,
-          }
-        );
-      } else {
-        // Nếu không tìm thấy bản ghi, thêm mới vào Tb_Tonkho
-        await Tb_Tonkho.create(
-          {
-            ID_Taisan: groupedItem.ID_Taisan,
+        {
+          where: {
+            ID_Phongban: data.ID_Phieu1,
             ID_Nam: data.ID_Nam,
             ID_Quy: data.ID_Quy,
-            ID_Thang: data.ID_Thang,
-            ID_Phongban: data.ID_Phieu1,
-            Nhapngoai: groupedItem.Soluong,
-            Tiennhapngoai: groupedItem.Dongia * groupedItem.Soluong,
-            TonSosach: Sequelize.literal(
-              `Tondau + Nhapngoai + Nhapkhac + NhapNB - XuatNB - XuattraNCC - XuatThanhly - XuatHuy - XuatgiaoNV`
-            ),
-          },
-          { transaction }
-        );
-      }
-    })
-  );
-
-  await Promise.all(
-    Object.values(groupedItems).map(async (groupedItem) => {
-      const taisan = await Ent_Taisan.findOne({
-        where: {
-          ID_Taisan: groupedItem.ID_Taisan,
-          isDelete: 0,
-        },
-        attributes: ["ID_Taisan", "i_MaQrCode"],
-        transaction,
-      });
-
-      if (taisan.i_MaQrCode == 0) {
-        const [duan, taisanDetails] = await getDuanVsTaisanDetails(
-          data.ID_Phongban,
-          taisan.ID_Taisan
-        );
-        const foundItem = ID_PhieuNXCT_Items.find(
-          (item) => item.ID_Taisan === taisan.ID_Taisan
-        );
-
-        const Thuoc = duan?.Thuoc;
-        const ManhomTs = taisanDetails.ent_nhomts.Manhom;
-        const MaID = taisanDetails.ID_Taisan;
-        const MaTaisan = taisanDetails.Mats;
-        const Ngay = formatDateTime(data.NgayNX);
-
-        const createQrCodeEntry = async (index) => {
-          const MaQrCode =
-            index >= 1
-              ? `${Thuoc}|${ManhomTs}|${MaID}|${MaTaisan}|${Ngay}|${index}`
-              : `${Thuoc}|${ManhomTs}|${MaID}|${MaTaisan}|${Ngay}`;
-
-          await Tb_TaisanQrCode.create(
-            {
-              ID_Nam: data.ID_Nam,
-              ID_Quy: data.ID_Quy,
-              ID_Taisan: foundItem.ID_Taisan,
-              ID_PhieuNCCCT: foundItem.ID_PhieuNCCCT,
-              ID_Phongban: data.ID_Phieu1,
-              Giatri: groupedItem.Dongia,
-              Ngaykhoitao: data.NgayNX,
-              MaQrCode: MaQrCode,
-              Namsx: groupedItem.Namsx,
-              Nambdsd: null,
-              Ghichu: "",
-              iTinhtrang: 0,
-            },
-            { transaction }
-          );
-        };
-
-    await Promise.all(
-      Object.values(groupedItems).map(async (groupedItem) => {
-        const taisan = await Ent_Taisan.findOne({
-          where: {
             ID_Taisan: groupedItem.ID_Taisan,
             isDelete: 0,
           },
-          attributes: ["ID_Taisan", "i_MaQrCode", "isDelete"],
           transaction,
-        });
-
-        if (taisan.i_MaQrCode == 0) {
-          const [duan, taisanDetails] = await getDuanVsTaisanDetails(
-            data.ID_Phongban,
-            taisan.ID_Taisan
-          );
-          const foundItem = ID_PhieuNXCT_Items.find(
-            (item) => item.ID_Taisan === taisan.ID_Taisan
-          );
-
-          const Thuoc = duan?.Thuoc;
-          const ManhomTs = taisanDetails.ent_nhomts.Manhom;
-          const MaID = taisanDetails.ID_Taisan;
-          const MaTaisan = taisanDetails.Mats;
-          const Ngay = formatDateTime(data.NgayNX);
-
-          const createQrCodeEntry = async (index) => {
-            const MaQrCode = `${Thuoc}|${ManhomTs}|${MaID}|${MaTaisan}|${Ngay}|${index}`;
-
-            await Tb_TaisanQrCode.create(
-              {
-                ID_Nam: data.ID_Nam,
-                ID_Quy: data.ID_Quy,
-                ID_Taisan: foundItem.ID_Taisan,
-                ID_PhieuNCCCT: foundItem.ID_PhieuNCCCT,
-                ID_Phongban: data.ID_Phieu1,
-                Giatri: groupedItem.Dongia,
-                Ngaykhoitao: data.NgayNX,
-                MaQrCode: MaQrCode,
-                Namsx: groupedItem.Namsx,
-                Nambdsd: null,
-                Ghichu: "",
-                iTinhtrang: 0,
-              },
-              { transaction }
-            );
-          };
-
-          for (let i = 1; i <= Number(groupedItem.Soluong); i++) {
-            await createQrCodeEntry(i);
-          }
-        } else {
-          await createQrCodeEntry(1);
         }
-      })
-    );
-  } catch (error) {
-    throw new Error(`Có lỗi xảy ra khi tạo phiếu nhập NCC: ${error.message}`);
-  }
-}))
+      );
+    } else {
+      const TonSosach =
+        0 + 
+        groupedItem.Soluong +
+        0 + 
+        0 - 
+        0 -
+        0 -
+        0 -
+        0;
+
+      // Tạo mới nếu không tồn tại
+      await Tb_Tonkho.create(
+        {
+          ID_Taisan: groupedItem.ID_Taisan,
+          ID_Nam: data.ID_Nam,
+          ID_Quy: data.ID_Quy,
+          ID_Thang: data.ID_Thang,
+          ID_Phongban: data.ID_Phieu1,
+          Nhapngoai: groupedItem.Soluong,
+          Tiennhapngoai: groupedItem.Dongia * groupedItem.Soluong,
+          TonSosach,
+          isDelete: 0,
+        },
+        { transaction }
+      );
+    }
+  });
+  await Promise.all(tonkhoPromises);
+
+  // Xử lý tạo mã QR
+  const taisanIds = Object.keys(groupedItems);
+  const taisans = await Ent_Taisan.findAll({
+    where: {
+      ID_Taisan: taisanIds,
+      isDelete: 0,
+    },
+    attributes: ["ID_Taisan", "i_MaQrCode", "isDelete"],
+    transaction,
+  });
+
+  const createQrPromises = taisans.map(async (taisan) => {
+    if (Number(taisan.i_MaQrCode) === 0) {
+      const [duan, taisanDetails] = await getDuanVsTaisanDetails(
+        data.ID_Phongban,
+        taisan.ID_Taisan
+      );
+      const foundItem = ID_PhieuNXCT_Items.find(
+        (item) => item.ID_Taisan === taisan.ID_Taisan
+      );
+
+      const Thuoc = duan?.Thuoc;
+      const ManhomTs = taisanDetails.ent_nhomts.Manhom;
+      const MaID = taisanDetails.ID_Taisan;
+      const MaTaisan = taisanDetails.Mats;
+      const Ngay = formatDateTime(data.NgayNX);
+
+      const qrCodes = [];
+      for (let i = 1; i <= Number(groupedItems[taisan.ID_Taisan].Soluong); i++) {
+        qrCodes.push({
+          ID_Nam: data.ID_Nam,
+          ID_Quy: data.ID_Quy,
+          ID_Taisan: foundItem.ID_Taisan,
+          ID_PhieuNCCCT: foundItem.ID_PhieuNCCCT,
+          ID_Phongban: data.ID_Phieu1,
+          Giatri: groupedItems[taisan.ID_Taisan].Dongia,
+          Ngaykhoitao: data.NgayNX,
+          MaQrCode: `${Thuoc}|${ManhomTs}|${MaID}|${MaTaisan}|${Ngay}|${i}`,
+          Namsx: groupedItems[taisan.ID_Taisan].Namsx,
+          Nambdsd: null,
+          Ghichu: "",
+          iTinhtrang: 0,
+        });
+      }
+      await Tb_TaisanQrCode.bulkCreate(qrCodes, { transaction });
+    }
+  });
+  await Promise.all(createQrPromises);
+
+  console.log("run ");
+};
 
 // 5 Xuat tra ncc
 // 6 xuat thanh ly
 // 7 Xuat huy
 const create_PhieuXuatNCC = async (item, data, transaction) => {
   if (item.ID_TaisanQrcode !== null) {
-    const checkUserTaisan = await Tb_TaisanQrCode.findByPk(
-      item.ID_TaisanQrcode,
+    console.log('item.ID_TaisanQrcode', item.ID_TaisanQrcode)
+    const checkUserTaisan = await Tb_TaisanQrCode.findOne(
       {
-        attributes: ["ID_TaisanQrcode", "ID_User"],
+        attributes: ["ID_TaisanQrcode", "ID_User", "isDelete"],
+        where: {
+          isDelete: 0,
+          ID_TaisanQrcode: item.ID_TaisanQrcode
+        }, 
       },
       transaction
     );
+    console.log('checkUserTaisan', checkUserTaisan)
 
-    if (checkUserTaisan.ID_User != null && checkUserTaisan.ID_User != 0) {
+    if (checkUserTaisan?.ID_User != null && checkUserTaisan?.ID_User != 0) {
       throw new Error(
         `Tài sản này đã giao cho user có ID là : ${checkUserTaisan.ID_User}`
       );
@@ -271,16 +230,18 @@ const create_PhieuXuatNCC = async (item, data, transaction) => {
     }
 
     let updateTaisanQrCode = {};
-    switch (data.ID_Nghiepvu) {
-      case "5":
+    switch (Number(data.ID_Nghiepvu)) {
+      case 5:
         updateTaisanQrCode = { iTinhtrang: 4, isDelete: 1 };
         break;
-      case "6":
+      case 6:
         updateTaisanQrCode = { iTinhtrang: 2, isDelete: 1 };
         break;
-      case "7":
+      case 7:
         updateTaisanQrCode = { iTinhtrang: 3, isDelete: 1 };
         break;
+      default:
+        throw Error("Lỗi khi cập nhật qr code");
     }
 
     await Tb_TaisanQrCode.update(updateTaisanQrCode, {
@@ -302,8 +263,8 @@ const create_PhieuXuatNCC = async (item, data, transaction) => {
   );
 
   let updateTonkho = {};
-  switch (data.ID_Nghiepvu) {
-    case "5":
+  switch (Number(data.ID_Nghiepvu)) {
+    case 5:
       updateTonkho = {
         XuattraNCC: Sequelize.literal(`XuattraNCC + ${item.Soluong}`),
         TonSosach: Sequelize.literal(
@@ -311,7 +272,7 @@ const create_PhieuXuatNCC = async (item, data, transaction) => {
         ),
       };
       break;
-    case "6":
+    case 6:
       updateTonkho = {
         XuatThanhly: Sequelize.literal(`XuatThanhly + ${item.Soluong}`),
         TonSosach: Sequelize.literal(
@@ -319,7 +280,7 @@ const create_PhieuXuatNCC = async (item, data, transaction) => {
         ),
       };
       break;
-    case "7":
+    case 7:
       updateTonkho = {
         XuatHuy: Sequelize.literal(`XuatHuy + ${item.Soluong}`),
         TonSosach: Sequelize.literal(
@@ -334,20 +295,23 @@ const create_PhieuXuatNCC = async (item, data, transaction) => {
       ID_Taisan: item.ID_Taisan,
       ID_Phongban: data.ID_Phieu1,
       TonSosach: { [Op.gte]: item.Soluong },
-      ID_Nam: data.ID_Nam,
+      // ID_Nam: data.ID_Nam,
       ID_Quy: data.ID_Quy,
       isDelete: 0,
     },
     transaction,
   });
+  console.log(updatedRowCount)
 
   if (updatedRowCount === 0) {
     throw new Error(`Số lượng không hợp lệ cho ID_Taisan: ${item.ID_Taisan}`);
   }
 };
+// những dự án đã triển khai, những dự án nào chỉ mới kê khai, những khối nào đã triển khai của dự án 
 
-const updateTb_PhieuNCCCT = async (phieunxct, ID_PhieuNCC, data) => {
-  const transaction = await sequelize.transaction();
+// ================================= Cập nhật
+// 6.1.2 Cập nhập phiếu nhập hàng từ nhà cung cấp
+const updatePhieuNhapHangNCC = async (phieunxct, ID_PhieuNCC, data, transaction) => {
   try {
     const groupedItems = {};
 
@@ -381,7 +345,7 @@ const updateTb_PhieuNCCCT = async (phieunxct, ID_PhieuNCC, data) => {
 
     const itemsMarkedForDeletion = phieunxct
       .filter((item) => item.ID_PhieuNCCCT && item.isDelete === 1)
-      .map((item) => item.ID_PhieuNCCCT); 
+      .map((item) => item.ID_PhieuNCCCT);
 
     const itemsToDelete = currentItemIds.filter((id) =>
       itemsMarkedForDeletion.includes(id)
@@ -389,13 +353,15 @@ const updateTb_PhieuNCCCT = async (phieunxct, ID_PhieuNCC, data) => {
 
     // If there are items to delete, remove them from the database
     if (itemsToDelete.length > 0) {
-      await Tb_PhieuNCCCT.update({
-        isDelete: 1
-      },{
-        where: { ID_PhieuNCCCT: itemsToDelete },
-        transaction,
-      });
-      
+      await Tb_PhieuNCCCT.update(
+        {
+          isDelete: 1,
+        },
+        {
+          where: { ID_PhieuNCCCT: itemsToDelete },
+          transaction,
+        }
+      );
     }
 
     // Cập nhật hoặc tạo mới các bản ghi
@@ -441,7 +407,7 @@ const updateTb_PhieuNCCCT = async (phieunxct, ID_PhieuNCC, data) => {
                 ID_Nam: data.ID_Nam,
                 ID_Quy: data.ID_Quy,
                 ID_Taisan: groupedItem.ID_Taisan,
-                isDelete: 0
+                isDelete: 0,
               },
               transaction,
             });
@@ -461,7 +427,7 @@ const updateTb_PhieuNCCCT = async (phieunxct, ID_PhieuNCC, data) => {
                     ID_Nam: data.ID_Nam,
                     ID_Quy: data.ID_Quy,
                     ID_Taisan: groupedItem.ID_Taisan,
-                    isDelete: 0
+                    isDelete: 0,
                   },
                   transaction,
                 }
@@ -477,7 +443,7 @@ const updateTb_PhieuNCCCT = async (phieunxct, ID_PhieuNCC, data) => {
                   Nhapngoai: groupedItem.Soluong,
                   Tiennhapngoai: groupedItem.Dongia * groupedItem.Soluong,
                   TonSosach: groupedItem.Soluong,
-                  isDelete: 0
+                  isDelete: 0,
                 },
                 { transaction }
               );
@@ -496,15 +462,17 @@ const updateTb_PhieuNCCCT = async (phieunxct, ID_PhieuNCC, data) => {
             if (taisan?.i_MaQrCode == 0) {
               await Tb_TaisanQrCode.update(
                 {
-                  isDelete: 2
-                },{
-                where: {
-                  ID_Taisan: groupedItem.ID_Taisan,
-                  ID_PhieuNCCCT: newPhieuCCCCT.ID_PhieuNCCCT,
-                  isDelete: 0
+                  isDelete: 2,
                 },
-                transaction,
-              });
+                {
+                  where: {
+                    ID_Taisan: groupedItem.ID_Taisan,
+                    ID_PhieuNCCCT: newPhieuCCCCT.ID_PhieuNCCCT,
+                    isDelete: 0,
+                  },
+                  transaction,
+                }
+              );
 
               const [duan, taisanDetails] = await getDuanVsTaisanDetails(
                 data.ID_Phongban,
@@ -555,142 +523,18 @@ const updateTb_PhieuNCCCT = async (phieunxct, ID_PhieuNCC, data) => {
       })
     );
 
-    await transaction.commit();
+    // await transaction.commit();
     return true;
   } catch (error) {
-    await transaction.rollback();
+    // await transaction.rollback();
     throw error;
   }
 };
 
-const getAllTb_PhieuNCCCT = async () => {
-  // Điều kiện để lấy các bản ghi không bị XCTóa
-  let whereClause = {
-    isDelete: 0,
-  };
-
-  // Thực hiện truy vấn với Sequelize
-  const res = await Tb_PhieuNCCCT.findAll({
-    attributes: [
-      "ID_PhieuNCCCT",
-      "ID_PhieuNCC",
-      "ID_Taisan",
-      "Dongia",
-      "Soluong",
-      "Namsx",
-      "isDelete",
-    ],
-    where: whereClause,
-  });
-
-  return res;
-};
-
-const scanTb_PhieuNCCCT = async (data) => {
-  const file = await uploadFile(data.images);
-  const res = await Tb_PhieuNCCCT.create({
-    Anhts: file ? file.id : "",
-    ID_TaisanQrcode: data.ID_TaisanQrcode,
-    ID_PhieuNCC: data.ID_PhieuNCC,
-    ID_Taisan: data.ID_Taisan,
-    Dongia: data.Dongia,
-    Soluong: data.Soluong || 1,
-    Namsx: data.Namsx,
-  });
-  return res;
-};
-
-const getTaiSanPB = async (
-  ID_Phongban,
-  ID_NoiXuat,
-  ID_Quy,
-  ID_Loainhom,
-  ID_Nghiepvu
-) => {
-  const whereCondition = {
-    ID_Phieu1: ID_Phongban,
-    ID_Phieu2: ID_NoiXuat,
-    ID_Quy,
-    ID_Loainhom,
-    ID_Nghiepvu,
-    isDelete: 0,
-  };
-
-  try {
-    const [pccResults, tonkhos, taisanQrCodes] = await Promise.all([
-      Tb_PhieuNCC.findAll({
-        where: whereCondition,
-        include: [
-          {
-            model: Tb_PhieuNCCCT,
-            as: "tb_phieunccct",
-            where: { isDelete: 0 },
-            attributes: ["ID_Taisan", "Dongia", "Soluong", "isDelete"],
-            include: [
-              {
-                model: Ent_Taisan,
-                as: "ent_taisan",
-                attributes: ["Tents", "ID_Nhomts", "isDelete"],
-              },
-            ],
-          },
-        ],
-      }),
-
-      Tb_Tonkho.findAll({
-        where: {
-          ID_Phongban,
-          ID_Quy,
-          isDelete: 0,
-        },
-        attributes: ["ID_Taisan", "TonSosach", "isDelete", "ID_Phongban", "ID_Quy"],
-      }),
-
-      Tb_TaisanQrCode.findAll({
-        where: {
-          ID_Phongban,
-          isDelete: 0,
-        },
-        attributes: ["ID_TaisanQrcode", "ID_Taisan", "MaQrCode", "isDelete" , "ID_Phongban"],
-      }),
-    ]);
-
-    // Tạo map tồn kho từ kết quả truy vấn tồn kho
-    const tonKhoMap = tonkhos.reduce((map, tk) => {
-      map[tk.ID_Taisan] = tk.TonSosach;
-      return map;
-    }, {});
-
-    // Tạo map mã QR từ kết quả truy vấn mã QR
-    const qrCodeMap = taisanQrCodes.reduce((map, qr) => {
-      if (!map[qr.ID_Taisan]) {
-        map[qr.ID_Taisan] = [];
-      }
-      map[qr.ID_Taisan].push({
-        ID_TaisanQrcode: qr.ID_TaisanQrcode,
-        MaQrCode: qr.MaQrCode,
-      });
-      return map;
-    }, {});
-
-    const resultWithQrCode = pccResults.flatMap((pcc) =>
-      pcc.tb_phieunccct.map((item) => ({
-        ID_Taisan: item.ID_Taisan,
-        Dongia: item.Dongia,
-        Soluongnhap: item.Soluong,
-        TonSosach: tonKhoMap[item.ID_Taisan] || 0,
-        Tents: item.ent_taisan.Tents,
-        ent_taisanqrcode: qrCodeMap[item.ID_Taisan] || [],
-      }))
-    );
-
-    return resultWithQrCode;
-  } catch (error) {
-    console.error("Error fetching assets:", error);
-    throw error;
-  }
-};
-
+// ( Nghiệp vụ 5, 6, 7)
+// 6.1.4 Phiêu xuất trả nhà cung cấp
+// 6.1.5 Phiếu xuất thanh lý
+// 6.1.6 Phiếu xuât hủy
 const updatePhieuNCCCT = async (reqData, phieunccct) => {
   const transaction = await sequelize.transaction();
   try {
@@ -732,7 +576,10 @@ const updatePhieuNCCCT = async (reqData, phieunccct) => {
           await Tb_TaisanQrCode.update(
             { iTinhtrang: 0, isDelete: 0 },
             {
-              where: { ID_TaisanQrcode: deleteItem.ID_TaisanQrcode },
+              where: {
+                ID_TaisanQrcode: deleteItem.ID_TaisanQrcode,
+                isDelete: 0,
+              },
               transaction,
             }
           );
@@ -752,7 +599,7 @@ const updatePhieuNCCCT = async (reqData, phieunccct) => {
         await Tb_PhieuNCCCT.update(
           { Soluong: item.Soluong },
           {
-            where: { ID_PhieuNCCCT: existingItem.ID_PhieuNCCCT },
+            where: { ID_PhieuNCCCT: existingItem.ID_PhieuNCCCT, isDelete: 0 },
             transaction,
           }
         );
@@ -775,11 +622,13 @@ const updatePhieuNCCCT = async (reqData, phieunccct) => {
 
 const updateTonkho = async (item, reqData, Soluong, transaction) => {
   let tonkho = {};
-  switch (reqData.ID_Nghiepvu) {
+  switch (Number(reqData.ID_Nghiepvu)) {
     case 2:
       tonkho = {
         Nhapngoai: Sequelize.literal(`Nhapngoai + ${Soluong}`),
-        Tiennhapngoai: Sequelize.literal(`Tiennhapngoai + ${Soluong}*${item.Dongia}`),
+        Tiennhapngoai: Sequelize.literal(
+          `Tiennhapngoai + ${Soluong}*${item.Dongia}`
+        ),
         TonSosach: Sequelize.literal(
           `Tondau + Nhapngoai + Nhapkhac + NhapNB - XuatNB - XuattraNCC - XuatThanhly - XuatHuy - XuatgiaoNV`
         ),
@@ -809,6 +658,8 @@ const updateTonkho = async (item, reqData, Soluong, transaction) => {
         ),
       };
       break;
+    default:
+      throw new Error("Lỗi khi update tồn kho");
   }
   await Tb_Tonkho.update(tonkho, {
     where: {
@@ -821,6 +672,181 @@ const updateTonkho = async (item, reqData, Soluong, transaction) => {
     },
     transaction,
   });
+};
+
+const getAllTb_PhieuNCCCT = async () => {
+  // Điều kiện để lấy các bản ghi không bị XCTóa
+  let whereClause = {
+    isDelete: 0,
+  };
+
+  // Thực hiện truy vấn với Sequelize
+  const res = await Tb_PhieuNCCCT.findAll({
+    attributes: [
+      "ID_PhieuNCCCT",
+      "ID_PhieuNCC",
+      "ID_Taisan",
+      "Dongia",
+      "Soluong",
+      "Namsx",
+      "isDelete",
+    ],
+    where: whereClause,
+  });
+
+  return res;
+};
+
+const scanTb_PhieuNCCCT = async (data) => {
+  const file = await uploadFile(data.images);
+  const res = await Tb_PhieuNCCCT.create({
+    Anhts: file ? file.id : "",
+    ID_TaisanQrcode: data.ID_TaisanQrcode,
+    ID_PhieuNCC: data.ID_PhieuNCC,
+    ID_Taisan: data.ID_Taisan,
+    Dongia: data.Dongia,
+    Soluong: data.Soluong || 1,
+    Namsx: data.Namsx,
+  });
+  return res;
+};
+
+const getTaiSanPB = async (
+  ID_NoiNhap,
+  ID_NoiXuat,
+  ID_Quy,
+  ID_Nam,
+  ID_Loainhom
+) => {
+  const whereCondition = {
+    ID_Phieu1: ID_NoiXuat,
+    ID_Quy,
+    // ID_Nam,
+    ID_Loainhom,
+    isDelete: 0,
+  };
+
+  try {
+    const [pccResults, tonkhos, taisanQrCodes] = await Promise.all([
+      Tb_PhieuNCC.findAll({
+        where: whereCondition,
+        attributes: [
+          "ID_Phieu1",
+          "ID_Phieu2",
+          "ID_Quy",
+          "ID_Loainhom",
+          "isDelete",
+          // "ID_Nam",
+        ],
+        include: [
+          {
+            model: Tb_PhieuNCCCT,
+            as: "tb_phieunccct",
+            where: { isDelete: 0 },
+            attributes: ["ID_Taisan", "Dongia", "Soluong", "isDelete", "Namsx"],
+            include: [
+              {
+                model: Ent_Taisan,
+                as: "ent_taisan",
+                attributes: ["Tents", "ID_Nhomts", "isDelete"],
+              },
+            ],
+          },
+        ],
+      }),
+
+      Tb_Tonkho.findAll({
+        where: {
+          ID_Phongban: ID_NoiXuat,
+          ID_Quy,
+          isDelete: 0,
+        },
+        attributes: [
+          "ID_Taisan",
+          "TonSosach",
+          "isDelete",
+          "ID_Phongban",
+          "ID_Quy",
+        ],
+      }),
+
+      Tb_TaisanQrCode.findAll({
+        where: {
+          ID_Phongban: ID_NoiXuat,
+          isDelete: 0,
+        },
+        attributes: [
+          "ID_TaisanQrcode",
+          "ID_Taisan",
+          "MaQrCode",
+          "isDelete",
+          "ID_Phongban",
+        ],
+      }),
+    ]);
+
+    // Tạo map tồn kho từ kết quả truy vấn tồn kho
+    const tonKhoMap = tonkhos.reduce((map, tk) => {
+      map[tk.ID_Taisan] = tk.TonSosach;
+      return map;
+    }, {});
+
+    // Tạo map mã QR từ kết quả truy vấn mã QR
+    const qrCodeMap = taisanQrCodes.reduce((map, qr) => {
+      if (!map[qr.ID_Taisan]) {
+        map[qr.ID_Taisan] = [];
+      }
+      map[qr.ID_Taisan].push({
+        ID_TaisanQrcode: qr.ID_TaisanQrcode,
+        MaQrCode: qr.MaQrCode,
+      });
+      return map;
+    }, {});
+
+    // Biến đổi dữ liệu để mỗi mã QR code trở thành một tài sản riêng, nếu không có mã QR code thì trả về MaQrCode và ID_TaisanQrcode rỗng
+    const resultWithQrCode = pccResults.flatMap((pcc) =>
+      pcc.tb_phieunccct.flatMap((item) => {
+        const qrCodes = qrCodeMap[item.ID_Taisan] || [];
+
+        if (qrCodes.length > 0) {
+          // Nếu có mã QR code, tạo ra mỗi tài sản với số lượng là 1 và mã QR code tương ứng
+          return qrCodes.map((qrCode) => ({
+            ID_Taisan: item.ID_Taisan,
+            ID_TaisanQrcode: qrCode.ID_TaisanQrcode, // Lấy ID_TaisanQrcode từ qrCodes
+            Dongia: item.Dongia,
+            Soluong: 1,
+            Namsx: item.Namsx,
+            Tong: item.Dongia,
+            isDelete: 0,
+            isUpdate: 0,
+            TonSosach: tonKhoMap[item.ID_Taisan] || 0,
+            Tents: item.ent_taisan.Tents,
+            MaQrCode: qrCode.MaQrCode, // Mỗi tài sản có một mã QR code
+          }));
+        } else {
+          // Nếu không có mã QR code, trả về tài sản với MaQrCode và ID_TaisanQrcode là null
+          return {
+            ID_Taisan: item.ID_Taisan,
+            ID_TaisanQrcode: null, // Không có mã QR code, nên ID_TaisanQrcode là null
+            Dongia: item.Dongia,
+            Soluong: item.Soluong, // Số lượng gốc của tài sản
+            Tong: item.Dongia * item.Soluong,
+            TonSosach: tonKhoMap[item.ID_Taisan] || 0,
+            Tents: item.ent_taisan.Tents,
+            MaQrCode: null, // Không có mã QR code
+            Namsx: item.Namsx,
+            isDelete: 0,
+            isUpdate: 0,
+          };
+        }
+      })
+    );
+
+    return resultWithQrCode;
+  } catch (error) {
+    console.error("Error fetching assets:", error);
+    throw error;
+  }
 };
 
 const deleteTb_PhieuNCCCT = async (ID_PhieuNCC, transaction) => {
@@ -861,10 +887,9 @@ const deleteTb_PhieuNCCCT = async (ID_PhieuNCC, transaction) => {
   }
 
   for (const item of phieuNCCCts) {
-    const delta = - item.Soluong;
-    await updateTonkho(item, phieuNCC, delta, transaction); 
+    const delta = -item.Soluong;
+    await updateTonkho(item, phieuNCC, delta, transaction);
   }
-
 
   await Tb_PhieuNCCCT.update(
     { isDelete: 1 },
@@ -878,12 +903,11 @@ const deleteTb_PhieuNCCCT = async (ID_PhieuNCC, transaction) => {
   );
 };
 
-
 module.exports = {
   create_PhieuNhapNCC,
   create_PhieuXuatNCC,
   getAllTb_PhieuNCCCT,
-  updateTb_PhieuNCCCT,
+  updatePhieuNhapHangNCC,
   scanTb_PhieuNCCCT,
   getTaiSanPB,
   updatePhieuNCCCT,

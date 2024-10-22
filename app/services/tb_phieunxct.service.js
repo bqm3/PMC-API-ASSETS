@@ -516,8 +516,6 @@ const getTaiSanPB = async (
     isDelete: 0,
   };
 
-  console.log('whereCondition', whereCondition)
-
   try {
     const [pccResults, tonkhos, taisanQrCodes] = await Promise.all([
       Tb_PhieuNX.findAll({

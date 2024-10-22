@@ -255,6 +255,7 @@ const getPhieuNCCFilter = async (req, res) => {
 };
 
 const updateTb_PhieuNCC = async (req, res) => {
+  const t = await sequelize.transaction(); // Bắt đầu transaction
   try {
     const user = req.user.data;
     const ID_PhieuNCC = req.params.id;
@@ -275,61 +276,55 @@ const updateTb_PhieuNCC = async (req, res) => {
     const Thang = await eThangService.getDetail(NgayNX);
     const Nam = await eNamService.getDetail(NgayNX);
 
-    // Prepare data for Tb_PhieuNCC creation
+    // Prepare data for Tb_PhieuNCC update
     const reqData = {
-      ID_PhieuNCC: ID_PhieuNCC,
-      ID_Nghiepvu: ID_Nghiepvu,
-      Sophieu: Sophieu,
+      ID_PhieuNCC,
+      ID_Nghiepvu,
+      Sophieu,
       ID_Phieu1: ID_NoiNhap,
       ID_Phieu2: ID_NoiXuat,
       ID_Nam: Nam.ID_Nam,
-      ID_Loainhom: ID_Loainhom,
+      ID_Loainhom,
       ID_Thang: Thang.ID_Thang,
-      NgayNX: NgayNX,
+      NgayNX,
       ID_User: user.ID_User,
-      Ghichu: Ghichu,
-      ID_Quy: ID_Quy,
+      Ghichu,
+      ID_Quy,
       isDelete: 0,
       ID_Phongban: user.ID_Phongban,
     };
 
-    const updatePhieuNXResult = await tbPhieuNCCService.updateTb_PhieuNCC(
-      reqData
-    );
+    const updatePhieuNXResult = await tbPhieuNCCService.updateTb_PhieuNCC(reqData, { transaction: t });
+
     if (!updatePhieuNXResult) {
-      return res.status(500).json({
-        message: "Đã xảy ra lỗi khi cập nhật phiếu nhập xuất",
-      });
+      await t.rollback(); // Rollback nếu có lỗi
+      return res.status(500).json({ message: "Đã xảy ra lỗi khi cập nhật phiếu nhập xuất" });
     }
 
-    // Update Tb_PhieuNCCCT if `phieunccct` contains valid items
-    if (
-      Array.isArray(phieunccct) &&
-      phieunccct.length > 0 &&
-      phieunccct[0].ID_Taisan !== null
-    ) {
-      const updatePhieuNccCTResult =
-        await tbPhieuNCCCTService.updateTb_PhieuNCCCT(
-          phieunccct,
-          ID_PhieuNCC,
-          reqData
-        );
-      if (!updatePhieuNccCTResult) {
-        return res.status(500).json({
-          message: "Đã xảy ra lỗi khi cập nhật chi tiết phiếu nhập xuất",
-        });
+    if (Array.isArray(phieunccct) && phieunccct.length > 0 && phieunccct[0].ID_Taisan !== null) {
+      switch (Number(ID_Nghiepvu)) {
+        case 2:
+          await tbPhieuNCCCTService.updatePhieuNhapHangNCC(phieunccct, ID_PhieuNCC, reqData, t); // Gọi service với transaction
+          break;
+        case 5:
+        case 6:
+        case 7:
+          await tbPhieuNCCCTService.updatePhieuNCCCT(data, phieunccct, t);
+          break;
+        default:
+          break;
       }
     }
 
-    // Send success response
-    res.status(200).json({
-      message: "Cập nhật thành công",
-      data: updatePhieuNXResult,
-    });
+    // Commit transaction nếu tất cả thành công
+    await t.commit();
+
+    res.status(200).json({ message: "Cập nhật thành công", data: reqData });
   } catch (error) {
-    // Handle errors
+    // Rollback transaction nếu có lỗi
+    await t.rollback();
     console.error("Error in creating Tb_PhieuNCC:", error);
-    res.status(500).json({ message: "Đã xảy ra lỗi khi tạo phiếu nhập xuất" });
+    res.status(500).json({ message: "Đã xảy ra lỗi khi sửa phiếu nhập xuất" });
   }
 };
 
@@ -419,15 +414,15 @@ const deleteTb_PhieuNCC = async (req, res) => {
   }
 };
 
-const getTaiSan = async (req, res) => {
-  const { ID_Phongban, ID_Loainhom, ID_Quy, ID_Nghiepvu, ID_NoiXuat } =
+const getTaiSanByPhongBanDA = async (req, res) => {
+  const { ID_NoiNhap, ID_Loainhom, ID_Quy, ID_NoiXuat, ID_Nam } =
     req.body;
   const data = await tbPhieuNCCCTService.getTaiSanPB(
-    ID_Phongban,
+    ID_NoiNhap,
     ID_NoiXuat,
     ID_Quy,
+    ID_Nam,
     ID_Loainhom,
-    ID_Nghiepvu
   );
   res.status(200).json({
     data: data,
@@ -503,6 +498,6 @@ module.exports = {
   getPhieuNCCByUser,
   closeFastTb_PhieuNCC,
   getPhieuNCCFilter,
-  getTaiSan,
+  getTaiSanByPhongBanDA,
   updatePhieuNCC,
 };

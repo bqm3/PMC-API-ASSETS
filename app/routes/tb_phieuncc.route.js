@@ -10,13 +10,12 @@ module.exports = (app) => {
     [isAuthenticated, isRole],
     tb_phieuncc.createTb_PhieuNCC
   );
+
   router.get("/all", tb_phieuncc.getAllTb_PhieuNCC);
-  router.get("/taisan",[isAuthenticated], tb_phieuncc.getTaiSan);
   router.get("/:id", tb_phieuncc.getDetailTb_PhieuNCC);
-
-
   router.get("/kiemke/:id", [isAuthenticated], tb_phieuncc.getPhieuNCCByUser);
   router.post("/filter/:id", [isAuthenticated], tb_phieuncc.getPhieuNCCFilter);
+  router.post("/taisan",[isAuthenticated], tb_phieuncc.getTaiSanByPhongBanDA);
 
   router.put(
     "/update/:id",

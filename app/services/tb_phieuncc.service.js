@@ -23,28 +23,61 @@ const tbPhieuNCCCTService = require("../services/tb_phieunccct.service");
 const createTb_PhieuNCC = async (phieunccct, data) => {
   const transaction = await sequelize.transaction();
   try {
+    // Tạo bản ghi Tb_PhieuNCC
     const res = await Tb_PhieuNCC.create(data, { transaction });
+
+    // Kiểm tra nếu phieunccct có giá trị và chứa ID_Taisan hợp lệ
     if (phieunccct.length > 0 && phieunccct[0].ID_Taisan != null) {
-      // nghiệp vụ 2: Nhập hàng từ nhà cung cấp
+      // Nghiệp vụ 2: Nhập hàng từ nhà cung cấp
       if (data.ID_Nghiepvu == 2) {
-        await tbPhieuNCCCTService.create_PhieuNhapNCC(
-          phieunccct,
-          res,
-          transaction
+        console.log('vao nghiep vu 2')
+        await tbPhieuNCCCTService.create_PhieuNhapNCC(phieunccct, res, transaction);
+      } 
+      // Nghiệp vụ 5,6,7: Xuất trả nhà cung cấp
+      else {
+        console.log('vao nghiep vu 5,6,7')
+        // Sử dụng Promise.all để tạo nhiều Phiếu xuất cùng lúc
+        await Promise.all(
+          phieunccct.map(item => tbPhieuNCCCTService.create_PhieuXuatNCC(item, res, transaction))
         );
-      } else {
-        // nghiệp vụ 5,6,7: Xuất trả nhà cung cấp
-        for (const item of phieunccct) {
-          await tbPhieuNCCCTService.create_PhieuXuatNCC(item, res, transaction);
-        }
       }
     }
+
+    // Commit transaction nếu không có lỗi
     await transaction.commit();
     return res;
   } catch (error) {
+    // Rollback transaction nếu có lỗi
     await transaction.rollback();
-    throw new Error(error.message || `Có lỗi xảy ra !`);
+    throw new Error(error.message || 'Có lỗi xảy ra !');
   }
+};
+
+const updateTb_PhieuNCC = async (data) => {
+  let whereClause = {
+    isDelete: 0,
+  };
+
+  const res = await Tb_PhieuNCC.findByPk(
+    data.ID_PhieuNCC,
+    {
+      ID_Nghiepvu: data.ID_Nghiepvu,
+      Sophieu: data.Sophieu,
+      ID_NoiNhap: data.ID_NoiNhap,
+      ID_NoiXuat: data.ID_NoiXuat,
+      ID_Nam: data.ID_Nam,
+      ID_Loainhom: data.ID_Loainhom,
+      ID_Thang: data.ID_Thang,
+      NgayNX: data.NgayNX,
+      ID_User: data.ID_User,
+      Ghichu: data.Ghichu,
+      ID_Quy: data.ID_Quy,
+    },
+    {
+      where: whereClause,
+    }
+  );
+  return res;
 };
 
 const getDetailTb_PhieuNCC = async (ID_PhieuNCC) => {
@@ -488,33 +521,6 @@ const getPhieuNCCByUser = async (ID_User, ID_Quy) => {
   return res;
 };
 
-const updateTb_PhieuNCC = async (data) => {
-  let whereClause = {
-    isDelete: 0,
-    ID_PhieuNCC: data.ID_PhieuNCC,
-  };
-
-  const res = await Tb_PhieuNCC.update(
-    {
-      ID_Nghiepvu: data.ID_Nghiepvu,
-      Sophieu: data.Sophieu,
-      ID_NoiNhap: data.ID_NoiNhap,
-      ID_NoiXuat: data.ID_NoiXuat,
-      ID_Nam: data.ID_Nam,
-      ID_Loainhom: data.ID_Loainhom,
-      ID_Thang: data.ID_Thang,
-      NgayNX: data.NgayNX,
-      ID_User: data.ID_User,
-      Ghichu: data.Ghichu,
-      ID_Quy: data.ID_Quy,
-    },
-    {
-      where: whereClause,
-    }
-  );
-  return res;
-};
-
 const closeTb_PhieuNCC = async (ID) => {
   const res = await Tb_PhieuNCC.update(
     { iTinhtrang: 1 },
@@ -548,7 +554,6 @@ const deleteTb_PhieuNCC = async (ID) => {
     throw error;
   }
 };
-
 
 const updatePhieuNCC = async (data) => {
   try {
