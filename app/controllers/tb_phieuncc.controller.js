@@ -56,35 +56,36 @@ const createTb_PhieuNCC = async (req, res) => {
       ID_Phongban: user.ID_Phongban,
     };
     // Check if the combination of ID_Nghiepvu and Sophieu already exists
-    const checkPhieuNCC = await Tb_PhieuNCC.findOne({
-      attributes: [
-        "ID_Nghiepvu",
-        "Sophieu",
-        "ID_Phieu1",
-        "ID_Phieu2",
-        "iTinhtrang",
-        "isDelete",
-        "ID_Nam",
-        "ID_Quy",
-        "isDelete",
-      ],
-      where: {
-        isDelete: 0,
-        ID_Nghiepvu: ID_Nghiepvu,
-        Sophieu: {
-          [Op.like]: `%${Sophieu}%`,
-        },
-      },
-    });
+    // const checkPhieuNCC = await Tb_PhieuNCC.findOne({
+    //   attributes: [
+    //     "ID_Nghiepvu",
+    //     "Sophieu",
+    //     "ID_Phieu1",
+    //     "ID_Phieu2",
+    //     "iTinhtrang",
+    //     "isDelete",
+    //     "ID_Nam",
+    //     "ID_Quy",
+    //     "isDelete",
+    //   ],
+    //   where: {
+    //     isDelete: 0,
+    //     ID_Nghiepvu: ID_Nghiepvu,
+    //     Sophieu: {
+    //       [Op.like]: `%${Sophieu}%`,
+    //     },
+    //   },
+    // });
 
-    if (checkPhieuNCC) {
-      return res.status(400).json({
-        message: "Đã có phiếu tồn tại",
-      });
-    }
+    // if (checkPhieuNCC) {
+    //   return res.status(400).json({
+    //     message: "Đã có phiếu tồn tại",
+    //   });
+    // }
 
     let data;
-    data = await tbPhieuNCCService.createTb_PhieuNCC(phieunccct, reqData);
+    const filteredArray = phieunccct.filter(item => item.isDelete === 0);
+    data = await tbPhieuNCCService.createTb_PhieuNCC(filteredArray, reqData);
     // Send success response
     res.status(200).json({
       message: "Tạo thành công",
@@ -302,14 +303,18 @@ const updateTb_PhieuNCC = async (req, res) => {
     }
 
     if (Array.isArray(phieunccct) && phieunccct.length > 0 && phieunccct[0].ID_Taisan !== null) {
+      const checkphieunccct = phieunccct.filter((item) => item.isUpdate === 1);
+      const items = checkphieunccct.filter((item) => !((item.ID_PhieuNCCCT === null || item.ID_PhieuNCCCT === undefined
+        && item.isDelete === 1
+      )))
       switch (Number(ID_Nghiepvu)) {
         case 2:
-          await tbPhieuNCCCTService.updatePhieuNhapHangNCC(phieunccct, ID_PhieuNCC, reqData, t); // Gọi service với transaction
+          await tbPhieuNCCCTService.updatePhieuNhapHangNCC(items, reqData, t); // Gọi service với transaction
           break;
         case 5:
         case 6:
         case 7:
-          await tbPhieuNCCCTService.updatePhieuNCCCT(data, phieunccct, t);
+          await tbPhieuNCCCTService.updatePhieuNCCCT(data, items, t);
           break;
         default:
           break;

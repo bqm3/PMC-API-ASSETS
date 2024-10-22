@@ -132,7 +132,7 @@ const createTb_PhieuNXNBCT = async (phieunxct, data) => {
 
       if (updatedRowCount === 0) {
         throw new Error(
-          `Số lượng không hợp lệ cho ID_Taisan: ${item.ID_Taisan}`
+          `Số lượng không hợp lệ cho tài sản: ${item.Tents || item.ID_Taisan}`
         );
       }
 
