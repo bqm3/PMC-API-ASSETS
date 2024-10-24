@@ -165,6 +165,7 @@ const getDetailTb_PhieuNX = async(ID_PhieuNX) => {
           "ID_PhieuNXCT",
           "ID_PhieuNX",
           "ID_Taisan",
+          "ID_TaisanQrcode",
           "Dongia",
           "Namsx",
           "Soluong",
@@ -621,16 +622,21 @@ const closeTb_PhieuNX = async (ID) => {
   return res;
 };
 
-const deleteTb_PhieuNX = async (ID) => {
-  const res = await Tb_PhieuNX.update(
-    { isDelete: 1 },
-    {
-      where: {
-        ID_PhieuNX: ID,
-      },
-    }
-  );
-  return res;
+const deleteTb_PhieuNX = async (ID,transaction) => {
+  try{
+    const res = await Tb_PhieuNX.update(
+      { isDelete: 1 },
+      {
+        where: {
+          ID_PhieuNX: ID,
+        },
+        transaction,
+      }
+    );
+    return res;
+  } catch (error) {
+    throw error
+  }
 };
 
 module.exports = {
