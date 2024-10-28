@@ -112,7 +112,6 @@ const getAllTb_taisanqrcode = async () => {
           "Gioitinh",
           "Diachi",
           "Sodienthoai",
-          "Ghichu",
         ],
       },
     ],

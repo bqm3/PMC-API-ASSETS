@@ -25,7 +25,7 @@ const Ent_Taisan = sequelize.define(
     Tentscu: {
       type: DataTypes.CHAR,
     },
-    Modem: {
+    Model: {
       type: DataTypes.CHAR,
     },
     SerialNumber: {

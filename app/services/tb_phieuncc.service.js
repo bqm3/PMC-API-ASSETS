@@ -23,6 +23,20 @@ const tbPhieuNCCCTService = require("../services/tb_phieunccct.service");
 const createTb_PhieuNCC = async (phieunccct, data) => {
   const transaction = await sequelize.transaction();
   try {
+
+    const existingRecord = await Tb_PhieuNCC.findOne({
+      where: {
+        iTinhtrang: 1,
+        ID_Phieu1: data.ID_Phieu1,
+        isDelete: 0,
+      },
+      transaction
+    });
+
+    // Nếu có phiếu phù hợp với điều kiện trên, báo lỗi và rollback transaction
+    if (existingRecord) {
+      throw new Error('Phòng ban xuất phải khóa các phiếu');
+    }
     // Tạo bản ghi Tb_PhieuNCC
     const res = await Tb_PhieuNCC.create(data, { transaction });
 

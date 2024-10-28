@@ -200,6 +200,12 @@ Tb_PhieuNXCT.hasMany(Tb_TaisanQrCode, {
 });
 Tb_TaisanQrCode.belongsTo(Tb_PhieuNXCT, { foreignKey: "ID_PhieuNXCT" });
 
+Ent_User.hasMany(Tb_TaisanQrCode, {
+  as: "ent_user",
+  foreignKey: "ID_User",
+});
+Tb_TaisanQrCode.belongsTo(Ent_User, { foreignKey: "ID_User" });
+
 // Tai san
 Ent_Donvi.hasMany(Ent_Taisan, { as: "ent_taisan", foreignKey: "ID_Donvi" });
 Ent_Taisan.belongsTo(Ent_Donvi, {

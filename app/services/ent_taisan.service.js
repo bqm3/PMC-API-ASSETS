@@ -14,7 +14,7 @@ const createEnt_taisan = async (data) => {
   return res;
 };
 
-const findTaisan = async (Tents) => {
+const findTaisan = async (data) => {
   const res = await Ent_Taisan.findOne({
     attributes: [
       "ID_Taisan",
@@ -31,18 +31,39 @@ const findTaisan = async (Tents) => {
     ],
     where: {
       isDelete: 0,
-      Tents: sequelize.where(
-        sequelize.fn(
-          "UPPER",
-          sequelize.fn("TRIM", sequelize.col("Tents"))
-        ),
-        "LIKE",
-        Tents.trim().toUpperCase()
-      ),
+      [Op.or]: [
+        {
+          Tents: sequelize.where(
+            sequelize.fn("UPPER", sequelize.fn("TRIM", sequelize.col("Tents"))),
+            "LIKE",
+            `%${data.Tents.trim().toUpperCase()}%`
+          ),
+        },
+        {
+          Model: sequelize.where(
+            sequelize.fn("UPPER", sequelize.fn("TRIM", sequelize.col("Model"))),
+            "LIKE",
+            `%${data.Model.trim().toUpperCase()}%`
+          ),
+        },
+        {
+          SerialNumber: sequelize.where(
+            sequelize.fn(
+              "UPPER",
+              sequelize.fn("TRIM", sequelize.col("SerialNumber"))
+            ),
+            "LIKE",
+            `%${data.SerialNumber.trim().toUpperCase()}%`
+          ),
+        },
+      ],
     },
   });
   return res;
-}
+};
+
+// ra danh sách phiếu thuộc phong ban ng đó, phân quyền,, vào tài khoản vip thì xemd c hết, còn vào tài khoản có ID Phongban thì xem dc phòng ban đó thôi
+// 1 list chưa khóa, còn khóa r thì thôi
 
 const getAllEnt_taisan = async () => {
   let whereClause = {

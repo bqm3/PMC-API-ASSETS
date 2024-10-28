@@ -445,7 +445,7 @@ const updatePhieuNCCCT = async (reqData, phieunccct) => {
   } catch (error) {
     await transaction.rollback();
     console.error("Lỗi khi cập nhật Tb_PhieuNCCCT:", error);
-    throw new Error(error.message || "Có lỗi xảy ra khi cập nhật phiếu NCCCT.");
+    throw error;
   }
 };
 
@@ -503,9 +503,10 @@ const updateTonkho = async (item, reqData, Soluong, transaction) => {
     transaction,
   });
 
+  console.log('updatedRowCount', updatedRowCount)
   if (updatedRowCount === 0) {
     throw new Error(
-      `Số lượng không hợp lệ cho tài sản: ${item.Tents ?? item.ID_Taisan}`
+      `Số lượng không hợp lệ cho tài sản: ${item?.ent_taisan?.Tents ?? item.ID_Taisan}`
     );
   }
 };
@@ -562,8 +563,22 @@ const getTaiSanPB = async (
     ID_Loainhom,
     isDelete: 0,
   };
-
+  const transaction = await sequelize.transaction();
   try {
+    // const existingRecord = await Tb_PhieuNCC.findOne({
+    //   where: {
+    //     iTinhtrang: 1,
+    //     ID_Phieu1: ID_NoiXuat,
+    //     isDelete: 0
+    //   },
+    //   transaction
+    // });
+
+    // // Nếu có phiếu phù hợp với điều kiện trên, báo lỗi và rollback transaction
+    // if (existingRecord) {
+    //   throw new Error('Phòng ban dự án phải khóa các phiếu cần tạo.');
+    // }
+
     const [pccResults, tonkhos, taisanQrCodes] = await Promise.all([
       Tb_PhieuNCC.findAll({
         
@@ -684,6 +699,7 @@ const getTaiSanPB = async (
     return resultWithQrCode;
   } catch (error) {
     console.error("Error fetching assets:", error);
+    await transaction.rollback();
     throw error;
   }
 };

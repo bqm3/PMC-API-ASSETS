@@ -55,36 +55,9 @@ const createTb_PhieuNCC = async (req, res) => {
       isDelete: 0,
       ID_Phongban: user.ID_Phongban,
     };
-    // Check if the combination of ID_Nghiepvu and Sophieu already exists
-    // const checkPhieuNCC = await Tb_PhieuNCC.findOne({
-    //   attributes: [
-    //     "ID_Nghiepvu",
-    //     "Sophieu",
-    //     "ID_Phieu1",
-    //     "ID_Phieu2",
-    //     "iTinhtrang",
-    //     "isDelete",
-    //     "ID_Nam",
-    //     "ID_Quy",
-    //     "isDelete",
-    //   ],
-    //   where: {
-    //     isDelete: 0,
-    //     ID_Nghiepvu: ID_Nghiepvu,
-    //     Sophieu: {
-    //       [Op.like]: `%${Sophieu}%`,
-    //     },
-    //   },
-    // });
-
-    // if (checkPhieuNCC) {
-    //   return res.status(400).json({
-    //     message: "Đã có phiếu tồn tại",
-    //   });
-    // }
 
     let data;
-    const filteredArray = phieunccct.filter(item => item.isDelete === 0);
+    const filteredArray = phieunccct.filter((item) => item.isDelete === 0);
     data = await tbPhieuNCCService.createTb_PhieuNCC(filteredArray, reqData);
     // Send success response
     res.status(200).json({
@@ -295,18 +268,31 @@ const updateTb_PhieuNCC = async (req, res) => {
       ID_Phongban: user.ID_Phongban,
     };
 
-    const updatePhieuNXResult = await tbPhieuNCCService.updateTb_PhieuNCC(reqData, { transaction: t });
+    const updatePhieuNXResult = await tbPhieuNCCService.updateTb_PhieuNCC(
+      reqData,
+      { transaction: t }
+    );
 
     if (!updatePhieuNXResult) {
       await t.rollback(); // Rollback nếu có lỗi
-      return res.status(500).json({ message: "Đã xảy ra lỗi khi cập nhật phiếu nhập xuất" });
+      return res
+        .status(500)
+        .json({ message: "Đã xảy ra lỗi khi cập nhật phiếu nhập xuất" });
     }
 
-    if (Array.isArray(phieunccct) && phieunccct.length > 0 && phieunccct[0].ID_Taisan !== null) {
+    if (
+      Array.isArray(phieunccct) &&
+      phieunccct.length > 0 &&
+      phieunccct[0].ID_Taisan !== null
+    ) {
       const checkphieunccct = phieunccct.filter((item) => item.isUpdate === 1);
-      const items = checkphieunccct.filter((item) => !((item.ID_PhieuNCCCT === null || item.ID_PhieuNCCCT === undefined
-        && item.isDelete === 1
-      )))
+      const items = checkphieunccct.filter(
+        (item) =>
+          !(
+            item.ID_PhieuNCCCT === null ||
+            (item.ID_PhieuNCCCT === undefined && item.isDelete === 1)
+          )
+      );
       switch (Number(ID_Nghiepvu)) {
         case 2:
           await tbPhieuNCCCTService.updatePhieuNhapHangNCC(items, reqData, t); // Gọi service với transaction
@@ -314,7 +300,7 @@ const updateTb_PhieuNCC = async (req, res) => {
         case 5:
         case 6:
         case 7:
-          await tbPhieuNCCCTService.updatePhieuNCCCT(data, items, t);
+          await tbPhieuNCCCTService.updatePhieuNCCCT(reqData, items, t);
           break;
         default:
           break;
@@ -329,10 +315,11 @@ const updateTb_PhieuNCC = async (req, res) => {
     // Rollback transaction nếu có lỗi
     await t.rollback();
     console.error("Error in creating Tb_PhieuNCC:", error);
-    res.status(500).json({ message: "Đã xảy ra lỗi khi sửa phiếu nhập xuất" });
+    res.status(500).json({
+      message: error ? error.message : "Đã xảy ra lỗi khi sửa phiếu nhập xuất",
+    });
   }
 };
-
 const closeTb_PhieuNCC = async (req, res) => {
   const transaction = await sequelize.transaction(); // Tạo transaction mới
   try {
@@ -420,19 +407,24 @@ const deleteTb_PhieuNCC = async (req, res) => {
 };
 
 const getTaiSanByPhongBanDA = async (req, res) => {
-  const { ID_NoiNhap, ID_Loainhom, ID_Quy, ID_NoiXuat, ID_Nam, ID_Nghiepvu } =
-    req.body;
-  const data = await tbPhieuNCCCTService.getTaiSanPB(
-    ID_NoiNhap,
-    ID_NoiXuat,
-    ID_Quy,
-    ID_Nam,
-    ID_Loainhom,
-    ID_Nghiepvu
-  );
-  res.status(200).json({
-    data: data,
-  });
+  try {
+    const { ID_NoiNhap, ID_Loainhom, ID_Quy, ID_NoiXuat, ID_Nam, ID_Nghiepvu } =
+      req.body;
+    const data = await tbPhieuNCCCTService.getTaiSanPB(
+      ID_NoiNhap,
+      ID_NoiXuat,
+      ID_Quy,
+      ID_Nam,
+      ID_Loainhom,
+      ID_Nghiepvu
+    );
+    res.status(200).json({
+      data: data,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: error.message });
+  }
 };
 
 const updatePhieuNCC = async (req, res) => {
