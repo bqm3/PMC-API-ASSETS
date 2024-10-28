@@ -4,7 +4,7 @@ const {Tb_PhieuNXCT, Tb_SuachuaTS, Tb_SuachuaCT} = require("../models/setup.mode
 
 const createEnt_taisan = async (req, res) => {
   try {
-    const { ID_Nhomts, ID_Donvi, Tents, Thongso, Ghichu, Nuocsx, Tentscu, i_MaQrCode } = req.body;
+    const { ID_Nhomts, ID_Donvi, Tents, Thongso, Ghichu, Nuocsx, Tentscu, i_MaQrCode,Modem, SerialNumber } = req.body;
 
     // Bước 1: Thêm bản ghi mới vào bảng ent_taisan mà không có Mats
     const reqData = {
@@ -17,6 +17,8 @@ const createEnt_taisan = async (req, res) => {
       Thongso: Thongso || "",
       Nuocsx: Nuocsx || "",
       Ghichu: Ghichu || "",
+      Modem: Modem || null,
+      SerialNumber: SerialNumber || null,
       isDelete: 0,
     };
 
@@ -82,7 +84,7 @@ const getAllEnt_taisan = async (req, res) => {
 
 const updateEnt_taisan = async (req, res) => {
   try {
-    const { ID_Nhomts, ID_Donvi, Mats, Tents, Thongso, Ghichu, Nuocsx, Tentscu, i_MaQrCode } = req.body;
+    const { ID_Nhomts, ID_Donvi, Mats, Tents, Thongso, Ghichu, Nuocsx, Tentscu, i_MaQrCode, Modem, SerialNumber } = req.body;
     const ID_Taisan = req.params.id;
 
     // Bước 1: Kiểm tra chi tiết tài sản hiện tại
@@ -123,6 +125,8 @@ const updateEnt_taisan = async (req, res) => {
       Nuocsx: Nuocsx || currentAsset.Nuocsx,
       Tentscu: Tentscu || currentAsset.Tentscu,
       i_MaQrCode: i_MaQrCode || currentAsset.i_MaQrCode,
+      Modem: Modem || currentAsset.Modem,
+      SerialNumber: SerialNumber || currentAsset.SerialNumber,
       ID_Taisan: ID_Taisan,
     });
 

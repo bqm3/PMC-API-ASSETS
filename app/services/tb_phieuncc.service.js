@@ -217,6 +217,7 @@ const getDetailTb_PhieuNCC = async (ID_PhieuNCC) => {
           "ID_PhieuNCCCT",
           "ID_PhieuNCC",
           "ID_Taisan",
+          "ID_TaisanQrcode",
           "Dongia",
           "Namsx",
           "Soluong",

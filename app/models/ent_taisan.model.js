@@ -25,6 +25,12 @@ const Ent_Taisan = sequelize.define(
     Tentscu: {
       type: DataTypes.CHAR,
     },
+    Modem: {
+      type: DataTypes.CHAR,
+    },
+    SerialNumber: {
+      type: DataTypes.CHAR,
+    },
     Thongso: {
       type: DataTypes.CHAR,
     },

@@ -368,7 +368,7 @@ const closeTb_PhieuNX = async (req, res) => {
 
     if (
       (ID_Nghiepvu == 1 || ID_Nghiepvu == 2) &&
-      phieunxct[0].ID_Taisan !== null
+      phieunxct[0]?.ID_Taisan !== null
     ) {
       await tbTaiSanQrService.insertDataToEntQRCode(phieunxct, reqData, {
         transaction,

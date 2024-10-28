@@ -552,12 +552,13 @@ const getTaiSanPB = async (
   ID_NoiXuat,
   ID_Quy,
   ID_Nam,
-  ID_Loainhom
+  ID_Loainhom,
+  ID_Nghiepvu
 ) => {
   const whereCondition = {
     ID_Phieu1: ID_NoiXuat,
     ID_Quy,
-    // ID_Nam,
+    ID_Nghiepvu: 2,
     ID_Loainhom,
     isDelete: 0,
   };
@@ -565,12 +566,13 @@ const getTaiSanPB = async (
   try {
     const [pccResults, tonkhos, taisanQrCodes] = await Promise.all([
       Tb_PhieuNCC.findAll({
-        where: whereCondition,
+        
         attributes: [
           "ID_Phieu1",
           "ID_Phieu2",
           "ID_Quy",
           "ID_Loainhom",
+          "ID_Nghiepvu",
           "isDelete",
           // "ID_Nam",
         ],
@@ -589,6 +591,7 @@ const getTaiSanPB = async (
             ],
           },
         ],
+        where: whereCondition,
       }),
 
       Tb_Tonkho.findAll({

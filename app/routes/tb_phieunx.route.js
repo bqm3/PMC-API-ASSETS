@@ -11,7 +11,7 @@ module.exports = (app) => {
     tb_phieunx.createTb_PhieuNX
   );
   router.get("/all", tb_phieunx.getAllTb_PhieuNX);
-  router.post("/taisan/:id",[isAuthenticated], tb_phieunx.getTaiSan);
+  router.post("/taisan",[isAuthenticated], tb_phieunx.getTaiSan);
   router.get("/:id", tb_phieunx.getDetailTb_PhieuNX);
 
   router.get("/kiemke/:id", [isAuthenticated], tb_phieunx.getPhieuNXByUser);

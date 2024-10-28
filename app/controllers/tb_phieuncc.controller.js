@@ -420,7 +420,7 @@ const deleteTb_PhieuNCC = async (req, res) => {
 };
 
 const getTaiSanByPhongBanDA = async (req, res) => {
-  const { ID_NoiNhap, ID_Loainhom, ID_Quy, ID_NoiXuat, ID_Nam } =
+  const { ID_NoiNhap, ID_Loainhom, ID_Quy, ID_NoiXuat, ID_Nam, ID_Nghiepvu } =
     req.body;
   const data = await tbPhieuNCCCTService.getTaiSanPB(
     ID_NoiNhap,
@@ -428,6 +428,7 @@ const getTaiSanByPhongBanDA = async (req, res) => {
     ID_Quy,
     ID_Nam,
     ID_Loainhom,
+    ID_Nghiepvu
   );
   res.status(200).json({
     data: data,
