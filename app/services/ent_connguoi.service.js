@@ -195,6 +195,8 @@ const updateStatus = async (data) => {
       ID_Phongban: data.ID_Phongban,
       isDelete: 0,
     };
+
+    console.log(data.Status)
     if (!data.MaPMC || !data.Hoten || !data.Sodienthoai) {
       throw new CustomError("400", "Thiếu thông tin dữ liệu.");
     }

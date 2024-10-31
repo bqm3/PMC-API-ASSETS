@@ -1,4 +1,5 @@
 const Ent_Chinhanh = require("./ent_chinhanh.model");
+const Ent_Hang = require("./ent_hang.model");
 const Ent_Connguoi = require("./ent_connguoi.model");
 const Ent_Donvi = require("./ent_donvi.model");
 const Ent_Nghiepvu = require("./ent_nghiepvu.model");
@@ -210,6 +211,11 @@ Tb_TaisanQrCode.belongsTo(Ent_User, { foreignKey: "ID_User" });
 Ent_Donvi.hasMany(Ent_Taisan, { as: "ent_taisan", foreignKey: "ID_Donvi" });
 Ent_Taisan.belongsTo(Ent_Donvi, {
   foreignKey: "ID_Donvi",
+});
+
+Ent_Hang.hasMany(Ent_Taisan, { as: "ent_taisan", foreignKey: "ID_Hang" });
+Ent_Taisan.belongsTo(Ent_Hang, {
+  foreignKey: "ID_Hang",
 });
 
 Ent_Nhomts.hasMany(Ent_Taisan, { as: "ent_taisan", foreignKey: "ID_Nhomts" });
@@ -480,4 +486,5 @@ module.exports = {
   Tb_PhieuNCCCT,
   Tb_GiaonhanTS,
   Tb_GiaonhanTSCT,
+  Ent_Hang
 };

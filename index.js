@@ -32,6 +32,7 @@ app.get("/", (req, res) => {
 });
 
 require("./app/routes/ent_donvi.route")(app);
+require("./app/routes/ent_hang.route")(app);
 require("./app/routes/ent_chucvu.route")(app);
 require("./app/routes/ent_policy.route")(app);
 require("./app/routes/ent_connguoi.route")(app);
