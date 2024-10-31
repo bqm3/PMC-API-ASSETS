@@ -11,7 +11,7 @@ const {
 const sequelize = require("../config/db.config");
 const { Op, where, Sequelize } = require("sequelize");
 const formatDateTime = require("../utils/formatDatetime");
-const { getDuanVsTaisanDetails } = require("./create_qr_code.service");
+const { getDuanVsTaisanDetails, createQrCode } = require("./create_qr_code.service");
 // ================================ Tạo mới
 //phiếu 6.1.2 nhập hàng từ nhà cung cấp
 // 2 Nhập hàng từ nhà cung cấp
@@ -321,44 +321,7 @@ const updatePhieuNhapHangNCC = async (phieunxct, data, transaction) => {
   }
 };
 
-const createQrCode = async (item, data, transaction) => {
-  const taisan = await Ent_Taisan.findByPk(item.ID_Taisan, {
-    attributes: ["ID_Taisan", "i_MaQrCode", "isDelete"],
-    transaction,
-  });
 
-  if (taisan && Number(taisan.i_MaQrCode) === 0) {
-    const [duan, taisanDetails] = await getDuanVsTaisanDetails(
-      data.ID_Phongban,
-      taisan.ID_Taisan
-    );
-
-    const Thuoc = duan?.Thuoc;
-    const ManhomTs = taisanDetails.ent_nhomts.Manhom;
-    const MaID = taisanDetails.ID_Taisan;
-    const MaTaisan = taisanDetails.Mats;
-    const Ngay = formatDateTime(data.NgayNX);
-
-    const qrCodes = [];
-    for (let i = 1; i <= Number(item.Soluong); i++) {
-      qrCodes.push({
-        ID_Nam: data.ID_Nam,
-        ID_Quy: data.ID_Quy,
-        ID_Taisan: item.ID_Taisan,
-        ID_PhieuNCCCT: item.ID_PhieuNCCCT,
-        ID_Phongban: data.ID_Phieu1,
-        Giatri: item.Dongia,
-        Ngaykhoitao: data.NgayNX,
-        MaQrCode: `${Thuoc}|${ManhomTs}|${MaID}|${MaTaisan}|${Ngay}|${i}`,
-        Namsx: item.Namsx,
-        Nambdsd: null,
-        Ghichu: "",
-        iTinhtrang: 0,
-      });
-    }
-    await Tb_TaisanQrCode.bulkCreate(qrCodes, { transaction });
-  }
-};
 
 // ( Nghiệp vụ 5, 6, 7)
 // 6.1.4 Phiêu xuất trả nhà cung cấp

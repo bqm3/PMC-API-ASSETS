@@ -14,6 +14,10 @@ const scanQrCodeTb_PhieuNXCT = async (req, res) => {
       Dongia,
       Soluong,
       Namsx,
+      ID_Phongban,
+      ID_Nam,
+      ID_Quy,
+      MaQrCode,
     } = req.body;
 
     const images = req.file;
@@ -28,6 +32,10 @@ const scanQrCodeTb_PhieuNXCT = async (req, res) => {
       ID_Taisan,
       Dongia,
       Soluong,
+      ID_Phongban,
+      ID_Nam,
+      ID_Quy,
+      MaQrCode,
     };
 
     await tbPhieuNXCT.scanTb_PhieuNXCT(reqData);

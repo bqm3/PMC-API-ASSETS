@@ -265,8 +265,8 @@ const insertDataToEntQRCode = async (phieunxct, data) => {
 
         const createQrCodeEntry = async (index) => {
           const MaQrCode = index >= 1 
-            ? `${Thuoc}|${ManhomTs}|${MaID}|${MaTaisan}|${Ngay}|${index}` 
-            : `${Thuoc}|${ManhomTs}|${MaID}|${MaTaisan}|${Ngay}`;
+            ? `${Thuoc}|${data.ID_NoiNhap}|${ManhomTs}|${MaID}|${MaTaisan}|${Ngay}|${index}` 
+            : `${Thuoc}|${data.ID_NoiNhap}|${ManhomTs}|${MaID}|${MaTaisan}|${Ngay}`;
 
           await Tb_TaisanQrCode.create({
             ID_Taisan: item.ID_Taisan,
