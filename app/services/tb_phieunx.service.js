@@ -582,6 +582,91 @@ const getPhieuNXByUser = async(ID_User, ID_Quy) => {
 
   return res;
 }
+
+const getPhieuNXByIDPB = async(ID_Phongban) => {
+    const data = await Tb_PhieuNX.findAll({
+      where: {
+        ID_Phongban: ID_Phongban,
+        ID_Nghiepvu: 9,
+        iTinhtrang: 0,
+        isDelete: 0,
+      }, include : [
+        {
+          model: Ent_Phongbanda,
+          as: "NoiNhap", // Alias được sử dụng để phân biệt nơi nhập
+          attributes: [
+            "ID_Phongban",
+            "ID_Chinhanh",
+            "ID_Nhompb",
+            "Mapb",
+            "Tenphongban",
+            "Diachi",
+            "Ghichu",
+            "isDelete",
+          ]
+        },
+        {
+          model: Ent_Phongbanda,
+          as: "NoiXuat", // Alias được sử dụng để phân biệt nơi nhập
+          attributes: [
+            "ID_Phongban",
+            "ID_Chinhanh",
+            "ID_Nhompb",
+            "Mapb",
+            "Tenphongban",
+            "Diachi",
+            "Ghichu",
+            "isDelete",
+          ]
+        },
+        {
+          model: Ent_Loainhom,
+          attributes: ["ID_Loainhom", "Loainhom", "isDelete"],
+        },
+        // Nghiep vu
+        {
+          model: Ent_Nghiepvu,
+          attributes: ["ID_Nghiepvu", "Nghiepvu", "isDelete"],
+          where: {
+            isDelete: 0,
+          },
+        },
+        // Nam
+        {
+          model: Ent_Nam,
+          attributes: ["ID_Nam", "Nam", "Giatri"],
+        },
+        //Quy
+        {
+          model: Ent_Quy,
+          attributes: ["ID_Quy", "Quy"],
+        },
+        // Thang
+        {
+          model: Ent_Thang,
+          attributes: ["ID_Thang", "Thang", "iThang"],
+        },
+        {
+          model: Ent_User,
+          attributes: [
+            "ID_User",
+            "ID_Nhompb",
+            "ID_Chinhanh",
+            "MaPMC",
+            "Hoten",
+            "Gioitinh",
+            "Diachi",
+            "Sodienthoai",
+            "Emails",
+            "Anh",
+            "isDelete",
+            "ID_Chucvu",
+          ],
+        }
+      ]
+    })
+    return data;
+}
   
 const updateTb_PhieuNX = async (data) => {
   let whereClause = {
@@ -646,5 +731,6 @@ module.exports = {
   deleteTb_PhieuNX,
   getDetailTb_PhieuNX,
   closeTb_PhieuNX,
-  getPhieuNXByUser
+  getPhieuNXByUser,
+  getPhieuNXByIDPB
 };

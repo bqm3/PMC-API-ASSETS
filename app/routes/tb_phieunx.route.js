@@ -14,6 +14,7 @@ module.exports = (app) => {
   router.post("/taisan",[isAuthenticated], tb_phieunx.getTaiSan);
   router.get("/:id", tb_phieunx.getDetailTb_PhieuNX);
 
+  router.get("/kiemke/phongban/", [isAuthenticated], tb_phieunx.getPhieuNXByIDPB);
   router.get("/kiemke/:id", [isAuthenticated], tb_phieunx.getPhieuNXByUser);
 
   router.put(

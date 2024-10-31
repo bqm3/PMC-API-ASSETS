@@ -116,13 +116,13 @@ const createTb_PhieuNX = async (req, res) => {
     });
 
     // Switch statement for ID_Nghiepvu cases with phieunxct validation
-    const filteredArray = phieunxct.filter((item) => item.isDelete === 0);
     if (
-      filteredArray &&
-      Array.isArray(filteredArray) &&
-      filteredArray.length > 0 &&
-      filteredArray[0]?.ID_Taisan !== null
+      phieunxct &&
+      Array.isArray(phieunxct) &&
+      phieunxct.length > 0 &&
+      phieunxct[0]?.ID_Taisan !== null
     ) {
+      const filteredArray = phieunxct.filter((item) => item.isDelete === 0);
       switch (ID_Nghiepvu) {
         case "1":
           await tbPhieuNXCTService.createTb_PhieuNXCT(filteredArray, data, {
@@ -189,13 +189,13 @@ const getAllTb_PhieuNX = async (req, res) => {
 };
 
 const getTaiSan = async (req, res) => {
-  const { ID_NoiNhap, ID_Loainhom, ID_Quy, ID_Nghiepvu, ID_NoiXuat } = req.body;
+  const { ID_NoiNhap, ID_Loainhom, ID_Quy, ID_NoiXuat, ID_Nam } = req.body;
   const data = await tbPhieuNXCTService.getTaiSanPB(
     ID_NoiNhap,
     ID_NoiXuat,
     ID_Quy,
     ID_Loainhom,
-    ID_Nghiepvu
+    ID_Nam,
   );
   res.status(200).json({
     data: data,
@@ -213,6 +213,21 @@ const getPhieuNXByUser = async (req, res) => {
     );
     res.status(200).json({
       message: "Danh sách phiếu kiểm kê của nhân viên trong quý",
+      data: data,
+    });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+const getPhieuNXByIDPB = async (req, res) => {
+  try {
+    const userData = req.user.data;
+    const ID_Phongban = userData.ID_Phongban;
+
+    const data = await tbPhieuNXService.getPhieuNXByIDPB(ID_Phongban);
+    res.status(200).json({
+      message: "Danh sách phiếu kiểm kê của phòng ban",
       data: data,
     });
   } catch (error) {
@@ -286,7 +301,6 @@ const updateTb_PhieuNX = async (req, res) => {
             item.isDelete === 1
           )
       );
-
 
       switch (ID_Nghiepvu) {
         case "1":
@@ -411,7 +425,7 @@ const deleteTb_PhieuNX = async (req, res) => {
     const ID_Nghiepvu = req.query.idNV;
 
     await tbPhieuNXService.deleteTb_PhieuNX(ID_PhieuNX, transaction);
-    if (ID_Nghiepvu == 3) { 
+    if (ID_Nghiepvu == 3) {
       await tbPhieuNXNBCTService.delete_PhieuNXNB(ID_PhieuNX, transaction);
     }
 
@@ -436,4 +450,5 @@ module.exports = {
   getPhieuNXByUser,
   closeFastTb_PhieuNX,
   getTaiSan,
+  getPhieuNXByIDPB,
 };

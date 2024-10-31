@@ -14,7 +14,7 @@ const createQrCode = async (item, data, transaction) => {
 
   if (taisan && Number(taisan.i_MaQrCode) === 0) {
     const [duan, taisanDetails] = await getDuanVsTaisanDetails(
-      data.ID_Phongban,
+      data.ID_Phieu1,
       taisan.ID_Taisan
     );
 
@@ -35,7 +35,7 @@ const createQrCode = async (item, data, transaction) => {
         ID_Phongban: data.ID_Phieu1 ?? data.ID_NoiNhap,
         Giatri: item.Dongia,
         Ngaykhoitao: data.NgayNX,
-        MaQrCode: `${Thuoc}|${ManhomTs}|${MaID}|${MaTaisan}|${Ngay}|${i}`,
+        MaQrCode: `${Thuoc}|${data.ID_Phieu1}|${ManhomTs}|${MaID}|${MaTaisan}|${Ngay}|${i}`,
         Namsx: item.Namsx,
         Nambdsd: null,
         Ghichu: "",
