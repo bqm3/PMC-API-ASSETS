@@ -5,6 +5,7 @@ const {
   Ent_Nhomts,
   Ent_Donvi,
   Ent_Loainhom,
+  Ent_Hang,
 } = require("../models/setup.model");
 const { Op } = require("sequelize");
 const sequelize = require("../config/db.config");
@@ -20,6 +21,7 @@ const findTaisan = async (data) => {
       "ID_Taisan",
       "ID_Nhomts",
       "ID_Donvi",
+      "ID_Hang",
       "Tentscu",
       "i_MaQrCode",
       "Mats",
@@ -77,6 +79,7 @@ const getAllEnt_taisan = async () => {
       "Tentscu",
       "i_MaQrCode",
       "ID_Donvi",
+      "ID_Hang",
       "Mats",
       "Tents",
       "Thongso",
@@ -101,6 +104,11 @@ const getAllEnt_taisan = async () => {
       {
         model: Ent_Donvi,
         attributes: ["ID_Donvi", "Donvi", "isDelete"],
+        where: { isDelete: 0 },
+      },
+      {
+        model: Ent_Hang,
+        attributes: ["ID_Hang", "Tenhang", "isDelete"],
         where: { isDelete: 0 },
       },
       
@@ -181,6 +189,7 @@ const updateEnt_taisan = async (data) => {
     {
       ID_Nhomts: data.ID_Nhomts,
       ID_Donvi: data.ID_Donvi,
+      ID_Hang: data.ID_Hang,
       Mats: data.Mats,
       Tents: data.Tents,
       Thongso: data.Thongso,

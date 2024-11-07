@@ -28,7 +28,7 @@ const getDetail = async (data) => {
 const getDetailByID = async (data) => {
   let whereClause = {
     isDelete: 0,
-    ID_Nhacc: !data.ID_Nhacc,
+    ID_Nhacc: {[Op.ne]: data.ID_Nhacc},
     [Op.or]: [
       { MaNhacc: data.MaNhacc },
       {
@@ -69,6 +69,9 @@ const update = async (data) => {
       Sodienthoai: data.Sodienthoai,
       Sotaikhoan: data.Sotaikhoan,
       Nganhang: data.Nganhang,
+      Nguoilienhe: data.Nguoilienhe,
+      Email: data.Email,
+      Thanhpho: data.Thanhpho,
       Diachi: data.Diachi,
       Ghichu: data.Ghichu,
       isDelete: 0,

@@ -1,13 +1,13 @@
-const { Ent_Donvi } = require("../models/setup.model");
+const { Ent_Hang } = require("../models/setup.model");
 const { Op } = require("sequelize");
 const sequelize = require("../config/db.config");
 
-const createEnt_donvi = async (data) => {
+const createEnt_Hang = async (data) => {
   const find = await getDetail(data)
   if(find) {
-    throw new Error(`Đã tồn tại đơn vị: ${data.Donvi}`);
+    throw new Error(`Đã tồn tại hãng: ${data.Tenhang}`);
   }
-  const res = await Ent_Donvi.create(data);
+  const res = await Ent_Hang.create(data);
   return res;
 };
 
@@ -15,24 +15,24 @@ const getDetail = async (data, excludeId = null) => {
   try{
     const conditions = {
       isDelete: 0,
-      Donvi: sequelize.where(
+      Tenhang: sequelize.where(
         sequelize.fn(
           "UPPER",
-          sequelize.fn("TRIM", sequelize.col("Donvi"))
+          sequelize.fn("TRIM", sequelize.col("Tenhang"))
         ),
         "LIKE",
-        data.Donvi.trim().toUpperCase()
+        data.Tenhang.trim().toUpperCase()
       ),
     };
     if(excludeId){
-      conditions.ID_Donvi = {
+      conditions.ID_Hang = {
         [Op.ne]: excludeId 
       };
     }
-    const find = await Ent_Donvi.findOne({
+    const find = await Ent_Hang.findOne({
       attributes: [
-        "ID_Donvi",
-        "Donvi",
+        "ID_Hang",
+        "Tenhang",
         "isDelete",
       ],
       where: conditions,
@@ -43,31 +43,31 @@ const getDetail = async (data, excludeId = null) => {
   }
 }
 
-const getAllEnt_donvi = async () => {
+const getAllEnt_Hang = async () => {
   let whereClause = {
     isDelete: 0,
   };
 
-  const res = await Ent_Donvi.findAll({
+  const res = await Ent_Hang.findAll({
     where: whereClause,
   });
   return res;
 };
 
-const updateEnt_donvi = async (data) => {
+const updateEnt_Hang = async (data) => {
   try {
-    const find = await getDetail(data, data.ID_Donvi)
+    const find = await getDetail(data, data.ID_Hang)
     if(find){
-      throw new Error(`Đã tồn tại đơn vị: ${data.Donvi}`);
+      throw new Error(`Đã tồn tại hãng: ${data.Tenhang}`);
     } else {
       let whereClause = {
         isDelete: 0,
-        ID_Donvi: data.ID_Donvi,
+        ID_Hang: data.ID_Hang,
       };
     
-      const res = await Ent_Donvi.update(
+      const res = await Ent_Hang.update(
         {
-          Donvi: data.Donvi,
+          Tenhang: data.Tenhang,
         },
         {
           where: whereClause,
@@ -80,12 +80,12 @@ const updateEnt_donvi = async (data) => {
   }
 };
 
-const deleteEnt_donvi = async (id) => {
-  const res = await Ent_Donvi.update(
+const deleteEnt_Hang = async (id) => {
+  const res = await Ent_Hang.update(
     { isDelete: 1 },
     {
       where: {
-        ID_Donvi: id,
+        ID_Hang: id,
       },
     }
   );
@@ -93,8 +93,8 @@ const deleteEnt_donvi = async (id) => {
 };
 
 module.exports = {
-  createEnt_donvi,
-  getAllEnt_donvi,
-  updateEnt_donvi,
-  deleteEnt_donvi,
+  createEnt_Hang,
+  getAllEnt_Hang,
+  updateEnt_Hang,
+  deleteEnt_Hang,
 };

@@ -1,6 +1,8 @@
 const Ent_Chinhanh = require("./ent_chinhanh.model");
 const Ent_Connguoi = require("./ent_connguoi.model");
 const Ent_Donvi = require("./ent_donvi.model");
+const Ent_Hang = require("./ent_hang.model");
+const Ent_Duan = require("./ent_duan.model");
 const Ent_Nghiepvu = require("./ent_nghiepvu.model");
 const Ent_Nhompb = require("./ent_nhompb.model");
 const Ent_Nhomts = require("./ent_nhomts.model");
@@ -79,6 +81,14 @@ Ent_Chinhanh.hasMany(Ent_Phongbanda, {
 });
 Ent_Phongbanda.belongsTo(Ent_Chinhanh, {
   foreignKey: "ID_Chinhanh",
+});
+
+Ent_Duan.hasMany(Ent_Phongbanda, {
+  as: "ent_phongbanda",
+  foreignKey: "ID_Duan",
+});
+Ent_Phongbanda.belongsTo(Ent_Duan, {
+  foreignKey: "ID_Duan",
 });
 
 // Policy
@@ -210,6 +220,11 @@ Tb_TaisanQrCode.belongsTo(Ent_User, { foreignKey: "ID_User" });
 Ent_Donvi.hasMany(Ent_Taisan, { as: "ent_taisan", foreignKey: "ID_Donvi" });
 Ent_Taisan.belongsTo(Ent_Donvi, {
   foreignKey: "ID_Donvi",
+});
+
+Ent_Hang.hasMany(Ent_Taisan, { as: "ent_taisan", foreignKey: "ID_Hang" });
+Ent_Taisan.belongsTo(Ent_Hang, {
+  foreignKey: "ID_Hang",
 });
 
 Ent_Nhomts.hasMany(Ent_Taisan, { as: "ent_taisan", foreignKey: "ID_Nhomts" });
@@ -344,6 +359,7 @@ Tb_GiaonhanTS.hasMany(Tb_GiaonhanTSCT, {
 });
 Tb_GiaonhanTSCT.belongsTo(Tb_GiaonhanTS, {
   foreignKey: "ID_Giaonhan",
+  as: "tb_giaonhants"
 });
 
 // Ent_Taisan.hasMany(Tb_GiaonhanTSCT, {
@@ -359,6 +375,7 @@ Ent_Taisan.hasMany(Tb_GiaonhanTSCT, { foreignKey: 'ID_Taisan' });
 
 Tb_TaisanQrCode.hasMany(Tb_GiaonhanTSCT, {
   foreignKey: "ID_TaisanQrcode",
+  as: 'tb_giaonhantsct'
 });
 Tb_GiaonhanTSCT.belongsTo(Tb_TaisanQrCode, {
   foreignKey: "ID_TaisanQrcode"
@@ -435,9 +452,9 @@ Tb_PhieuNCCCT.belongsTo(Ent_Taisan, {
   foreignKey: "ID_Taisan",
 });
 
-Tb_TaisanQrCode.hasMany(Tb_PhieuNCCCT, {
+Tb_TaisanQrCode.belongsTo(Tb_PhieuNCCCT, {
   as: "tb_phieunccct",
-  foreignKey: "ID_TaisanQrcode",
+  foreignKey: "ID_PhieuNCCCT",
 });
 Tb_PhieuNCCCT.belongsTo(Tb_TaisanQrCode, {
   foreignKey: "ID_TaisanQrcode",
@@ -454,6 +471,8 @@ module.exports = {
   Ent_Chinhanh,
   Ent_Connguoi,
   Ent_Donvi,
+  Ent_Hang,
+  Ent_Duan,
   Ent_Nghiepvu,
   Ent_Nhompb,
   Ent_Nhomts,

@@ -2,6 +2,7 @@ const {
   Ent_Phongbanda,
   Ent_Chinhanh,
   Ent_Nhompb,
+  Ent_Duan,
 } = require("../models/setup.model");
 const { Op } = require("sequelize");
 const sequelize = require("../config/db.config");
@@ -11,26 +12,13 @@ const createEnt_phongbanda = async (data) => {
   return res;
 };
 
-// const check_phongbanda = async (Mapb, Tenphongban) => {
-//   const existingRoom = await Ent_Phongbanda.findOne({
-//     where: {
-//       [Op.or]: [
-//         { Mapb: Mapb },
-//         { Tenphongban: Tenphongban }
-//       ],
-//       isDelete: 0,
-//     },
-//     attributes: ["ID_Phongban", "Mapb", "Tenphongban", "isDelete"],
-//   });
-//   return existingRoom !== null;
-// };
-
-const check_phongbanda = async (Mapb, Tenphongban, excludeId = null) => {
+const check_phongbanda = async (Mapb, Tenphongban, Thuoc,  excludeId = null) => {
   const conditions = {
     [Op.or]: [
       { Mapb: Mapb },
       { Tenphongban: Tenphongban }
     ],
+    Thuoc: Thuoc,
     isDelete: 0,
   };
 
@@ -42,10 +30,10 @@ const check_phongbanda = async (Mapb, Tenphongban, excludeId = null) => {
 
   const existingRoom = await Ent_Phongbanda.findOne({
     where: conditions,
-    attributes: ["ID_Phongban", "Mapb", "Tenphongban", "isDelete"],
+    attributes: ["ID_Phongban", "Mapb", "Tenphongban", "Thuoc", "isDelete"],
   });
 
-  return existingRoom !== null;
+  return existingRoom;
 };
 
 
@@ -58,6 +46,7 @@ const getAllEnt_phongbanda = async () => {
     attributes: [
       "ID_Phongban",
       "ID_Chinhanh",
+      "ID_Duan",
       "ID_Nhompb",
       "Mapb",
       "Thuoc",
@@ -75,6 +64,11 @@ const getAllEnt_phongbanda = async () => {
       {
         model: Ent_Nhompb,
         attributes: ["ID_Nhompb", "Nhompb", "isDelete"],
+        where: { isDelete: 0 },
+      },
+      {
+        model: Ent_Duan,
+        attributes: ["ID_Duan", "Duan", "isDelete"],
         where: { isDelete: 0 },
       },
     ],
@@ -126,6 +120,7 @@ const updateEnt_phongbanda = async (data) => {
   const res = await Ent_Phongbanda.update(
     {
       ID_Chinhanh: data.ID_Chinhanh,
+      ID_Duan: data.ID_Duan,
       ID_Nhompb: data.ID_Nhompb,
       Mapb: data.Mapb,
       Thuoc: data.Thuoc,
