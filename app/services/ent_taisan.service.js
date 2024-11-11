@@ -9,13 +9,49 @@ const {
 } = require("../models/setup.model");
 const { Op } = require("sequelize");
 const sequelize = require("../config/db.config");
+const { removeVietnameseTones } = require("../utils/utils");
 
 const createEnt_taisan = async (data) => {
   const res = await Ent_Taisan.create(data);
   return res;
 };
 
-const findTaisan = async (data) => {
+const findTaisan = async (data, excludeId = null) => {
+  const conditions = {
+    isDelete: 0,
+    [Op.or]: [
+      {
+        Tents: sequelize.where(
+          sequelize.fn("UPPER", sequelize.fn("TRIM", sequelize.col("Tents"))),
+          "LIKE",
+          `%${data?.Tents?.trim()?.toUpperCase()}%`
+        ),
+      },
+      {
+        Model: sequelize.where(
+          sequelize.fn("UPPER", sequelize.fn("TRIM", sequelize.col("Model"))),
+          "LIKE",
+          `%${data.Model?.trim()?.toUpperCase()}%`
+        ),
+      },
+      {
+        SerialNumber: sequelize.where(
+          sequelize.fn(
+            "UPPER",
+            sequelize.fn("TRIM", sequelize.col("SerialNumber"))
+          ),
+          "LIKE",
+          `%${data.SerialNumber?.trim()?.toUpperCase()}%`
+        ),
+      },
+    ],
+  };
+  if (excludeId) {
+    conditions.ID_Taisan = {
+      [Op.ne]: excludeId,
+    };
+  }
+
   const res = await Ent_Taisan.findOne({
     attributes: [
       "ID_Taisan",
@@ -27,39 +63,13 @@ const findTaisan = async (data) => {
       "Mats",
       "Tents",
       "Thongso",
+      "SerialNumber",
+      "Model",
       "Nuocsx",
       "Ghichu",
       "isDelete",
     ],
-    where: {
-      isDelete: 0,
-      [Op.or]: [
-        {
-          Tents: sequelize.where(
-            sequelize.fn("UPPER", sequelize.fn("TRIM", sequelize.col("Tents"))),
-            "LIKE",
-            `%${data.Tents.trim().toUpperCase()}%`
-          ),
-        },
-        {
-          Model: sequelize.where(
-            sequelize.fn("UPPER", sequelize.fn("TRIM", sequelize.col("Model"))),
-            "LIKE",
-            `%${data.Model.trim().toUpperCase()}%`
-          ),
-        },
-        {
-          SerialNumber: sequelize.where(
-            sequelize.fn(
-              "UPPER",
-              sequelize.fn("TRIM", sequelize.col("SerialNumber"))
-            ),
-            "LIKE",
-            `%${data.SerialNumber.trim().toUpperCase()}%`
-          ),
-        },
-      ],
-    },
+    where: conditions,
   });
   return res;
 };
@@ -83,6 +93,8 @@ const getAllEnt_taisan = async () => {
       "Mats",
       "Tents",
       "Thongso",
+      "Model",
+      "SerialNumber",
       "Nuocsx",
       "Ghichu",
       "isDelete",
@@ -90,16 +102,16 @@ const getAllEnt_taisan = async () => {
     include: [
       {
         model: Ent_Nhomts,
-        as : "ent_nhomts",
+        as: "ent_nhomts",
         attributes: ["ID_Nhomts", "Manhom", "Tennhom", "isDelete"],
         where: { isDelete: 0 },
         include: [
           {
             model: Ent_Loainhom,
-            as : "ent_loainhom",
+            as: "ent_loainhom",
             attributes: ["ID_Loainhom", "Loainhom"],
-          }
-        ]
+          },
+        ],
       },
       {
         model: Ent_Donvi,
@@ -111,7 +123,6 @@ const getAllEnt_taisan = async () => {
         attributes: ["ID_Hang", "Tenhang", "isDelete"],
         where: { isDelete: 0 },
       },
-      
     ],
     where: whereClause,
   });
@@ -146,7 +157,6 @@ const getDetailEnt_taisan = async (id) => {
         attributes: ["ID_Donvi", "Donvi", "isDelete"],
         where: { isDelete: 0 },
       },
-      
     ],
     where: {
       isDelete: 0,
@@ -157,17 +167,14 @@ const getDetailEnt_taisan = async (id) => {
 
 const check_taisan = async (Mats, Tents, excludeId = null) => {
   const conditions = {
-    [Op.or]: [
-      { Mats: Mats },
-      { Tents: Tents }
-    ],
+    [Op.or]: [{ Mats: Mats }, { Tents: Tents }],
     isDelete: 0,
   };
 
   // Nếu excludeId có giá trị, thêm điều kiện để loại trừ bản ghi đó
   if (excludeId) {
     conditions.ID_Taisan = {
-      [Op.ne]: excludeId // Không lấy bản ghi có ID bằng excludeId
+      [Op.ne]: excludeId, // Không lấy bản ghi có ID bằng excludeId
     };
   }
 
@@ -185,6 +192,36 @@ const updateEnt_taisan = async (data) => {
     ID_Taisan: data.ID_Taisan,
   };
 
+  const filterData = await findTaisan(data, data.ID_Taisan);
+  if (filterData) {
+    if (
+      data.Tents &&
+      filterData.Tents &&
+      removeVietnameseTones(filterData.Tents) ===
+        removeVietnameseTones(data.Tents)
+    ) {
+      throw new Error(`Đã tồn tại tên tài sản: ${data.Tents} trong tài sản: ${filterData.Tents}`);
+    }
+
+    if (
+      data.Model &&
+      filterData.Model &&
+      removeVietnameseTones(filterData.Model) ===
+        removeVietnameseTones(data.Model)
+    ) {
+      throw new Error(`Đã tồn tại model tài sản: ${data.Model} trong tài sản: ${filterData.Tents}`);
+    }
+
+    if (
+      data.SerialNumber &&
+      filterData.SerialNumber &&
+      removeVietnameseTones(filterData.SerialNumber) ===
+        removeVietnameseTones(data.SerialNumber)
+    ) {
+      throw new Error(`Đã tồn tại serial number tài sản: ${data.SerialNumber} trong tài sản: ${filterData.Tents}`);
+    }
+  }
+
   const res = await Ent_Taisan.update(
     {
       ID_Nhomts: data.ID_Nhomts,
@@ -194,6 +231,8 @@ const updateEnt_taisan = async (data) => {
       Tents: data.Tents,
       Thongso: data.Thongso,
       Nuocsx: data.Nuocsx,
+      Model: data.Model,
+      SerialNumber: data.SerialNumber,
       Ghichu: data.Ghichu,
       Tentscu: data.Tentscu,
       i_MaQrCode: data.i_MaQrCode,
@@ -224,5 +263,5 @@ module.exports = {
   deleteEnt_taisan,
   getDetailEnt_taisan,
   check_taisan,
-  findTaisan
+  findTaisan,
 };

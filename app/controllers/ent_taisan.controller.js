@@ -1,6 +1,7 @@
 const entTaisanService = require("../services/ent_taisan.service");
 const entNhomtsService = require("../services/ent_nhomts.service");
 const {Tb_PhieuNXCT, Tb_SuachuaTS, Tb_SuachuaCT} = require("../models/setup.model");
+const { removeVietnameseTones } = require("../utils/utils");
 
 const createEnt_taisan = async (req, res) => {
   try {

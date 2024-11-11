@@ -36,7 +36,7 @@ const createEnt_phongbanda = async (req, res) => {
       ) {
         conflictDetails.push(`tên phong ban: ${Tenphongban}`);
       }
-      res.status(409).json({
+      res.status(400).json({
         message: `Đã có phòng ban dự án thuộc ${Thuoc} tồn tại với ${conflictDetails.join(
           ", "
         )}. Vui lòng kiểm tra lại.`,
@@ -105,7 +105,7 @@ const updateEnt_phongbanda = async (req, res) => {
       ) {
         conflictDetails.push(`tên phong ban: ${Tenphongban}`);
       }
-      res.status(409).json({
+      res.status(400).json({
         message: `Đã có phòng ban dự án thuộc ${Thuoc} tồn tại với ${conflictDetails.join(
           ", "
         )}. Vui lòng kiểm tra lại.`,

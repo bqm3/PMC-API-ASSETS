@@ -49,7 +49,7 @@ const createEnt_Nhacc = async (req, res) => {
         conflictDetails.push(`mã số thuế: ${Masothue}`);
       }
       res
-        .status(409)
+        .status(400)
         .json({
           message: `Nhà cung cấp đã tồn tại với ${conflictDetails.join(
             ", "
@@ -170,7 +170,7 @@ const updateEnt_Nhacc = async (req, res) => {
         conflictDetails.push(`mã số thuế: ${Masothue}`);
       }
       res
-        .status(409)
+        .status(400)
         .json({
           message: `Nhà cung cấp đã tồn tại với ${conflictDetails.join(
             ", "
