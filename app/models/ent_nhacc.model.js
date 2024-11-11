@@ -18,9 +18,19 @@ const Ent_Nhacc = sequelize.define(
       type: DataTypes.CHAR,
       allowNull: false,
     },
+    Thanhpho: {
+      type: DataTypes.CHAR,
+    },
     Masothue: {
       type: DataTypes.CHAR,
       allowNull: false,
+    },
+    Nguoilienhe: {
+      type: DataTypes.CHAR,
+      allowNull: false,
+    },
+    Email: {
+      type: DataTypes.CHAR,
     },
     Sodienthoai: {
       type: DataTypes.CHAR,

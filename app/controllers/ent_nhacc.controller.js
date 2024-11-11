@@ -1,5 +1,6 @@
 const entNhaccService = require("../services/ent_nhacc.service");
 const { Ent_Nhacc } = require("../models/setup.model");
+const { removeVietnameseTones } = require("../utils/utils");
 
 const createEnt_Nhacc = async (req, res) => {
   try {
@@ -7,19 +8,25 @@ const createEnt_Nhacc = async (req, res) => {
       MaNhacc,
       TenNhacc,
       Masothue,
+      Thanhpho,
       Sodienthoai,
       Sotaikhoan,
       Nganhang,
+      Nguoilienhe,
+      Email,
       Diachi,
       Ghichu,
     } = req.body;
     const reqData = {
       MaNhacc: MaNhacc,
       TenNhacc: TenNhacc,
+      Thanhpho: Thanhpho,
       Masothue: Masothue,
       Sodienthoai: Sodienthoai,
       Sotaikhoan: Sotaikhoan,
       Nganhang: Nganhang,
+      Nguoilienhe: Nguoilienhe,
+      Email: Email,
       Diachi: Diachi,
       Ghichu: Ghichu,
       isDelete: 0,
@@ -31,9 +38,23 @@ const createEnt_Nhacc = async (req, res) => {
       Masothue: Masothue,
     });
     if (dataDetail) {
-      res.status(500).json({
-        message: "Nhập lại thông tin",
-      });
+      let conflictDetails = [];
+      if (removeVietnameseTones(dataDetail.MaNhacc) == removeVietnameseTones(MaNhacc)){
+        conflictDetails.push(`mã nhà cung cấp: ${MaNhacc}`);
+      }
+      if (removeVietnameseTones(dataDetail.TenNhacc) == removeVietnameseTones(TenNhacc)){
+        conflictDetails.push(`tên nhà cung cấp: ${TenNhacc}`);
+      }
+      if (removeVietnameseTones(dataDetail.Masothue) == removeVietnameseTones(Masothue)){
+        conflictDetails.push(`mã số thuế: ${Masothue}`);
+      }
+      res
+        .status(400)
+        .json({
+          message: `Nhà cung cấp đã tồn tại với ${conflictDetails.join(
+            ", "
+          )}. Vui lòng kiểm tra lại.`,
+        });
     } else {
       const data = await entNhaccService.create(reqData);
       res.status(200).json({
@@ -67,9 +88,12 @@ const getDetailEnt_Nhacc = async (req, res) => {
         "MaNhacc",
         "TenNhacc",
         "Masothue",
+        "Thanhpho",
         "Sodienthoai",
         "Sotaikhoan",
         "Nganhang",
+        "Nguoilienhe",
+        "Email",
         "Diachi",
         "Ghichu",
         "isDelete",
@@ -98,6 +122,9 @@ const updateEnt_Nhacc = async (req, res) => {
       Sodienthoai,
       Sotaikhoan,
       Nganhang,
+      Nguoilienhe,
+      Email,
+      Thanhpho,
       Diachi,
       Ghichu,
     } = req.body;
@@ -110,6 +137,9 @@ const updateEnt_Nhacc = async (req, res) => {
       Sodienthoai: Sodienthoai,
       Sotaikhoan: Sotaikhoan,
       Nganhang: Nganhang,
+      Nguoilienhe: Nguoilienhe,
+      Email: Email,
+      Thanhpho: Thanhpho,
       Diachi: Diachi,
       Ghichu: Ghichu,
       isDelete: 0,
@@ -129,9 +159,23 @@ const updateEnt_Nhacc = async (req, res) => {
     });
 
     if (dataDetail) {
-      return res.status(500).json({
-        message: "Đã tồn tại nhà cung cấp",
-      });
+      let conflictDetails = [];
+      if (removeVietnameseTones(dataDetail.MaNhacc) == removeVietnameseTones(MaNhacc)){
+        conflictDetails.push(`mã nhà cung cấp: ${MaNhacc}`);
+      }
+      if (removeVietnameseTones(dataDetail.TenNhacc) == removeVietnameseTones(TenNhacc)){
+        conflictDetails.push(`tên nhà cung cấp: ${TenNhacc}`);
+      }
+      if (removeVietnameseTones(dataDetail.Masothue) == removeVietnameseTones(Masothue)){
+        conflictDetails.push(`mã số thuế: ${Masothue}`);
+      }
+      res
+        .status(400)
+        .json({
+          message: `Nhà cung cấp đã tồn tại với ${conflictDetails.join(
+            ", "
+          )}. Vui lòng kiểm tra lại.`,
+        });
     } else {
       const data = await entNhaccService.update(reqData);
       return res.status(200).json({
@@ -143,7 +187,6 @@ const updateEnt_Nhacc = async (req, res) => {
     return res.status(500).json({ message: error.message });
   }
 };
-
 
 const deleteEnt_Nhacc = async (req, res) => {
   try {

@@ -3,24 +3,17 @@ const { Op } = require("sequelize");
 
 const createEnt_Loainhom = async (data) => {
   const find = await Ent_Loainhom.findOne({
-    attributes: [
-      "ID_Loainhom",
-      "Loainhom",
-      "isDelete",
-    ],
+    attributes: ["ID_Loainhom", "Loainhom", "isDelete"],
     where: {
       isDelete: 0,
       Loainhom: sequelize.where(
-        sequelize.fn(
-          "UPPER",
-          sequelize.fn("TRIM", sequelize.col("Loainhom"))
-        ),
+        sequelize.fn("UPPER", sequelize.fn("TRIM", sequelize.col("Loainhom"))),
         "LIKE",
         data.Loainhom.trim().toUpperCase()
       ),
     },
   });
-  if(find) {
+  if (find) {
     throw new Error("Đã tồn tại");
   }
   const res = await Ent_Loainhom.create(data);
@@ -43,6 +36,19 @@ const updateEnt_Loainhom = async (data) => {
     isDelete: 0,
     ID_Loainhom: data.ID_Loainhom,
   };
+
+  let whereClauseCheck = {
+    isDelete: 0,
+    ID_Loainhom: { [Op.ne]: data.ID_Loainhom },
+    [Op.or]: [{ Loainhom: data.Loainhom }],
+  };
+
+  const resCheck = await Ent_Loainhom.findOne({
+    where: whereClauseCheck,
+  });
+  if (resCheck) {
+    throw new Error("Đã tồn tại");
+  }
 
   const res = await Ent_Loainhom.update(
     {

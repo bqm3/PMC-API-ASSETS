@@ -9,7 +9,7 @@ const createEnt_hang = async (req, res) => {
     };
     const data = await entHangService.createEnt_Hang(reqData);
     res.status(200).json({
-      message: "Tạo thành công",
+      message: "Thêm hãng thành công",
       data: data,
     });
   } catch (error) {
@@ -21,7 +21,7 @@ const getAllEnt_hang = async (req, res) => {
   try {
     const data = await entHangService.getAllEnt_Hang();
     res.status(200).json({
-      message: "Danh sách",
+      message: "Danh sách hãng",
       data: data,
     });
   } catch (error) {
@@ -32,9 +32,9 @@ const getAllEnt_hang = async (req, res) => {
 const updateEnt_hang = async (req, res) => {
   try {
     const { Tenhang } = req.body;
-    const ID_Tenhang = req.params.id;
+    const ID_Hang = req.params.id;
     await entHangService.updateEnt_Hang({
-      ID_Tenhang: ID_Tenhang,
+      ID_Hang: ID_Hang,
       Tenhang: Tenhang,
     });
     res.status(200).json({
@@ -47,8 +47,8 @@ const updateEnt_hang = async (req, res) => {
 
 const deleteEnt_hang = async (req, res) => {
   try {
-    const ID_Tenhang = req.params.id;
-    await entHangService.deleteEnt_Hang(ID_Tenhang);
+    const ID_Hang = req.params.id;
+    await entHangService.deleteEnt_Hang(ID_Hang);
     res.status(200).json({
       message: "Xóa thành công!",
     });

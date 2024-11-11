@@ -9,6 +9,12 @@ const {
   Ent_Nhompb,
   Ent_Connguoi,
   Ent_User,
+  Tb_PhieuNCC,
+  Tb_PhieuNCCCT,
+  Tb_GiaonhanTSCT,
+  Tb_GiaonhanTS,
+  Tb_PhieuNXCT,
+  Tb_PhieuNX,
 } = require("../models/setup.model");
 const { Op } = require("sequelize");
 const { uploadFile } = require("../middleware/image.middleware");
@@ -321,6 +327,108 @@ const scanQrCodeTb_Taisanqrcode = async (data) => {
   return res;
 };
 
+const getDetailTb_Taisanqrcode1 = async (id) => {
+  const res = await Tb_TaisanQrCode.findByPk(id, {
+    attributes: [
+      "ID_TaisanQrcode",
+      "ID_Taisan",
+      "ID_PhieuNCCCT",
+      "ID_PhieuNXCT",
+      "Giatri",
+      "MaQrCode",
+      "Ngaykhoitao",
+      "iTinhtrang",
+      "isDelete",
+      "Ghichu",
+      "ID_Nam",
+      "Namsx",
+      "Nambdsd",
+      "Image",
+      "ID_Phongban",
+      "ID_User",
+    ],
+    include: [
+      {
+        model: Ent_Taisan,
+        as: "ent_taisan",
+        attributes: [
+          "ID_Taisan",
+          "ID_Nhomts",
+          "ID_Donvi",
+          "Mats",
+          "Tents",
+          "Thongso",
+          "Ghichu",
+          "isDelete",
+        ],
+        include: [
+          {
+            model: Ent_Nhomts,
+            as: "ent_nhomts",
+            attributes: ["ID_Nhomts", "Manhom", "Tennhom", "isDelete"],
+            where: { isDelete: 0 },
+          },
+          {
+            model: Ent_Donvi,
+            as: "ent_donvi",
+            attributes: ["ID_Donvi", "Donvi", "isDelete"],
+            where: { isDelete: 0 },
+          },
+        ],
+        where: { isDelete: 0 },
+      },
+      {
+        model: Tb_PhieuNCCCT,
+        as: "tb_phieunccct",
+        attributes: { exclude: ['createdAt', 'updatedAt'] },
+        where: {isDelete: 0},
+        include: [
+          {
+            model: Tb_PhieuNCC,
+            as: "tb_phieuncc",
+            attributes: { exclude: ['createdAt', 'updatedAt'] },
+            where: {isDelete: 0},
+          }
+        ]
+      },
+      {
+        model: Tb_PhieuNXCT,
+        as: "tb_phieunxct",
+        attributes: { exclude: ['createdAt', 'updatedAt'] },
+        where: { isDelete: 0 },
+        required: false,
+        include: [
+          {
+            model: Tb_PhieuNX,
+            as: "tb_phieunx",
+            attributes: { exclude: ['createdAt', 'updatedAt'] },
+            where: { isDelete: 0 },
+            required: false
+          }
+        ]
+      },      
+      {
+        model: Tb_GiaonhanTSCT,
+        as: "tb_giaonhantsct",
+        attributes: { exclude: ['createdAt', 'updatedAt'] },
+        where: {isDelete: 0},
+        include: [
+          {
+            model: Tb_GiaonhanTS,
+            as: "tb_giaonhants",
+            attributes: { exclude: ['createdAt', 'updatedAt'] },
+            where: {isDelete: 0},
+          }
+        ]
+      }
+    ],
+    where: {
+      isDelete: 0,
+    },
+  });
+  return res;
+};
+
 module.exports = {
   createTb_taisanqrcode,
   getAllTb_taisanqrcode,
@@ -329,6 +437,7 @@ module.exports = {
   getDetailTb_taisanqrcode,
   insertDataToEntQRCode,
   scanQrCodeTb_Taisanqrcode,
+  getDetailTb_Taisanqrcode1,
 };
 
 function formatDateTime(data) {

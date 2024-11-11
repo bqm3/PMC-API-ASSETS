@@ -190,6 +190,19 @@ const downloadQrCodes = async (req, res) => {
   }
 };
 
+const getDetailTb_Taisanqrcode1 = async(req, res) => {
+  try {
+    const ID_TaisanQrcode = req.params.id;
+    const data = await tbTaisanQrCodeService.getDetailTb_Taisanqrcode1(ID_TaisanQrcode);
+    res.status(200).json({
+      message: "Thông tin",
+      data: data,
+    });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+}
+
 
 
 module.exports = {
@@ -199,5 +212,6 @@ module.exports = {
   updateleTb_Taisanqrcode,
   deleteTb_Taisanqrcode,
   scanQrCodeTb_Taisanqrcode,
-  downloadQrCodes
+  downloadQrCodes,
+  getDetailTb_Taisanqrcode1
 };

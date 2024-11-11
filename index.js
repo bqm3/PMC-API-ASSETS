@@ -31,6 +31,8 @@ app.get("/", (req, res) => {
   res.json("PMC ASSETS!");
 });
 
+require("./app/routes/ent_hang.route")(app);
+require("./app/routes/ent_duan.route")(app);
 require("./app/routes/ent_donvi.route")(app);
 require("./app/routes/ent_hang.route")(app);
 require("./app/routes/ent_chucvu.route")(app);

@@ -303,7 +303,6 @@ const getAllTb_Suachuats = async () => {
       },
     ],
     where: whereClause,
-    logging: console.log, // Enable SQL logging to debug the generated query
   });
 
   return res;
