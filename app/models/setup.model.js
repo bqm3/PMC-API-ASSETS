@@ -2,7 +2,6 @@ const Ent_Chinhanh = require("./ent_chinhanh.model");
 const Ent_Hang = require("./ent_hang.model");
 const Ent_Connguoi = require("./ent_connguoi.model");
 const Ent_Donvi = require("./ent_donvi.model");
-const Ent_Hang = require("./ent_hang.model");
 const Ent_Duan = require("./ent_duan.model");
 const Ent_Nghiepvu = require("./ent_nghiepvu.model");
 const Ent_Nhompb = require("./ent_nhompb.model");
