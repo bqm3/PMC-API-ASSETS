@@ -15,10 +15,10 @@ const createEnt_phongbanda = async (data) => {
 const check_phongbanda = async (Mapb, Tenphongban, Thuoc,  excludeId = null) => {
   const conditions = {
     [Op.or]: [
-      { Mapb: Mapb },
-      { Tenphongban: Tenphongban }
+      { Mapb: Mapb.trim() },
+      { Tenphongban: Tenphongban.trim() }
     ],
-    Thuoc: Thuoc,
+    //Thuoc: Thuoc,
     isDelete: 0,
   };
 
@@ -31,6 +31,7 @@ const check_phongbanda = async (Mapb, Tenphongban, Thuoc,  excludeId = null) => 
   const existingRoom = await Ent_Phongbanda.findOne({
     where: conditions,
     attributes: ["ID_Phongban", "Mapb", "Tenphongban", "Thuoc", "isDelete"],
+    logging: true
   });
 
   return existingRoom;
