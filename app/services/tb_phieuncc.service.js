@@ -18,6 +18,7 @@ const {
 } = require("../models/setup.model");
 const sequelize = require("../config/db.config");
 const tbPhieuNCCCTService = require("../services/tb_phieunccct.service");
+const { Op } = require("sequelize");
 
 // nghiep vụ nha cung cap
 const createTb_PhieuNCC = async (phieunccct, data) => {
@@ -360,6 +361,98 @@ const getAllTb_PhieuNCC = async () => {
   return res;
 };
 
+const getAllTb_PhieuNCC_By_NghiepVu = async (ID_Nghiepvu) => {
+  // Điều kiện để lấy các bản ghi không bị xóa
+  let whereClause = {
+    isDelete: 0,
+  };
+
+  // Thực hiện truy vấn với Sequelize
+  const res = await Tb_PhieuNCC.findAll({
+    attributes: [
+      "ID_PhieuNCC",
+      "ID_Nghiepvu",
+      "Sophieu",
+      "ID_Phieu1",
+      "ID_Phieu2",
+      "ID_Loainhom",
+      "ID_User",
+      "NgayNX",
+      "Ghichu",
+      "ID_Nam",
+      "ID_Thang",
+      "ID_Quy",
+      "iTinhtrang",
+      "isDelete",
+      "ID_Phongban",
+    ],
+    include: [
+      {
+        model: Ent_Nghiepvu,
+        attributes: ["ID_Nghiepvu", "Nghiepvu", "isDelete"],
+        where: {
+          isDelete: 0,
+        },
+      },
+      {
+        model: Ent_Phongbanda,
+        as: "ent_phongbanda",
+        attributes: [
+          "ID_Phongban",
+          "ID_Chinhanh",
+          "ID_Nhompb",
+          "Mapb",
+          "Tenphongban",
+          "Diachi",
+          "Ghichu",
+          "isDelete",
+        ],
+      },
+      {
+        model: Ent_Nhacc,
+        as: "ent_nhacc",
+        attributes: ["ID_Nhacc", "MaNhacc", "TenNhacc", "Masothue"],
+      },
+      {
+        model: Ent_User,
+        attributes: [
+          "ID_User",
+          "ID_Nhompb",
+          "ID_Chinhanh",
+          "MaPMC",
+          "Hoten",
+          "Gioitinh",
+          "Diachi",
+          "Sodienthoai",
+          "Emails",
+          "Anh",
+          "isDelete",
+          "ID_Chucvu",
+          "ID_Phongban",
+        ],
+        include: [
+          {
+            model: Ent_Nhompb,
+            attributes: ["ID_Nhompb", "Nhompb", "isDelete"],
+            where: {
+              isDelete: 0,
+            },
+          },
+          {
+            model: Ent_Phongbanda,
+            as: "ent_phongbanda",
+            attributes: ["ID_Phongban", "TenPhongban"],
+          },
+        ],
+      },
+    ],
+    where: { ID_Nghiepvu: {[Op.in]: ID_Nghiepvu},isDelete: 0 },
+    order: [["NgayNX", "DESC"]],
+  });
+
+  return res;
+};
+
 const getPhieuNCCByUser = async (ID_User, ID_Quy) => {
   let whereClause = {
     isDelete: 0,
@@ -604,4 +697,5 @@ module.exports = {
   closeTb_PhieuNCC,
   getPhieuNCCByUser,
   updatePhieuNCC,
+  getAllTb_PhieuNCC_By_NghiepVu,
 };

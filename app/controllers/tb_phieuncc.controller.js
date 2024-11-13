@@ -486,6 +486,19 @@ const updatePhieuNCC = async (req, res) => {
   }
 };
 
+const getAllTb_PhieuNCC_By_NghiepVu = async (req, res) => {
+  try {
+    const ID_Nghiepvu = req.body.ID_Nghiepvu;
+    const data = await tbPhieuNCCService.getAllTb_PhieuNCC_By_NghiepVu(ID_Nghiepvu);
+    res.status(200).json({
+      message: "Danh sách",
+      data: data,
+    });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 module.exports = {
   createTb_PhieuNCC,
   getAllTb_PhieuNCC,
@@ -498,4 +511,5 @@ module.exports = {
   getPhieuNCCFilter,
   getTaiSanByPhongBanDA,
   updatePhieuNCC,
+  getAllTb_PhieuNCC_By_NghiepVu,
 };
