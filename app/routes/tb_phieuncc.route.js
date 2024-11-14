@@ -16,7 +16,7 @@ module.exports = (app) => {
   router.get("/kiemke/:id", [isAuthenticated], tb_phieuncc.getPhieuNCCByUser);
   router.post("/filter/:id", [isAuthenticated], tb_phieuncc.getPhieuNCCFilter);
   router.post("/taisan",[isAuthenticated], tb_phieuncc.getTaiSanByPhongBanDA);
-  router.post("/by-nghiepvu", tb_phieuncc.getAllTb_PhieuNCC_By_NghiepVu);
+  router.post("/by-nghiepvu",[isAuthenticated], tb_phieuncc.getAllTb_PhieuNCC_By_NghiepVu);
 
   router.put(
     "/update/:id",

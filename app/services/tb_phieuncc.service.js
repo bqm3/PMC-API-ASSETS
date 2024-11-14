@@ -361,11 +361,7 @@ const getAllTb_PhieuNCC = async () => {
   return res;
 };
 
-const getAllTb_PhieuNCC_By_NghiepVu = async (ID_Nghiepvu) => {
-  // Điều kiện để lấy các bản ghi không bị xóa
-  let whereClause = {
-    isDelete: 0,
-  };
+const getAllTb_PhieuNCC_By_NghiepVu = async (arr_NghiepVu) => {
 
   // Thực hiện truy vấn với Sequelize
   const res = await Tb_PhieuNCC.findAll({
@@ -446,7 +442,7 @@ const getAllTb_PhieuNCC_By_NghiepVu = async (ID_Nghiepvu) => {
         ],
       },
     ],
-    where: { ID_Nghiepvu: {[Op.in]: ID_Nghiepvu},isDelete: 0 },
+    where: { ID_Nghiepvu: {[Op.in]: arr_NghiepVu},isDelete: 0 },
     order: [["NgayNX", "DESC"]],
   });
 
