@@ -128,6 +128,7 @@ const createTb_PhieuNXNBCT = async (phieunxct, data) => {
           {
             where: {
               ID_Taisan: item.ID_Taisan,
+              Namsx: item.Namsx,
               ID_Phongban: data.ID_NoiXuat,
               TonSosach: { [Op.gte]: item.Soluong },
               ID_Nam: data.ID_Nam,
@@ -141,6 +142,7 @@ const createTb_PhieuNXNBCT = async (phieunxct, data) => {
         Tb_Tonkho.findOrCreate({
           where: {
             ID_Taisan: item.ID_Taisan,
+            Namsx: item.Namsx,
             ID_Phongban: data.ID_NoiNhap,
             ID_Nam: data.ID_Nam,
             ID_Quy: data.ID_Quy,
@@ -291,6 +293,7 @@ const updateTonKho = async (item, delta, data, isCheck, transaction) => {
   await Tb_Tonkho.update(tonkho, {
     where: {
       ID_Taisan: item.ID_Taisan,
+      Namsx: item.Namsx,
       ID_Phongban: isCheck === 0 ? data.ID_NoiXuat : data.ID_NoiNhap,
       ID_Nam: data.ID_Nam,
       ID_Quy: data.ID_Quy,

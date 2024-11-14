@@ -30,6 +30,10 @@ const Tb_Tonkho = sequelize.define(
       type: DataTypes.INTEGER,
       allowNull: true,
     },
+    Namsx: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+    },
     Tondau: {
       type: DataTypes.DOUBLE,
       allowNull: true,

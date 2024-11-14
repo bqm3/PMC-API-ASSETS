@@ -28,7 +28,7 @@ const Tb_GiaonhanTSCT = sequelize.define(
       type: DataTypes.TEXT,
       allowNull: true,
     },
-    Cacttlienquan: {
+    Cactllienquan: {
       type: DataTypes.TEXT,
       allowNull: false,
     },

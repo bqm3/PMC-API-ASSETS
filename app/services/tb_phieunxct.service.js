@@ -170,6 +170,7 @@ const updateOrInsertTonKho = async (
     const tonkho = await Tb_Tonkho.findOne({
       where: {
         ID_Taisan: item.ID_Taisan,
+        Namsx: item.Namsx,
         ID_Nam: data.ID_Nam,
         ID_Thang: data.ID_Thang,
         ID_Quy: data.ID_Quy,
@@ -194,6 +195,7 @@ const updateOrInsertTonKho = async (
       await Tb_Tonkho.update(updateFields, {
         where: {
           ID_Taisan: item.ID_Taisan,
+          Namsx: item.Namsx,
           ID_Nam: data.ID_Nam,
           ID_Quy: data.ID_Quy,
           ID_Thang: data.ID_Thang,
@@ -204,6 +206,7 @@ const updateOrInsertTonKho = async (
     } else {
       await Tb_Tonkho.create({
         ID_Taisan: item.ID_Taisan,
+        Namsx: item.Namsx,
         ID_Nam: data.ID_Nam,
         ID_Quy: data.ID_Quy,
         ID_Thang: data.ID_Thang,
@@ -374,6 +377,7 @@ const updateTb_PhieuNXCT = async (phieunxct, ID_PhieuNX, reqData) => {
                 ID_Thang,
                 ID_Quy,
                 ID_Phongban: ID_NoiNhap,
+                Namsx: item.Namsx,
               },
               transaction,
             }
@@ -428,6 +432,7 @@ const updateTb_PhieuNXCT = async (phieunxct, ID_PhieuNX, reqData) => {
               ID_Nam,
               ID_Thang,
               ID_Quy,
+              Namsx: item.Namsx,
               ID_Phongban: ID_NoiNhap,
               Tondau: Soluong,
               Tientondau: Dongia * Soluong,
@@ -527,6 +532,7 @@ const scanTb_PhieuNXCT = async (data) => {
           ID_Nam: data.ID_Nam,
           ID_Quy: data.ID_Quy,
           ID_Taisan: data.ID_Taisan,
+          Namsx: data.Namsx || null, 
           isDelete: 0,
         },
       }

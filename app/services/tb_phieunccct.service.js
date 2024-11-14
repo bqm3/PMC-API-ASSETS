@@ -95,6 +95,7 @@ const create_PhieuNhapNCC = async (phieunxct, data, transaction) => {
             ID_Nam: data.ID_Nam,
             ID_Quy: data.ID_Quy,
             ID_Taisan: groupedItem.ID_Taisan,
+            Namsx: groupedItem.Namsx,
             isDelete: 0,
           },
           update: {
@@ -106,6 +107,7 @@ const create_PhieuNhapNCC = async (phieunxct, data, transaction) => {
       } else {
         createOperations.push({
           ID_Taisan: groupedItem.ID_Taisan,
+          Namsx: groupedItem.Namsx,
           ID_Nam: data.ID_Nam,
           ID_Quy: data.ID_Quy,
           ID_Thang: data.ID_Thang,
@@ -258,6 +260,11 @@ const updatePhieuNhapHangNCC = async (phieunxct, data, transaction) => {
         );
         if (existingItem) {
           const delta = item.Soluong - existingItem.Soluong;
+          let priceChanged = false;
+          if (item.Dongia !== existingItem.Dongia) {
+            priceChanged = true;
+            deltaTien = item.Soluong * (item.Dongia - existingItem.Dongia);
+          }
           await Tb_PhieuNCCCT.update(
             {
               Dongia: item.Dongia,
@@ -270,7 +277,7 @@ const updatePhieuNhapHangNCC = async (phieunxct, data, transaction) => {
               transaction,
             }
           );
-          await updateTonkho(item, data, delta, transaction);
+          await updateTonkho(item, data, delta, priceChanged, deltaTien, transaction);
           await Tb_TaisanQrCode.update(
             {
               isDelete: 2,
@@ -412,7 +419,7 @@ const updatePhieuNCCCT = async (reqData, phieunccct) => {
   }
 };
 
-const updateTonkho = async (item, reqData, Soluong, transaction) => {
+const updateTonkho = async (item, reqData, Soluong, priceChanged = false, deltaTien, transaction) => {
   let tonkho = {};
   const tonSosachLiteral = Sequelize.literal(
     `Tondau + Nhapngoai + Nhapkhac + NhapNB - XuatNB - XuattraNCC - XuatThanhly - XuatHuy - XuatgiaoNV`
@@ -421,9 +428,9 @@ const updateTonkho = async (item, reqData, Soluong, transaction) => {
     case 2:
       tonkho = {
         Nhapngoai: Sequelize.literal(`Nhapngoai + ${Soluong}`),
-        Tiennhapngoai: Sequelize.literal(
-          `Tiennhapngoai + ${Soluong}*${item.Dongia}`
-        ),
+        Tiennhapngoai: priceChanged
+          ? Sequelize.literal(`Nhapngoai * ${deltaTien}`)
+          : Sequelize.literal(`Tiennhapngoai + ${Soluong} * ${item.Dongia}`),
         TonSosach: tonSosachLiteral,
       };
       break;
@@ -451,14 +458,16 @@ const updateTonkho = async (item, reqData, Soluong, transaction) => {
 
   const whereCondition = {
     ID_Taisan: item.ID_Taisan,
+    Namsx: item.Namsx,
     ID_Phongban: reqData.ID_Phieu1,
     ID_Nam: reqData.ID_Nam,
     ID_Quy: reqData.ID_Quy,
     isDelete: 0,
   };
 
-  if (Number(reqData.ID_Nghiepvu) !== 2) {
-    whereCondition.TonSosach = { [Op.gte]: Soluong };
+  // Kiểm tra tồn kho chỉ khi số lượng thay đổi
+  if (Number(reqData.ID_Nghiepvu) !== 2 && Soluong < 0) {
+    whereCondition.TonSosach = { [Op.gte]: Math.abs(Soluong) };
   }
 
   const [updatedRowCount] = await Tb_Tonkho.update(tonkho, {

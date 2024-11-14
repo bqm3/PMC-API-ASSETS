@@ -189,13 +189,14 @@ const getAllTb_PhieuNX = async (req, res) => {
 };
 
 const getTaiSan = async (req, res) => {
-  const { ID_NoiNhap, ID_Loainhom, ID_Quy, ID_NoiXuat, ID_Nam } = req.body;
+  const { ID_NoiNhap, ID_Loainhom, ID_Quy, ID_NoiXuat, NgayNX } = req.body;
+  const Nam = await eNamService.getDetail(NgayNX);
   const data = await tbPhieuNXCTService.getTaiSanPB(
     ID_NoiNhap,
     ID_NoiXuat,
     ID_Quy,
     ID_Loainhom,
-    ID_Nam,
+    Nam.ID_Nam,
   );
   res.status(200).json({
     data: data,

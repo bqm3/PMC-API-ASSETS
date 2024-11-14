@@ -11,6 +11,8 @@ const {
   Ent_Phongbanda,
   Ent_Nam,
   Ent_Quy,
+  Tb_PhieuNXCT,
+  Tb_PhieuNCCCT,
 } = require("../models/setup.model");
 
 // iGiaonhan = 1 : giao ts cho nhan su
@@ -49,8 +51,12 @@ const create_Tb_GiaoNhanTS = async (giaonhantsct, reqData) => {
       { transaction }
     );
 
-    if (giaonhantsct.length > 0 && giaonhantsct[0].ID_Taisan != null) {
-      for (const item of giaonhantsct) {
+    const filteredGiaonhantsct = giaonhantsct.filter(
+      (item) => item.ID_Taisan == null || item.isDelete !== 1
+    );
+    
+    if (filteredGiaonhantsct.length > 0) {
+      for (const item of filteredGiaonhantsct) {
         await create_Detail_GiaoNhanTSCT(item, data, transaction);
       }
     }
@@ -100,7 +106,7 @@ const create_Detail_GiaoNhanTSCT = async (item, data, transaction) => {
       ID_Taisan: item.ID_Taisan,
       ID_TaisanQrcode: item?.ID_TaisanQrcode,
       Tinhtrangmay: item?.Tinhtrangmay,
-      Cacttlienquan: item?.Cacttlienquan,
+      Cactllienquan: item?.Cactllienquan,
       Soluong: item.Soluong,
       isDelete: 0,
     },
@@ -238,7 +244,7 @@ const update_Tb_GiaoNhanTS = async (ID_Giaonhan, giaonhantsct) => {
       const tb_giaonhantsct = await Tb_GiaonhanTSCT.update(
         {
           Tinhtrangmay: item.Tinhtrangmay,
-          Cacttlienquan: item.Cacttlienquan,
+          Cactllienquan: item.Cactllienquan,
           Soluong: item.Soluong,
         },
         {
@@ -328,7 +334,7 @@ const getDetail_Tb_GiaoNhanTS = async (ID_Giaonhan) => {
             "ID_Giaonhan",
             "ID_TaisanQrcode",
             "Tinhtrangmay",
-            "Cacttlienquan",
+            "Cactllienquan",
             "Soluong",
             "isDelete",
           ],
@@ -527,6 +533,7 @@ const filter_Tb_GiaonhanTS = async (data) => {
       "Tonsosach",
       "Kiemke",
       "Giatb",
+      "Namsx",
       "isDelete",
     ],
     include: [
@@ -561,6 +568,14 @@ const filter_Tb_GiaonhanTS = async (data) => {
     include: [
       {
         model: Ent_Taisan,
+      },
+      {
+        model: Tb_PhieuNXCT,
+        as: "tb_phieunxct"
+      },
+      {
+        model: Tb_PhieuNCCCT,
+        as: "tb_phieunccct"
       },
     ],
   });
